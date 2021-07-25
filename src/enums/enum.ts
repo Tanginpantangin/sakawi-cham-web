@@ -1,3 +1,5 @@
+export declare type VariantType = 'primary' | 'info'| 'secondary'| 'success'| 'warning'| 'danger'| 'light'| 'link';
+
 export enum Months{
     January = 0,
     February,
@@ -23,13 +25,44 @@ export enum Days{
     Saturday    
 }
 
-export enum VariantType {
-    primary = "primary",
-    info = "info",
-    secondary = "secondary",
-    success = "success",
-    warning = "warning",
-    danger = "danger",
-    light = "light",
-    link = "link"
+export enum IkasSarak{
+    Liéh = 0,
+    Hak,
+    Jim,
+    Jây,
+    Dal,
+    Bak,
+    Waw,
+    JimLuic
 }
+
+export enum Nasak{
+    Takuh = 0,
+    Kabaw,
+    Rimaong,
+    Tapay,
+    InâGirai,
+    UlaAnaih,
+    Asaih,
+    Pabaiy,
+    Kra,
+    Manuk,
+    Asau,
+    Pabuei
+}
+
+export enum ArabMonth{
+    Muharam = 0,
+    Syafar,
+    Rabiulawal,
+    Rabiulakhir,
+    Jamadilawal,
+    Jamadilakhir,
+    Rejab,
+    Sykban,
+    Ramadan,
+    Syawal,
+    Julkaejah,
+    Julhiijaah
+}
+
