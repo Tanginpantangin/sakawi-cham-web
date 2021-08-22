@@ -1,24 +1,24 @@
 import { Col, Row } from "react-bootstrap";
-import { IkasSarak } from "../enums/enum";
+import { IkasSarak, Nasak } from "../enums/enum";
 import { AhierDate } from "../model/AhierDate";
 import { AwalDate } from "../model/AwalDate";
 
-interface DayAwalProps {
+interface DayAhierProps {
     date?: Date;
-    dateAwal: AwalDate;
-    dateAhier?: AhierDate;
+    dateAwal?: AwalDate;
+    dateAhier: AhierDate;
 }
 
 const divStyle: React.CSSProperties ={
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     fontSize: "0.8rem",
-    color: "green",
+    color: "red",
     paddingTop: "2rem",
     paddingBottom: "0.1rem",
 }
 
-export const DayAwal = (props: DayAwalProps) => {
+export const DayAhier = (props: DayAhierProps) => {
     return (
         <td>
             <Row>
@@ -30,10 +30,10 @@ export const DayAwal = (props: DayAwalProps) => {
                 <Col md={4}></Col>
             </Row>
             <Row>
-                <Col style={divStyle} md={4}>
-                    {props.dateAwal.date}.{props.dateAwal.month + 1}.{IkasSarak[props.dateAwal.year]}
-                </Col>
                 <Col md={4}></Col>
+                <Col style={divStyle} md={4}>
+                    {props.dateAhier.date}.{props.dateAhier.month + 1}.{Nasak[props.dateAhier.year.nasak]}-{IkasSarak[props.dateAhier.year.ikasSarak]}
+                </Col>
             </Row>
         </td>
     );

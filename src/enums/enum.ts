@@ -51,7 +51,7 @@ export enum Nasak{
     Pabuei
 }
 
-export enum ArabMonth{
+export enum AwalMonth{
     Muharam = 0,
     Syafar,
     Rabiulawal,
@@ -64,5 +64,21 @@ export enum ArabMonth{
     Syawal,
     Julkaejah,
     Julhiijaah
+}
+
+export enum AhierMonth{
+    BilanSa = 0,
+    BilanDua,
+    BilanKlau,
+    BilanPak,
+    BilanLima,
+    BilanNem,
+    BilanTajuh,
+    BilanDalipan,
+    BilanSalipan,
+    BilanSapluh,
+    BilanPuis,
+    BilanMak,
+    BilanBhang
 }
 

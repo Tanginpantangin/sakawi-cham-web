@@ -1,5 +1,10 @@
+import { AhierDate } from "../model/AhierDate";
+import { AwalDate } from "../model/AwalDate";
+
 interface DayProps {
     date: Date;
+    dateAwal?: AwalDate;
+    dateAhier?: AhierDate;
 }
 
 const divStyle: React.CSSProperties ={

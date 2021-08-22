@@ -1,42 +1,43 @@
 import React from "react";
 import { useState } from "react";
 import { Container, Row, Col, Table, ButtonToolbar, ButtonGroup, Button } from "react-bootstrap";
-import { AwalMonth, IkasSarak } from "../enums/enum";
-import { AwalDate } from "../model/AwalDate";
-import { DayAwal } from "./dayAwal";
+import { AhierMonth, IkasSarak, Nasak } from "../enums/enum";
+import { AhierDate } from "../model/AhierDate";
 import dataConfig from '../data/SakawiTakaiCiim.json';
+import { AhierYear } from "../model/AhierDate";
+import { DayAhier } from "./dayAhier";
 
-interface MonthAwalProps {
-    year: IkasSarak;
-    month: AwalMonth;
+interface MonthAhierProps {
+    year: AhierYear;
+    month: AhierMonth;
 }
 
-export const MonthAwal = (props: MonthAwalProps) => {
+export const MonthAhier = (props: MonthAhierProps) => {
     const [year, setYear] = useState(props.year);
     const [month, setMonth] = useState(props.month);
-    let firstDate: AwalDate = { date: 1, month: props.month, year: props.year };
-    const [firstDateOfMonth, setFirstDateOfMonth] = useState<AwalDate>(firstDate);
+    let firstDate: AhierDate = { date: 1, month: props.month, year: props.year };
+    const [firstDateOfMonth, setFirstDateOfMonth] = useState<AhierDate>(firstDate);
     const [firstDayOfMonth, setFirstDayOfMonth] = useState(0);
 
     React.useEffect(() => {
         function init() {
             // Read Sakawi Takai Ciim
-            let startDay = Number.parseInt(getStartDayByAwalMonth(year, month));
+            let startDay = Number.parseInt(getStartDateByMonth(year, month));
             setFirstDayOfMonth(startDay);
 
-            let firstDate: AwalDate = { date: 1, month: month, year: year };
+            let firstDate: AhierDate = { date: 1, month: month, year: year };
             setFirstDateOfMonth(firstDate);
         }
 
-        init();
+        //init();
     }, [year, month]);
 
-    function getStartDayByAwalMonth(year: IkasSarak, month: AwalMonth) {
-        let yearName = IkasSarak[year];
+    function getStartDateByMonth(year: AhierYear, month: AhierMonth) {
+        let yearName = IkasSarak[year.ikasSarak];
         let yearItem = dataConfig.filter(x => x.ArabYear === yearName)[0];
         let result = '';
 
-        switch (month) {
+        /*switch (month) {
             case 0:
                 result = yearItem['Month_01'];
                 break;
@@ -75,15 +76,15 @@ export const MonthAwal = (props: MonthAwalProps) => {
                 break;
             default:
                 break;
-        }
+        }*/
 
         return result;
     }
 
-    function getDayNumbersOfMonth(year: IkasSarak, month: AwalMonth) {
+    function getDayNumbersOfAhierMonth(year: AhierYear, month: AhierMonth) {
         let numberOfDay = 0;
 
-        // Tháng lẻ: (30 ngày), gồm: 1,3,5,7,9,11.
+        /*// Tháng lẻ: (30 ngày), gồm: 1,3,5,7,9,11.
         // Tháng chẳn: (29 ngày), gồm: 2,4,6,8,10. 
         if (month === AwalMonth.Muharam || month === AwalMonth.Rabiulawal || month === AwalMonth.Jamadilawal || 
             month === AwalMonth.Rejab || month === AwalMonth.Ramadan || month === AwalMonth.Julkaejah) {
@@ -99,19 +100,19 @@ export const MonthAwal = (props: MonthAwalProps) => {
             } else {
                 numberOfDay = 29;
             }
-        }
+        }*/
 
         return numberOfDay;
     }
 
-    function addDays(currentDate: AwalDate, addedDays: number) {
-        let result: AwalDate = {
+    function addDays(currentDate: AhierDate, addedDays: number) {
+        let result: AhierDate = {
             date: 1,
-            month: AwalMonth.Jamadilakhir,
-            year: IkasSarak.Liéh
+            month: AhierMonth.BilanSa,
+            year: {nasak: Nasak.Kabaw, ikasSarak: IkasSarak.Hak}
           };
 
-        let numberOfDays = getDayNumbersOfMonth(currentDate.year, currentDate.month);
+        let numberOfDays = getDayNumbersOfAhierMonth(currentDate.year, currentDate.month);
         let newDays = currentDate.date + addedDays;
         let newMonth = currentDate.month;
         let newYear = currentDate.year;
@@ -121,11 +122,19 @@ export const MonthAwal = (props: MonthAwalProps) => {
                 newMonth = currentDate.month + 1;
             } else {
                 newMonth = 0;
-    
-                if (currentDate.year < 7) {
-                    newYear = currentDate.year + 1;
+                
+                // Nasak
+                if (currentDate.year.nasak < 11) {
+                    newYear.nasak = currentDate.year.nasak + 1;
                 } else {
-                    newYear = 0;
+                    newYear.nasak = 0;
+                }
+
+                // Ikas Sarak
+                if (currentDate.year.ikasSarak < 7) {
+                    newYear.ikasSarak = currentDate.year.ikasSarak + 1;
+                } else {
+                    newYear.ikasSarak = 0;
                 }
             }
 
@@ -141,15 +150,23 @@ export const MonthAwal = (props: MonthAwalProps) => {
             } else {
                 newMonth = 11;
     
-                if (currentDate.year > 0) {
-                    newYear = currentDate.year - 1;
+                // Nasak
+                if (currentDate.year.nasak > 0) {
+                    newYear.nasak = currentDate.year.nasak - 1;
                 } else {
-                    newYear = 7;
+                    newYear.nasak = 11;
+                }
+
+                // Ikas Sarak
+                if (currentDate.year.ikasSarak > 0) {
+                    newYear.ikasSarak = currentDate.year.ikasSarak - 1;
+                } else {
+                    newYear.ikasSarak = 7;
                 }
             }
 
             result = {
-                date: getDayNumbersOfMonth(currentDate.year, currentDate.month - 1) + newDays,
+                date: getDayNumbersOfAhierMonth(currentDate.year, currentDate.month - 1) + newDays,
                 month: newMonth,
                 year: newYear
               };
@@ -166,8 +183,8 @@ export const MonthAwal = (props: MonthAwalProps) => {
     }
 
     function handleGoToToday() {
-        setMonth(AwalMonth.Syafar);
-        setYear(IkasSarak.Hak);
+        setMonth(AhierMonth.BilanSa);
+        setYear({nasak: Nasak.Kabaw, ikasSarak: IkasSarak.Hak});
     }
 
     function handleGoToPreviousMonth() {
@@ -176,10 +193,18 @@ export const MonthAwal = (props: MonthAwalProps) => {
         } else {
             setMonth(11);
 
-            if (year > 0) {
-                setYear(year - 1);
+            // Nasak
+            if (year.nasak > 0) {
+                setYear({nasak: year.nasak - 1, ikasSarak: year.ikasSarak - 1});
             } else {
-                setYear(7);
+                setYear({nasak: 11, ikasSarak: year.ikasSarak - 1});
+            }
+
+            // Ikas Sarak
+            if (year.ikasSarak > 0) {
+                setYear({nasak: year.nasak - 1, ikasSarak: year.ikasSarak - 1});
+            } else {
+                setYear({nasak: year.nasak - 1, ikasSarak: 7});
             }
         }
     }
@@ -190,10 +215,18 @@ export const MonthAwal = (props: MonthAwalProps) => {
         } else {
             setMonth(0);
 
-            if (year < 7) {
-                setYear(year + 1);
+            // Nasak
+            if (year.nasak < 11) {
+                setYear({nasak: year.nasak + 1, ikasSarak: year.ikasSarak + 1});
             } else {
-                setYear(0);
+                setYear({nasak: 0, ikasSarak: year.ikasSarak + 1});
+            }
+
+            // Ikas Sarak
+            if (year.ikasSarak < 7) {
+                setYear({nasak: year.nasak + 1, ikasSarak: year.ikasSarak + 1});
+            } else {
+                setYear({nasak: year.nasak + 1, ikasSarak: 0});
             }
         }
     }
@@ -206,13 +239,12 @@ export const MonthAwal = (props: MonthAwalProps) => {
         let cells = []
         for (let days = 0; days < 7; days++) {
             let cellDate = addDays(firstDateOfMonth, (count - firstDayOfMonth + 1));
-            let dateAwal: AwalDate = {
+            let dateAhier: AhierDate = {
                 date: cellDate.date,
                 month: cellDate.month,
                 year: cellDate.year
             }
-
-            cells.push(<DayAwal key={`cell${weeks}-${days}`} dateAwal={dateAwal}></DayAwal>);
+            cells.push(<DayAhier key={`cell${weeks}-${days}`} dateAhier={dateAhier}></DayAhier>);
             count++
         }
 
@@ -240,7 +272,7 @@ export const MonthAwal = (props: MonthAwalProps) => {
                     </ButtonToolbar>
                 </Col>
                 <Col md={5} style={{ textAlign: "center" }}>
-                    <h2>{AwalMonth[month]} {`(${(month + 1)})`} - {IkasSarak[year]}</h2>
+                    <h2>{AhierMonth[month]} {`(${(month + 1)})`} - {Nasak[year.nasak]} {IkasSarak[year.ikasSarak]}</h2>
                 </Col>
                 <Col md={3}></Col>
             </Row>
