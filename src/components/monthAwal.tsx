@@ -1,14 +1,13 @@
-import React from "react";
-import { useState } from "react";
-import { Container, Row, Col, Table, ButtonToolbar, ButtonGroup, Button } from "react-bootstrap";
-import { AwalMonth, IkasSarak } from "../enums/enum";
-import { AwalDate } from "../model/AwalDate";
+import React, { useState } from "react";
+import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "react-bootstrap";
+import { AwalMonthEnum, IkasSarakEnum } from "../enums/enum";
+import { addAwalMonths, AwalDate, AwalMonth, AwalYear } from "../model/AwalDate";
+import Helper from '../utility/helper';
 import { DayAwal } from "./dayAwal";
-import dataConfig from '../data/SakawiTakaiCiim.json';
 
 interface MonthAwalProps {
-    year: IkasSarak;
-    month: AwalMonth;
+    year: AwalYear;
+    month: AwalMonthEnum;
 }
 
 export const MonthAwal = (props: MonthAwalProps) => {
@@ -21,97 +20,28 @@ export const MonthAwal = (props: MonthAwalProps) => {
     React.useEffect(() => {
         function init() {
             // Read Sakawi Takai Ciim
-            let startDay = Number.parseInt(getStartDayByAwalMonth(year, month));
+            let startDay = Number.parseInt(Helper.getStartDayByAwalMonth(year, month));
             setFirstDayOfMonth(startDay);
 
             let firstDate: AwalDate = { date: 1, month: month, year: year };
             setFirstDateOfMonth(firstDate);
+
+
         }
 
         init();
     }, [year, month]);
 
-    function getStartDayByAwalMonth(year: IkasSarak, month: AwalMonth) {
-        let yearName = IkasSarak[year];
-        let yearItem = dataConfig.filter(x => x.ArabYear === yearName)[0];
-        let result = '';
 
-        switch (month) {
-            case 0:
-                result = yearItem['Month_01'];
-                break;
-            case 1:
-                result = yearItem['Month_02'];
-                break;
-            case 2:
-                result = yearItem['Month_03'];
-                break;
-            case 3:
-                result = yearItem['Month_04'];
-                break;
-            case 4:
-                result = yearItem['Month_05'];
-                break;
-            case 5:
-                result = yearItem['Month_06'];
-                break;
-            case 6:
-                result = yearItem['Month_07'];
-                break;
-            case 7:
-                result = yearItem['Month_08'];
-                break;
-            case 8:
-                result = yearItem['Month_09'];
-                break;
-            case 9:
-                result = yearItem['Month_10'];
-                break;
-            case 10:
-                result = yearItem['Month_11'];
-                break;
-            case 11:
-                result = yearItem['Month_12'];
-                break;
-            default:
-                break;
-        }
-
-        return result;
-    }
-
-    function getDayNumbersOfMonth(year: IkasSarak, month: AwalMonth) {
-        let numberOfDay = 0;
-
-        // Tháng lẻ: (30 ngày), gồm: 1,3,5,7,9,11.
-        // Tháng chẳn: (29 ngày), gồm: 2,4,6,8,10. 
-        if (month === AwalMonth.Muharam || month === AwalMonth.Rabiulawal || month === AwalMonth.Jamadilawal || 
-            month === AwalMonth.Rejab || month === AwalMonth.Ramadan || month === AwalMonth.Julkaejah) {
-            numberOfDay = 30;
-        } else if (month === AwalMonth.Syafar || month === AwalMonth.Rabiulakhir || month === AwalMonth.Jamadilakhir || 
-            month === AwalMonth.Sykban || month === AwalMonth.Syawal ) {
-            numberOfDay = 29;
-        } else {
-            // Riêng tháng 12: năm nhuận (thun "Nâh": Hak, Dal, Jim luic) 30 ngày, 
-            // năm thường (thun "Wak") 29 ngày.
-            if (year === IkasSarak.Hak || year === IkasSarak.Dal ||year === IkasSarak.JimLuic) {
-                numberOfDay =30;
-            } else {
-                numberOfDay = 29;
-            }
-        }
-
-        return numberOfDay;
-    }
 
     function addDays(currentDate: AwalDate, addedDays: number) {
         let result: AwalDate = {
             date: 1,
-            month: AwalMonth.Jamadilakhir,
-            year: IkasSarak.Liéh
-          };
+            month: AwalMonthEnum.Jamadilakhir,
+            year: { ikasSarak: IkasSarakEnum.Liéh }
+        };
 
-        let numberOfDays = getDayNumbersOfMonth(currentDate.year, currentDate.month);
+        let numberOfDays = Helper.getDayNumbersOfAwalMonth(currentDate.year, currentDate.month);
         let newDays = currentDate.date + addedDays;
         let newMonth = currentDate.month;
         let newYear = currentDate.year;
@@ -121,11 +51,11 @@ export const MonthAwal = (props: MonthAwalProps) => {
                 newMonth = currentDate.month + 1;
             } else {
                 newMonth = 0;
-    
-                if (currentDate.year < 7) {
-                    newYear = currentDate.year + 1;
+
+                if (currentDate.year.ikasSarak < 7) {
+                    newYear.ikasSarak = currentDate.year.ikasSarak + 1;
                 } else {
-                    newYear = 0;
+                    newYear.ikasSarak = 0;
                 }
             }
 
@@ -133,41 +63,60 @@ export const MonthAwal = (props: MonthAwalProps) => {
                 date: newDays - numberOfDays,
                 month: newMonth,
                 year: newYear
-              };
-            
+            };
+
         } else if (newDays <= 0) {
             if (currentDate.month > 0) {
                 newMonth = currentDate.month - 1;
             } else {
                 newMonth = 11;
-    
-                if (currentDate.year > 0) {
-                    newYear = currentDate.year - 1;
+
+                if (currentDate.year.ikasSarak > 0) {
+                    newYear.ikasSarak = currentDate.year.ikasSarak - 1;
                 } else {
-                    newYear = 7;
+                    newYear.ikasSarak = 7;
                 }
             }
 
             result = {
-                date: getDayNumbersOfMonth(currentDate.year, currentDate.month - 1) + newDays,
+                date: Helper.getDayNumbersOfAwalMonth(currentDate.year, currentDate.month - 1) + newDays,
                 month: newMonth,
                 year: newYear
-              };
-        }  
+            };
+        }
         else {
             result = {
                 date: newDays,
                 month: currentDate.month,
                 year: currentDate.year
-              };
+            };
         }
 
         return result;
     }
 
     function handleGoToToday() {
-        setMonth(AwalMonth.Syafar);
-        setYear(IkasSarak.Hak);
+        /*let result = Helper.getAwalDateByGregoryDate(new Date(2016, 9, 2));
+        console.log('2016, 9, 2 => ', JSON.stringify(result));*/
+
+        /*let startAhierYear: AhierYear = {
+            nasak: Nasak.Pabuei,
+            ikasSarak: IkasSarak.Jim,
+            yearNumber: 2019
+        }
+
+        let newYear = addAhierYears(startAhierYear, -1);
+        console.log('new year: ' + JSON.stringify(newYear))*/
+
+        /*let matrix = Helper.buildMatrixCalendar(2020);
+        console.log('matrix: ' + JSON.stringify(matrix))*/
+
+        const awalMonth: AwalMonth = { month: 0, year: { ikasSarak: IkasSarakEnum.Liéh, yearNumber: 2020 } };
+        let newMonth = addAwalMonths(awalMonth, -13);
+        console.log('addAwalMonths : ' + JSON.stringify(newMonth))
+
+        setMonth(AwalMonthEnum.Syafar);
+        setYear({ ikasSarak: IkasSarakEnum.Hak });
     }
 
     function handleGoToPreviousMonth() {
@@ -176,10 +125,10 @@ export const MonthAwal = (props: MonthAwalProps) => {
         } else {
             setMonth(11);
 
-            if (year > 0) {
-                setYear(year - 1);
+            if (year.ikasSarak > 0) {
+                setYear({ ikasSarak: year.ikasSarak - 1 });
             } else {
-                setYear(7);
+                setYear({ ikasSarak: 7 });
             }
         }
     }
@@ -190,10 +139,10 @@ export const MonthAwal = (props: MonthAwalProps) => {
         } else {
             setMonth(0);
 
-            if (year < 7) {
-                setYear(year + 1);
+            if (year.ikasSarak < 7) {
+                setYear({ ikasSarak: year.ikasSarak + 1 });
             } else {
-                setYear(0);
+                setYear({ ikasSarak: 0 });
             }
         }
     }
@@ -240,7 +189,7 @@ export const MonthAwal = (props: MonthAwalProps) => {
                     </ButtonToolbar>
                 </Col>
                 <Col md={5} style={{ textAlign: "center" }}>
-                    <h2>{AwalMonth[month]} {`(${(month + 1)})`} - {IkasSarak[year]}</h2>
+                    <h2>{AwalMonthEnum[month]} {`(${(month + 1)})`} - {IkasSarakEnum[year.ikasSarak]}</h2>
                 </Col>
                 <Col md={3}></Col>
             </Row>

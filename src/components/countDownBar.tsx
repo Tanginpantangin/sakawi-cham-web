@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ProgressBar } from "react-bootstrap";
 import { VariantType } from "../enums/enum";
 
-export interface CountDownBarProps{
+export interface CountDownBarProps {
     dateName: string;
     variantType: VariantType;
     toDate: Date;
@@ -18,7 +18,7 @@ export const CountDownBar = (props: CountDownBarProps) => {
     useEffect(() => {
         setTimeout(() => {
             init();
-          }, 1000);
+        }, 1000);
     });
 
     function init() {
@@ -37,7 +37,7 @@ export const CountDownBar = (props: CountDownBarProps) => {
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        
+
         setDays(days);
         setHours(hours);
         setMinutes(minutes);
@@ -45,7 +45,7 @@ export const CountDownBar = (props: CountDownBarProps) => {
     }
 
     return (
-        <ProgressBar variant={props.variantType.toString()} now={percent} 
+        <ProgressBar variant={props.variantType.toString()} now={percent}
             label={`${props.dateName}: còn ${days} ngày - ${("0" + hours).slice(-2)}h${("0" + minutes).slice(-2)}'${("0" + seconds).slice(-2)}"`} />
     );
 }

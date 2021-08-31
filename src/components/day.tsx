@@ -7,7 +7,7 @@ interface DayProps {
     dateAhier?: AhierDate;
 }
 
-const divStyle: React.CSSProperties ={
+const divStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "row-reverse",
     fontSize: "0.8rem"

@@ -1,15 +1,13 @@
-import React from "react";
-import { useState } from "react";
-import { Container, Row, Col, Table, ButtonToolbar, ButtonGroup, Button } from "react-bootstrap";
-import { AhierMonth, IkasSarak, Nasak } from "../enums/enum";
-import { AhierDate } from "../model/AhierDate";
-import dataConfig from '../data/SakawiTakaiCiim.json';
-import { AhierYear } from "../model/AhierDate";
+import React, { useState } from "react";
+import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "react-bootstrap";
+import { AhierMonthEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
+import { AhierDate, AhierYear } from "../model/AhierDate";
+import Helper from "../utility/helper";
 import { DayAhier } from "./dayAhier";
 
 interface MonthAhierProps {
     year: AhierYear;
-    month: AhierMonth;
+    month: AhierMonthEnum;
 }
 
 export const MonthAhier = (props: MonthAhierProps) => {
@@ -22,7 +20,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
     React.useEffect(() => {
         function init() {
             // Read Sakawi Takai Ciim
-            let startDay = Number.parseInt(getStartDateByMonth(year, month));
+            let startDay = Number.parseInt(Helper.getStartDayByAhierMonth(year, month));
             setFirstDayOfMonth(startDay);
 
             let firstDate: AhierDate = { date: 1, month: month, year: year };
@@ -32,87 +30,14 @@ export const MonthAhier = (props: MonthAhierProps) => {
         //init();
     }, [year, month]);
 
-    function getStartDateByMonth(year: AhierYear, month: AhierMonth) {
-        let yearName = IkasSarak[year.ikasSarak];
-        let yearItem = dataConfig.filter(x => x.ArabYear === yearName)[0];
-        let result = '';
-
-        /*switch (month) {
-            case 0:
-                result = yearItem['Month_01'];
-                break;
-            case 1:
-                result = yearItem['Month_02'];
-                break;
-            case 2:
-                result = yearItem['Month_03'];
-                break;
-            case 3:
-                result = yearItem['Month_04'];
-                break;
-            case 4:
-                result = yearItem['Month_05'];
-                break;
-            case 5:
-                result = yearItem['Month_06'];
-                break;
-            case 6:
-                result = yearItem['Month_07'];
-                break;
-            case 7:
-                result = yearItem['Month_08'];
-                break;
-            case 8:
-                result = yearItem['Month_09'];
-                break;
-            case 9:
-                result = yearItem['Month_10'];
-                break;
-            case 10:
-                result = yearItem['Month_11'];
-                break;
-            case 11:
-                result = yearItem['Month_12'];
-                break;
-            default:
-                break;
-        }*/
-
-        return result;
-    }
-
-    function getDayNumbersOfAhierMonth(year: AhierYear, month: AhierMonth) {
-        let numberOfDay = 0;
-
-        /*// Tháng lẻ: (30 ngày), gồm: 1,3,5,7,9,11.
-        // Tháng chẳn: (29 ngày), gồm: 2,4,6,8,10. 
-        if (month === AwalMonth.Muharam || month === AwalMonth.Rabiulawal || month === AwalMonth.Jamadilawal || 
-            month === AwalMonth.Rejab || month === AwalMonth.Ramadan || month === AwalMonth.Julkaejah) {
-            numberOfDay = 30;
-        } else if (month === AwalMonth.Syafar || month === AwalMonth.Rabiulakhir || month === AwalMonth.Jamadilakhir || 
-            month === AwalMonth.Sykban || month === AwalMonth.Syawal ) {
-            numberOfDay = 29;
-        } else {
-            // Riêng tháng 12: năm nhuận (thun "Nâh": Hak, Dal, Jim luic) 30 ngày, 
-            // năm thường (thun "Wak") 29 ngày.
-            if (year === IkasSarak.Hak || year === IkasSarak.Dal ||year === IkasSarak.JimLuic) {
-                numberOfDay =30;
-            } else {
-                numberOfDay = 29;
-            }
-        }*/
-
-        return numberOfDay;
-    }
-
     function addDays(currentDate: AhierDate, addedDays: number) {
         let result: AhierDate = {
             date: 1,
-            month: AhierMonth.BilanSa,
-            year: {nasak: Nasak.Kabaw, ikasSarak: IkasSarak.Hak}
-          };
+            month: AhierMonthEnum.BilanSa,
+            year: { nasak: NasakEnum.Kabaw, ikasSarak: IkasSarakEnum.Hak }
+        };
 
-        let numberOfDays = getDayNumbersOfAhierMonth(currentDate.year, currentDate.month);
+        let numberOfDays = Helper.getDayNumbersOfAhierMonth(currentDate.year, currentDate.month);
         let newDays = currentDate.date + addedDays;
         let newMonth = currentDate.month;
         let newYear = currentDate.year;
@@ -122,7 +47,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
                 newMonth = currentDate.month + 1;
             } else {
                 newMonth = 0;
-                
+
                 // Nasak
                 if (currentDate.year.nasak < 11) {
                     newYear.nasak = currentDate.year.nasak + 1;
@@ -142,14 +67,14 @@ export const MonthAhier = (props: MonthAhierProps) => {
                 date: newDays - numberOfDays,
                 month: newMonth,
                 year: newYear
-              };
-            
+            };
+
         } else if (newDays <= 0) {
             if (currentDate.month > 0) {
                 newMonth = currentDate.month - 1;
             } else {
                 newMonth = 11;
-    
+
                 // Nasak
                 if (currentDate.year.nasak > 0) {
                     newYear.nasak = currentDate.year.nasak - 1;
@@ -166,25 +91,25 @@ export const MonthAhier = (props: MonthAhierProps) => {
             }
 
             result = {
-                date: getDayNumbersOfAhierMonth(currentDate.year, currentDate.month - 1) + newDays,
+                date: Helper.getDayNumbersOfAhierMonth(currentDate.year, currentDate.month - 1) + newDays,
                 month: newMonth,
                 year: newYear
-              };
-        }  
+            };
+        }
         else {
             result = {
                 date: newDays,
                 month: currentDate.month,
                 year: currentDate.year
-              };
+            };
         }
 
         return result;
     }
 
     function handleGoToToday() {
-        setMonth(AhierMonth.BilanSa);
-        setYear({nasak: Nasak.Kabaw, ikasSarak: IkasSarak.Hak});
+        setMonth(AhierMonthEnum.BilanSa);
+        setYear({ nasak: NasakEnum.Kabaw, ikasSarak: IkasSarakEnum.Hak });
     }
 
     function handleGoToPreviousMonth() {
@@ -195,16 +120,16 @@ export const MonthAhier = (props: MonthAhierProps) => {
 
             // Nasak
             if (year.nasak > 0) {
-                setYear({nasak: year.nasak - 1, ikasSarak: year.ikasSarak - 1});
+                setYear({ nasak: year.nasak - 1, ikasSarak: year.ikasSarak - 1 });
             } else {
-                setYear({nasak: 11, ikasSarak: year.ikasSarak - 1});
+                setYear({ nasak: 11, ikasSarak: year.ikasSarak - 1 });
             }
 
             // Ikas Sarak
             if (year.ikasSarak > 0) {
-                setYear({nasak: year.nasak - 1, ikasSarak: year.ikasSarak - 1});
+                setYear({ nasak: year.nasak - 1, ikasSarak: year.ikasSarak - 1 });
             } else {
-                setYear({nasak: year.nasak - 1, ikasSarak: 7});
+                setYear({ nasak: year.nasak - 1, ikasSarak: 7 });
             }
         }
     }
@@ -217,16 +142,16 @@ export const MonthAhier = (props: MonthAhierProps) => {
 
             // Nasak
             if (year.nasak < 11) {
-                setYear({nasak: year.nasak + 1, ikasSarak: year.ikasSarak + 1});
+                setYear({ nasak: year.nasak + 1, ikasSarak: year.ikasSarak + 1 });
             } else {
-                setYear({nasak: 0, ikasSarak: year.ikasSarak + 1});
+                setYear({ nasak: 0, ikasSarak: year.ikasSarak + 1 });
             }
 
             // Ikas Sarak
             if (year.ikasSarak < 7) {
-                setYear({nasak: year.nasak + 1, ikasSarak: year.ikasSarak + 1});
+                setYear({ nasak: year.nasak + 1, ikasSarak: year.ikasSarak + 1 });
             } else {
-                setYear({nasak: year.nasak + 1, ikasSarak: 0});
+                setYear({ nasak: year.nasak + 1, ikasSarak: 0 });
             }
         }
     }
@@ -272,7 +197,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
                     </ButtonToolbar>
                 </Col>
                 <Col md={5} style={{ textAlign: "center" }}>
-                    <h2>{AhierMonth[month]} {`(${(month + 1)})`} - {Nasak[year.nasak]} {IkasSarak[year.ikasSarak]}</h2>
+                    <h2>{AhierMonthEnum[month]} {`(${(month + 1)})`} - {NasakEnum[year.nasak]} {IkasSarakEnum[year.ikasSarak]}</h2>
                 </Col>
                 <Col md={3}></Col>
             </Row>

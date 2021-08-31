@@ -1,5 +1,5 @@
 import { Col, Row } from "react-bootstrap";
-import { IkasSarak } from "../enums/enum";
+import { IkasSarakEnum } from "../enums/enum";
 import { AhierDate } from "../model/AhierDate";
 import { AwalDate } from "../model/AwalDate";
 
@@ -9,7 +9,7 @@ interface DayAwalProps {
     dateAhier?: AhierDate;
 }
 
-const divStyle: React.CSSProperties ={
+const divStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "row",
     fontSize: "0.8rem",
@@ -31,7 +31,7 @@ export const DayAwal = (props: DayAwalProps) => {
             </Row>
             <Row>
                 <Col style={divStyle} md={4}>
-                    {props.dateAwal.date}.{props.dateAwal.month + 1}.{IkasSarak[props.dateAwal.year]}
+                    {props.dateAwal.date}.{props.dateAwal.month + 1}.{IkasSarakEnum[props.dateAwal.year.ikasSarak]}
                 </Col>
                 <Col md={4}></Col>
             </Row>

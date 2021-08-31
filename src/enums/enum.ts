@@ -1,6 +1,6 @@
-export declare type VariantType = 'primary' | 'info'| 'secondary'| 'success'| 'warning'| 'danger'| 'light'| 'link';
+export declare type VariantType = 'primary' | 'info' | 'secondary' | 'success' | 'warning' | 'danger' | 'light' | 'link';
 
-export enum Months{
+export enum MonthEnum {
     January = 0,
     February,
     March,
@@ -15,17 +15,17 @@ export enum Months{
     December
 }
 
-export enum Days{
+export enum DayEnum {
     Sunday = 0,
     Monday,
     Tuesday,
     Wednesday,
     Thursday,
     Friday,
-    Saturday    
+    Saturday
 }
 
-export enum IkasSarak{
+export enum IkasSarakEnum {
     Liéh = 0,
     Hak,
     Jim,
@@ -36,7 +36,7 @@ export enum IkasSarak{
     JimLuic
 }
 
-export enum Nasak{
+export enum NasakEnum {
     Takuh = 0,
     Kabaw,
     Rimaong,
@@ -51,7 +51,7 @@ export enum Nasak{
     Pabuei
 }
 
-export enum AwalMonth{
+export enum AwalMonthEnum {
     Muharam = 0,
     Syafar,
     Rabiulawal,
@@ -66,7 +66,7 @@ export enum AwalMonth{
     Julhiijaah
 }
 
-export enum AhierMonth{
+export enum AhierMonthEnum {
     BilanSa = 0,
     BilanDua,
     BilanKlau,

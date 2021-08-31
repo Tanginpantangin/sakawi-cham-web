@@ -1,18 +1,31 @@
 vscode://vscode.github-authentication/did-authenticate?windowid=1&code=b7e85ce2ea242b5fe1e2&state=1052b7ce-94e7-4f8b-b6eb-4af6774017cc
 
+>> Overview:
+- Rap khik, Ahier nduec
+
 >> Sakawi Awal:
 - Lịch thuần âm. Cách tính dựa trên chu kỳ mặt trăng
 - Cách tính nhuần: cố định
 - Chỉ phục vụ cho các ngày lễ Hồi giáo
 - Cách đặt tên năm: trùng với 8 Ikas Sarak. Vd: năm "Dal", "Bak"
 - 8 Ikas Sarak (Cung/Can): Liéh, Hak, Jim-krâh, Jây, Dal, Bak, Waw, Jim-luic
-- 1 năm có 354 hoặc 355 ngày
-- Chu kỳ 8 năm: 3 năm nhuận (thun "Nâh": Hak, Dal, Jim-luic) và 5 năm thường (thun "Wak"). 
+- Chu kỳ 8 năm: 3 năm nhuận (thun "Nâh": Hak, Dal, Jim-luic) và 5 năm thường (thun "Wak": Liéh, Jim-krâh, Jây, Bak, Waw). 
 - 1 năm có: 12 tháng
 - 1 tháng có:
-	+ Tháng lẻ (gồm: 1,3,5,7,9,11): 30 ngày.
-	+ Tháng chẳn (gồm: 2,4,6,8,10): 29 ngày.
+	+ Tháng lẻ - "bilan tapak" (tháng đủ, gồm: 1,3,5,7,9,11): 30 ngày.
+	+ Tháng chẵn  - "bilan u" (tháng thiếu, gồm: 2,4,6,8,10): 29 ngày.
 	+ Riêng tháng 12: năm nhuận 30 ngày, năm thường 29 ngày.
+	
+- 1 năm có 354 hoặc 355 ngày:
+	+ 354 ngày (5 năm thiếu - thun "Wak") => (6*29) + (6*30) = 354
+	+ 355 ngày (3 năm thường - thun "Nâh") => (5*29) + (7*30) = 355
+	
+- 1 tháng chia thành:
+	+ Thượng tuần trăng ("bingun"): 
+		* Tháng đủ 30 ngày: từ 1 bingun -> 15 bingun ("Porami")
+		* Tháng thiếu 29 ngày: từ 1 bingun -> 14 bingun (không có 15 bingun)
+	+ Hạ tuần trăng ("klem" hoặc "kanem"): từ 1 klem -> 15 klem	
+	
 - 1 tuần có 7 ngày: Adit, Thom, Angar, But, Jip, Suk, Sanacar 
 
 
@@ -23,21 +36,48 @@ vscode://vscode.github-authentication/did-authenticate?windowid=1&code=b7e85ce2e
 - Cách đặt tên năm: kết hợp 12 Nasak và 8 Ikas Sarak. Vd: năm "Kabaw Hak", "Rimaong Jim"
 	+ 12 Nasak: Takuh, Kabaw, Rimaong, Tapay, Inâ Girai, Ula Anaih, Asaih, Pabaiy, Kra, Manuk, Asau, Pabuei
 	+ 8 Ikas Sarak (Cung/Can): Liéh, Hak, Jim-krâh, Jây, Dal, Bak, Waw, Jim-luic
-- 1 năm có:
+
+- Chu kỳ 8 năm và 32 năm.
+	+ 8 năm: 3 năm nhuận (thun "Nâh": Hak, Dal, Jim-luic) và 5 năm thường (thun "Wak": Liéh, Jim-krâh, Jây, Bak, Waw)
+	+ 32 năm: ???
+		
+- 1 năm có: 12 hoặc 13 tháng
 	+ Năm thường: 12 tháng
 	+ Năm nhuận: có 13 tháng
 		* Năm tiểu nhuận (chu kỳ 8 năm): 2 tháng 12 (Bilan Bhang)
 		* Năm đại chuẩn (chu kỳ 32 năm): 2 tháng 1 (Bilan Birau)	
+
 - 1 tháng có:
-	+ 354 ngày (5 năm thiếu - thun "Wak")
-	+ 355 ngày (3 năm thường - thun "Nâh")
-	+ 384 ngày (năm nhuận "Kran" - thun "Nâh")
-- Chu kỳ 8 năm và 32 năm.
- + 
+	+ Tháng lẻ - "bilan tapak" (tháng đủ, gồm: 1,3,5,7,9,11): 30 ngày.
+	+ Tháng chẵn - "bilan u" (tháng thiếu, gồm: 2,4,6,8,10): 29 ngày.
+	+ Tháng 12: năm nhuận 30 ngày ("bilan tapak"), năm thường 29 ngày ("bilan u").
+	+ Tháng 13: chỉ có ở năm nhuận "thun kran", 29 ngày ("bilan u")
+	
+- 1 năm có: 354 hoặc 384 ngày
+	+ 354 ngày (5 năm thiếu - thun "Wak") => (6*29) + (6*30) = 354
+	+ 384 ngày (3 năm nhuận "Kran" - thun "Nâh") => (5*29) + (7*30) + 29 = 384
+	
+- 1 tháng chia thành:
+	+ Thượng tuần trăng ("bingun"): từ 1 bingun -> 15 bingun ("Porami")
+		* Tháng thiếu 29 ngày: không có 6 bingun (từ 5 bingun lên 7 bingun)
+	+ Hạ tuần trăng ("klem" hoặc "kanem"): từ 1 klem -> 15 klem
+	
 - 1 tuần có 7 ngày: Adit, Thom, Angar, But, Jip, Suk, Sanacar 
 
 >> Quy luật/Quy ước:
+- 
 
+
+>> Các ngày đặc biệt trong năm:
+- Rija nagar: 1(bingun)/1 Sakawi Cham
+- Katé: 1(bingun)/7 Sakawi Cham
+- Cambur: 1klem/9 Sakawi Cham
+- Ricaow Ramawan:
+- Talaih Aek:
+- Ikak Waha:
+- Talaih Waha:
+- Ong trun:
+- Muk trun:
 
 
 - Islamic Months:
@@ -61,3 +101,6 @@ Dhul Hijjah – Muharram 1443
 Đại nhuận 32 năm. ?
 - Tìm Can:
 - Tìm Chi: 
+---
+Const:
+- dateOf_01.01.

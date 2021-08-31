@@ -1,8 +1,8 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Col, Row } from "react-bootstrap";
-import { AhierMonth, AwalMonth, IkasSarak, Nasak } from "../enums/enum";
+import { AhierMonthEnum, AwalMonthEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { AhierYear } from "../model/AhierDate";
+import { AwalYear } from "../model/AwalDate";
 import { CountDownBar } from "./countDownBar";
 import { Month } from "./month";
 import { MonthAhier } from "./monthAhier";
@@ -16,13 +16,14 @@ export const Calendar = () => {
     const [sakawiType] = useState<SakawiType>('sakawiAwal');
 
     // Sakawi Awal
-    const [yearAwal] = useState(IkasSarak.Hak);
-    const [monthAwal] = useState(AwalMonth.Sykban);
+    let awalYear: AwalYear = { ikasSarak: IkasSarakEnum.Hak };
+    const [yearAwal] = useState(awalYear);
+    const [monthAwal] = useState(AwalMonthEnum.Sykban);
 
     // Sakawi Ahier
-    let yearA: AhierYear = {nasak: Nasak.Kabaw, ikasSarak: IkasSarak.Hak};
-    const [yearAhier] = useState(yearA);
-    const [monthAhier] = useState(AhierMonth.BilanSa);
+    let ahierYear: AhierYear = { nasak: NasakEnum.Kabaw, ikasSarak: IkasSarakEnum.Hak };
+    const [yearAhier] = useState(ahierYear);
+    const [monthAhier] = useState(AhierMonthEnum.BilanSa);
 
     return (
         <>

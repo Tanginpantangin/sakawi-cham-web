@@ -1,7 +1,7 @@
-import React from "react";
-import { useState } from "react";
-import { Container, Row, Col, Table, ButtonToolbar, ButtonGroup, Button } from "react-bootstrap";
-import { Months } from "../enums/enum";
+import React, { useState } from "react";
+import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "react-bootstrap";
+import { MonthEnum } from "../enums/enum";
+import Helper from '../utility/helper';
 import { Day } from "./day";
 
 interface MonthProps {
@@ -25,11 +25,11 @@ export const Month = (props: MonthProps) => {
         init();
     }, [year, month]);
 
-    function addDays(date: Date, numberOfDays: number) {
+    /*function addGregoryDays(date: Date, numberOfDays: number) {
         let newDt = new Date(date);
         newDt.setDate(date.getDate() + numberOfDays);
         return newDt;
-    }
+    }*/
 
     function handleGoToToday() {
         const nowDate = new Date();
@@ -62,7 +62,7 @@ export const Month = (props: MonthProps) => {
     for (let weeks = 0; weeks < 6; weeks++) {
         let cells = []
         for (let days = 0; days < 7; days++) {
-            let cellDate = addDays(firstDateOfMonth, (count - firstDayOfMonth));
+            let cellDate = Helper.addGregoryDays(firstDateOfMonth, (count - firstDayOfMonth));
             cells.push(<Day key={`cell${weeks}-${days}`} date={cellDate}></Day>);
             count++
         }
@@ -73,25 +73,25 @@ export const Month = (props: MonthProps) => {
     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const tableStyle: React.CSSProperties = {
         height: "400px",
-        tableLayout:"fixed"
+        tableLayout: "fixed"
     }
 
     return (
         <Container>
             <Row>
-                <Col md={4} style={{textAlign:"left"}}>
+                <Col md={4} style={{ textAlign: "left" }}>
                     <ButtonToolbar aria-label="Toolbar with button groups">
                         <ButtonGroup aria-label="Basic example">
-                            <Button variant="secondary" className="fa fa-chevron-left" onClick={handleGoToPreviousMonth}/>
-                            <Button variant="secondary" className="fa fa-chevron-right" onClick={handleGoToNextMonth}/>
+                            <Button variant="secondary" className="fa fa-chevron-left" onClick={handleGoToPreviousMonth} />
+                            <Button variant="secondary" className="fa fa-chevron-right" onClick={handleGoToNextMonth} />
                         </ButtonGroup>
-                        <ButtonGroup aria-label="Third group" style={{marginLeft: ".75em"}}>
+                        <ButtonGroup aria-label="Third group" style={{ marginLeft: ".75em" }}>
                             <Button variant="secondary" onClick={handleGoToToday}>Today</Button>
                         </ButtonGroup>
                     </ButtonToolbar>
                 </Col>
-                <Col md={4} style={{textAlign:"center"}}>
-                    <h2>{Months[month]} {year}</h2>
+                <Col md={4} style={{ textAlign: "center" }}>
+                    <h2>{MonthEnum[month]} {year}</h2>
                 </Col>
                 <Col md={4}></Col>
             </Row>
@@ -101,7 +101,7 @@ export const Month = (props: MonthProps) => {
                         <thead>
                             <tr>
                                 {dayNames.map((d, index) =>
-                                    <th style={{ padding: "2px", textAlign: "center"}} key={index}>{d}</th>
+                                    <th style={{ padding: "2px", textAlign: "center" }} key={index}>{d}</th>
                                 )}
                             </tr>
                         </thead>
