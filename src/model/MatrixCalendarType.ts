@@ -1,6 +1,6 @@
-import { AhierMonthEnum, AwalMonthEnum } from "../enums/enum";
+import { AhierMonthEnum } from "../enums/enum";
 import { AhierYear } from "./AhierDate";
-import { AwalYear } from "./AwalDate";
+import { AwalMonth } from "./AwalDate";
 
 export interface MatrixCalendarType {
     ahierYear: AhierYear;
@@ -8,8 +8,8 @@ export interface MatrixCalendarType {
     dayNumbersOfAhierMonth: number;
     firstDayOfAhierMonth: number;
     dateOfGregoryCalendar: Date;
-    awalYear: AwalYear;
-    awalMonth: AwalMonthEnum;
+    //awalYear: AwalYear;
+    awalMonth: AwalMonth;
     dayNumbersOfAwalMonth: number;
     firstDayOfAwalMonth: number;
 }

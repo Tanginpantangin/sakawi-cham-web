@@ -31,7 +31,7 @@ export const DayAwal = (props: DayAwalProps) => {
             </Row>
             <Row>
                 <Col style={divStyle} md={4}>
-                    {props.dateAwal.date}.{props.dateAwal.month + 1}.{IkasSarakEnum[props.dateAwal.year.ikasSarak]}
+                    {props.dateAwal.date}.{props.dateAwal.awalMonth.month + 1}.{IkasSarakEnum[props.dateAwal.awalMonth.year.ikasSarak]}
                 </Col>
                 <Col md={4}></Col>
             </Row>

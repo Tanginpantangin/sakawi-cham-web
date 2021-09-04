@@ -10,20 +10,21 @@ export default class Helper {
     static getDayNumbersOfAwalMonth(year: AwalYear, month: AwalMonthEnum) {
         let numberOfDay = 0;
 
-        // Tháng lẻ: (30 ngày), gồm: 1,3,5,7,9,11.
-        // Tháng chẳn: (29 ngày), gồm: 2,4,6,8,10. 
         if (month === AwalMonthEnum.Muharam || month === AwalMonthEnum.Rabiulawal || month === AwalMonthEnum.Jamadilawal ||
             month === AwalMonthEnum.Rejab || month === AwalMonthEnum.Ramadan || month === AwalMonthEnum.Julkaejah) {
+            // Tháng lẻ: (30 ngày), gồm: 1,3,5,7,9,11.
             numberOfDay = 30;
         } else if (month === AwalMonthEnum.Syafar || month === AwalMonthEnum.Rabiulakhir || month === AwalMonthEnum.Jamadilakhir ||
             month === AwalMonthEnum.Sykban || month === AwalMonthEnum.Syawal) {
+            // Tháng chẳn: (29 ngày), gồm: 2,4,6,8,10. 
             numberOfDay = 29;
         } else {
-            // Riêng tháng 12: năm nhuận (thun "Nâh": Hak, Dal, Jim luic) 30 ngày, 
-            // năm thường (thun "Wak") 29 ngày.
+            // Riêng tháng 12: 
             if (year.ikasSarak === IkasSarakEnum.Hak || year.ikasSarak === IkasSarakEnum.Dal || year.ikasSarak === IkasSarakEnum.JimLuic) {
+                // năm nhuận (thun "Nâh": Hak, Dal, Jim luic): 30 ngày
                 numberOfDay = 30;
             } else {
+                // năm thường (thun "Wak"): 29 ngày
                 numberOfDay = 29;
             }
         }
@@ -120,8 +121,7 @@ export default class Helper {
 
         let resultDate: AwalDate = {
             date: awalDate,
-            month: awalMonth,
-            year: { ikasSarak: awalYear, yearNumber: awalYearNumber }
+            awalMonth: {month: awalMonth, year: { ikasSarak: awalYear, yearNumber: awalYearNumber }}
         }
 
         return resultDate;
@@ -137,23 +137,29 @@ export default class Helper {
     static getDayNumbersOfAhierMonth(year: AhierYear, month: AhierMonthEnum) {
         let numberOfDay = 0;
 
-        /*// Tháng lẻ: (30 ngày), gồm: 1,3,5,7,9,11.
-        // Tháng chẳn: (29 ngày), gồm: 2,4,6,8,10. 
-        if (month === AwalMonth.Muharam || month === AwalMonth.Rabiulawal || month === AwalMonth.Jamadilawal || 
-            month === AwalMonth.Rejab || month === AwalMonth.Ramadan || month === AwalMonth.Julkaejah) {
+        if (month === AhierMonthEnum.BilanSa || month === AhierMonthEnum.BilanKlau || month === AhierMonthEnum.BilanLima || 
+            month === AhierMonthEnum.BilanTajuh || month === AhierMonthEnum.BilanSalipan || month === AhierMonthEnum.BilanPuis) {
+            // Tháng lẻ - "bilan tapak": (30 ngày), gồm: 1,3,5,7,9,11.
             numberOfDay = 30;
-        } else if (month === AwalMonth.Syafar || month === AwalMonth.Rabiulakhir || month === AwalMonth.Jamadilakhir || 
-            month === AwalMonth.Sykban || month === AwalMonth.Syawal ) {
+        } else if (month === AhierMonthEnum.BilanDua || month === AhierMonthEnum.BilanPak || month === AhierMonthEnum.BilanNem || 
+            month === AhierMonthEnum.BilanDalipan || month === AhierMonthEnum.BilanSapluh ) {
+            // Tháng chẳn - "bilan u" : (29 ngày), gồm: 2,4,6,8,10. 
             numberOfDay = 29;
-        } else {
-            // Riêng tháng 12: năm nhuận (thun "Nâh": Hak, Dal, Jim luic) 30 ngày, 
-            // năm thường (thun "Wak") 29 ngày.
-            if (year === IkasSarak.Hak || year === IkasSarak.Dal ||year === IkasSarak.JimLuic) {
-                numberOfDay =30;
+        } else if (month === AhierMonthEnum.BilanMak)  {
+            // Tháng 12:  
+            if (year.ikasSarak === IkasSarakEnum.Hak || year.ikasSarak === IkasSarakEnum.Dal ||year.ikasSarak === IkasSarakEnum.JimLuic) {
+                // năm nhuận (thun "Nâh": Hak, Dal, Jim luic): 30 ngày
+                numberOfDay = 30;
             } else {
+                // năm thường (thun "Wak"): 29 ngày
                 numberOfDay = 29;
             }
-        }*/
+        } else if (month === AhierMonthEnum.BilanBhang) {
+            if (year.ikasSarak === IkasSarakEnum.Hak || year.ikasSarak === IkasSarakEnum.Dal ||year.ikasSarak === IkasSarakEnum.JimLuic) {
+                // năm nhuận (thun "Nâh": Hak, Dal, Jim luic): 29 ngày
+                numberOfDay = 29;
+            }
+        }
 
         return numberOfDay;
     }
@@ -216,6 +222,7 @@ export default class Helper {
         return result;
     }
     //#endregion
+
     static addGregoryDays(date: Date, numberOfDays: number) {
         let newDt = new Date(date);
         newDt.setDate(date.getDate() + numberOfDays);
@@ -239,8 +246,8 @@ export default class Helper {
 
             for (let m = 0; m < numberOfAhierMonth; m++) {
                 const awalYear: AwalYear = {
-                    ikasSarak: startAwalDate.year.ikasSarak,
-                    yearNumber: startAwalDate.year.yearNumber
+                    ikasSarak: startAwalDate.awalMonth.year.ikasSarak,
+                    yearNumber: startAwalDate.awalMonth.year.yearNumber
                 }
 
                 const dayNumbersOfAhierMonth = Helper.getDayNumbersOfAhierMonth(newYear, m);
@@ -252,15 +259,13 @@ export default class Helper {
                     dayNumbersOfAhierMonth: dayNumbersOfAhierMonth,
                     firstDayOfAhierMonth: 5,
                     dateOfGregoryCalendar: newGregoryDate,
-                    awalYear: awalYear,
-                    awalMonth: startAwalDate.month,
+                    awalMonth: startAwalDate.awalMonth,
                     dayNumbersOfAwalMonth: Helper.getDayNumbersOfAwalMonth(awalYear, m),
                     firstDayOfAwalMonth: 7
                 }
 
                 result.push(ahierMonthItem);
             }
-
         }
 
         return result;

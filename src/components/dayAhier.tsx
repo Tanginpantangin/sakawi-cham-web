@@ -32,7 +32,7 @@ export const DayAhier = (props: DayAhierProps) => {
             <Row>
                 <Col md={4}></Col>
                 <Col style={divStyle} md={4}>
-                    {props.dateAhier.date}.{props.dateAhier.month + 1}.{NasakEnum[props.dateAhier.year.nasak]}-{IkasSarakEnum[props.dateAhier.year.ikasSarak]}
+                    {props.dateAhier.date}.{props.dateAhier.ahierMonth.month + 1}.{NasakEnum[props.dateAhier.ahierMonth.year.nasak]}-{IkasSarakEnum[props.dateAhier.ahierMonth.year.ikasSarak]}
                 </Col>
             </Row>
         </td>

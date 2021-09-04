@@ -1,99 +1,32 @@
 import React, { useState } from "react";
 import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "react-bootstrap";
 import { AwalMonthEnum, IkasSarakEnum } from "../enums/enum";
-import { addAwalMonths, AwalDate, AwalMonth, AwalYear } from "../model/AwalDate";
+import { addAwalDays, addAwalMonths, AwalDate, AwalMonth } from "../model/AwalDate";
 import Helper from '../utility/helper';
 import { DayAwal } from "./dayAwal";
 
 interface MonthAwalProps {
-    year: AwalYear;
-    month: AwalMonthEnum;
+    awalMonth: AwalMonth;
 }
 
 export const MonthAwal = (props: MonthAwalProps) => {
-    const [year, setYear] = useState(props.year);
-    const [month, setMonth] = useState(props.month);
-    let firstDate: AwalDate = { date: 1, month: props.month, year: props.year };
+    const [awalMonth, setAwalMonth] = useState(props.awalMonth);
+    let firstDate: AwalDate = { date: 1, awalMonth: props.awalMonth};
     const [firstDateOfMonth, setFirstDateOfMonth] = useState<AwalDate>(firstDate);
     const [firstDayOfMonth, setFirstDayOfMonth] = useState(0);
 
     React.useEffect(() => {
         function init() {
             // Read Sakawi Takai Ciim
-            let startDay = Number.parseInt(Helper.getStartDayByAwalMonth(year, month));
-            setFirstDayOfMonth(startDay);
+            let startDay = Number.parseInt(Helper.getStartDayByAwalMonth(awalMonth.year, awalMonth.month));
+            //setFirstDayOfMonth(startDay);
 
-            let firstDate: AwalDate = { date: 1, month: month, year: year };
-            setFirstDateOfMonth(firstDate);
-
-
+            let firstDate: AwalDate = { date: 1, awalMonth: awalMonth };
+            //setFirstDateOfMonth(firstDate);
         }
 
         init();
-    }, [year, month]);
-
-
-
-    function addDays(currentDate: AwalDate, addedDays: number) {
-        let result: AwalDate = {
-            date: 1,
-            month: AwalMonthEnum.Jamadilakhir,
-            year: { ikasSarak: IkasSarakEnum.Liéh }
-        };
-
-        let numberOfDays = Helper.getDayNumbersOfAwalMonth(currentDate.year, currentDate.month);
-        let newDays = currentDate.date + addedDays;
-        let newMonth = currentDate.month;
-        let newYear = currentDate.year;
-
-        if (newDays > numberOfDays) {
-            if (currentDate.month < 11) {
-                newMonth = currentDate.month + 1;
-            } else {
-                newMonth = 0;
-
-                if (currentDate.year.ikasSarak < 7) {
-                    newYear.ikasSarak = currentDate.year.ikasSarak + 1;
-                } else {
-                    newYear.ikasSarak = 0;
-                }
-            }
-
-            result = {
-                date: newDays - numberOfDays,
-                month: newMonth,
-                year: newYear
-            };
-
-        } else if (newDays <= 0) {
-            if (currentDate.month > 0) {
-                newMonth = currentDate.month - 1;
-            } else {
-                newMonth = 11;
-
-                if (currentDate.year.ikasSarak > 0) {
-                    newYear.ikasSarak = currentDate.year.ikasSarak - 1;
-                } else {
-                    newYear.ikasSarak = 7;
-                }
-            }
-
-            result = {
-                date: Helper.getDayNumbersOfAwalMonth(currentDate.year, currentDate.month - 1) + newDays,
-                month: newMonth,
-                year: newYear
-            };
-        }
-        else {
-            result = {
-                date: newDays,
-                month: currentDate.month,
-                year: currentDate.year
-            };
-        }
-
-        return result;
-    }
+    }, [awalMonth]);
 
     function handleGoToToday() {
         /*let result = Helper.getAwalDateByGregoryDate(new Date(2016, 9, 2));
@@ -115,36 +48,15 @@ export const MonthAwal = (props: MonthAwalProps) => {
         let newMonth = addAwalMonths(awalMonth, -13);
         console.log('addAwalMonths : ' + JSON.stringify(newMonth))
 
-        setMonth(AwalMonthEnum.Syafar);
-        setYear({ ikasSarak: IkasSarakEnum.Hak });
+        setAwalMonth({month: 0, year: {ikasSarak: IkasSarakEnum.Liéh}});
     }
 
     function handleGoToPreviousMonth() {
-        if (month > 0) {
-            setMonth(month - 1);
-        } else {
-            setMonth(11);
-
-            if (year.ikasSarak > 0) {
-                setYear({ ikasSarak: year.ikasSarak - 1 });
-            } else {
-                setYear({ ikasSarak: 7 });
-            }
-        }
+        setAwalMonth(addAwalMonths(awalMonth, -1));
     }
 
     function handleGoToNextMonth() {
-        if (month < 11) {
-            setMonth(month + 1);
-        } else {
-            setMonth(0);
-
-            if (year.ikasSarak < 7) {
-                setYear({ ikasSarak: year.ikasSarak + 1 });
-            } else {
-                setYear({ ikasSarak: 0 });
-            }
-        }
+        setAwalMonth(addAwalMonths(awalMonth, 1));
     }
 
     // draw Calendar Table
@@ -154,11 +66,10 @@ export const MonthAwal = (props: MonthAwalProps) => {
     for (let weeks = 0; weeks < 6; weeks++) {
         let cells = []
         for (let days = 0; days < 7; days++) {
-            let cellDate = addDays(firstDateOfMonth, (count - firstDayOfMonth + 1));
+            let cellDate = addAwalDays(firstDateOfMonth, (count - firstDayOfMonth + 1));
             let dateAwal: AwalDate = {
                 date: cellDate.date,
-                month: cellDate.month,
-                year: cellDate.year
+                awalMonth: cellDate.awalMonth,
             }
 
             cells.push(<DayAwal key={`cell${weeks}-${days}`} dateAwal={dateAwal}></DayAwal>);
@@ -189,7 +100,7 @@ export const MonthAwal = (props: MonthAwalProps) => {
                     </ButtonToolbar>
                 </Col>
                 <Col md={5} style={{ textAlign: "center" }}>
-                    <h2>{AwalMonthEnum[month]} {`(${(month + 1)})`} - {IkasSarakEnum[year.ikasSarak]}</h2>
+                    <h2>{AwalMonthEnum[awalMonth.month]} {`(${(awalMonth.month + 1)})`} - {IkasSarakEnum[awalMonth.year.ikasSarak]}</h2>
                 </Col>
                 <Col md={3}></Col>
             </Row>

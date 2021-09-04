@@ -3,8 +3,7 @@ import Helper from "../utility/helper";
 
 export interface AwalDate {
     date: number;
-    month: AwalMonthEnum;
-    year: AwalYear;
+    awalMonth: AwalMonth;
 }
 
 export interface AwalMonth {
@@ -17,6 +16,65 @@ export interface AwalYear {
     yearNumber?: number;
 }
 
+export function addAwalDays(currentDate: AwalDate, addedDays: number) {
+    let numberOfDays = Helper.getDayNumbersOfAwalMonth(currentDate.awalMonth.year, currentDate.awalMonth.month);
+    let newDays = currentDate.date + addedDays;
+    let newMonth = currentDate.awalMonth.month;
+    let newYear = currentDate.awalMonth.year;
+
+    let result: AwalDate = {
+        date: 1,
+        awalMonth: {
+            month: AwalMonthEnum.Jamadilakhir,
+            year: { ikasSarak: IkasSarakEnum.Liéh }
+        }
+    };
+
+    if (newDays > numberOfDays) {
+        if (currentDate.awalMonth.month < 11) {
+            newMonth = currentDate.awalMonth.month + 1;
+        } else {
+            newMonth = 0;
+
+            if (currentDate.awalMonth.year.ikasSarak < 7) {
+                newYear.ikasSarak = currentDate.awalMonth.year.ikasSarak + 1;
+            } else {
+                newYear.ikasSarak = 0;
+            }
+        }
+
+        result = {
+            date: newDays - numberOfDays,
+            awalMonth: {month:newMonth, year: newYear}
+        };
+
+    } else if (newDays <= 0) {
+        if (currentDate.awalMonth.month > 0) {
+            newMonth = currentDate.awalMonth.month - 1;
+        } else {
+            newMonth = 11;
+
+            if (currentDate.awalMonth.year.ikasSarak > 0) {
+                newYear.ikasSarak = currentDate.awalMonth.year.ikasSarak - 1;
+            } else {
+                newYear.ikasSarak = 7;
+            }
+        }
+
+        result = {
+            date: Helper.getDayNumbersOfAwalMonth(currentDate.awalMonth.year, currentDate.awalMonth.month - 1) + newDays,
+            awalMonth: { month: newMonth,year: newYear}
+        };
+    }
+    else {
+        result = {
+            date: newDays,
+            awalMonth: currentDate.awalMonth
+        };
+    }
+
+    return result;
+}
 
 export function addAwalMonths(currentMonth: AwalMonth, addedMonths: number) {
     let newMonth = currentMonth.month + addedMonths;
