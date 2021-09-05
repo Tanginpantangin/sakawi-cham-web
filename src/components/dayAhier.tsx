@@ -4,7 +4,7 @@ import { AhierDate } from "../model/AhierDate";
 import { AwalDate } from "../model/AwalDate";
 
 interface DayAhierProps {
-    date?: Date;
+    dateGregory: Date;
     dateAwal: AwalDate;
     dateAhier: AhierDate;
 }
@@ -23,7 +23,9 @@ export const DayAhier = (props: DayAhierProps) => {
         <td>
             <Row>
                 <Col md={4}></Col>
-                <Col md={4}></Col>
+                <Col md={4}>
+                    {props.dateGregory.getDate()}/{props.dateGregory.getMonth() + 1}/{props.dateGregory.getFullYear()}
+                </Col>
             </Row>
             <Row>
                 <Col md={4}></Col>

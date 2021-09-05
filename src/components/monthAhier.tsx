@@ -21,6 +21,9 @@ export const MonthAhier = (props: MonthAhierProps) => {
     const [firstDateOfAwalMonth, setFirstDateOfAwalMonth] = useState<AwalDate>(firstAwalDate);
     const [firstDayOfAwalMonth, setFirstDayOfAwalMonth] = useState(0);
 
+    const [firstDateOfGregoryMonth, setFirstDateOfGregoryMonth] = useState<Date>(new Date(2019,3,4));
+    const [firstDayOfGregoryMonth, setFirstDayOfGregoryMonth] = useState(0);
+
     React.useEffect(() => {
         function init() {
             // Build matrix Calendar
@@ -39,6 +42,10 @@ export const MonthAhier = (props: MonthAhierProps) => {
             let firstAwalDate: AwalDate = { date: 1, awalMonth: currentAhierMonth.awalMonth };
             setFirstDateOfAwalMonth(firstAwalDate);
             setFirstDayOfAwalMonth(currentAhierMonth?.firstDayOfAwalMonth);
+
+            // Gregory Date
+            setFirstDateOfGregoryMonth(currentAhierMonth.dateOfGregoryCalendar);
+            setFirstDayOfGregoryMonth(currentAhierMonth.dateOfGregoryCalendar.getDay());
         }
 
         init();
@@ -81,7 +88,9 @@ export const MonthAhier = (props: MonthAhierProps) => {
                 awalMonth: cellAwalDate.awalMonth
             }
 
-            cells.push(<DayAhier key={`cell${weeks}-${days}`} dateAhier={dateAhier} dateAwal={dateAwal}></DayAhier>);
+            let GregoryDate = Helper.addGregoryDays(firstDateOfGregoryMonth, (count - firstDayOfGregoryMonth));
+
+            cells.push(<DayAhier key={`cell${weeks}-${days}`} dateAhier={dateAhier} dateAwal={dateAwal} dateGregory={GregoryDate}></DayAhier>);
             count++;
         }
 
