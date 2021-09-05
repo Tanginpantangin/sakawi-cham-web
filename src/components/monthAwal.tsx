@@ -11,7 +11,7 @@ interface MonthAwalProps {
 
 export const MonthAwal = (props: MonthAwalProps) => {
     const [awalMonth, setAwalMonth] = useState(props.awalMonth);
-    let firstDate: AwalDate = { date: 1, awalMonth: props.awalMonth};
+    let firstDate: AwalDate = { date: 1, awalMonth: props.awalMonth };
     const [firstDateOfMonth, setFirstDateOfMonth] = useState<AwalDate>(firstDate);
     const [firstDayOfMonth, setFirstDayOfMonth] = useState(0);
 
@@ -41,14 +41,14 @@ export const MonthAwal = (props: MonthAwalProps) => {
         let newYear = addAhierYears(startAhierYear, -1);
         console.log('new year: ' + JSON.stringify(newYear))*/
 
-        /*let matrix = Helper.buildMatrixCalendar(2020);
-        console.log('matrix: ' + JSON.stringify(matrix))*/
+        let matrix = Helper.buildMatrixCalendar(2020);
+        console.log('matrix: ' + JSON.stringify(matrix))
 
-        const awalMonth: AwalMonth = { month: 0, year: { ikasSarak: IkasSarakEnum.Liéh, yearNumber: 2020 } };
+        /*const awalMonth: AwalMonth = { month: 0, year: { ikasSarak: IkasSarakEnum.Liéh, yearNumber: 2020 } };
         let newMonth = addAwalMonths(awalMonth, -13);
-        console.log('addAwalMonths : ' + JSON.stringify(newMonth))
+        console.log('addAwalMonths : ' + JSON.stringify(newMonth))*/
 
-        setAwalMonth({month: 0, year: {ikasSarak: IkasSarakEnum.Liéh}});
+        setAwalMonth({ month: 0, year: { ikasSarak: IkasSarakEnum.Liéh } });
     }
 
     function handleGoToPreviousMonth() {

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "react-bootstrap";
 import { AhierMonthEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { addAhierDays, addAhierMonths, AhierDate, AhierMonth } from "../model/AhierDate";
+import { addAwalDays, AwalDate } from "../model/AwalDate";
 import Helper from "../utility/helper";
 import { DayAhier } from "./dayAhier";
 
@@ -10,26 +11,42 @@ interface MonthAhierProps {
 }
 
 export const MonthAhier = (props: MonthAhierProps) => {
+    //const [matrixCalender, setMatrixCalender] = useState<MatrixCalendarType>();
     const [ahierMonth, setAhierMonth] = useState(props.ahierMonth);
-    let firstDate: AhierDate = { date: 1, ahierMonth: props.ahierMonth };
-    const [firstDateOfMonth, setFirstDateOfMonth] = useState<AhierDate>(firstDate);
-    const [firstDayOfMonth, setFirstDayOfMonth] = useState(0);
+    let firstAhierDate: AhierDate = { date: 1, ahierMonth: props.ahierMonth };
+    const [firstDateOfAhierMonth, setFirstDateOfAhierMonth] = useState<AhierDate>(firstAhierDate);
+    const [firstDayOfAhierMonth, setFirstDayOfAhierMonth] = useState(0);
+
+    let firstAwalDate: AwalDate = { date: 1, awalMonth: { month: 0, year: { ikasSarak: 0, yearNumber: 1400 } } };
+    const [firstDateOfAwalMonth, setFirstDateOfAwalMonth] = useState<AwalDate>(firstAwalDate);
+    const [firstDayOfAwalMonth, setFirstDayOfAwalMonth] = useState(0);
 
     React.useEffect(() => {
         function init() {
-            // Read Sakawi Takai Ciim
-            let startDay = Number.parseInt(Helper.getStartDayByAhierMonth(ahierMonth.year, ahierMonth.month));
-            //setFirstDayOfMonth(startDay);
+            // Build matrix Calendar
+            let matrix = Helper.buildMatrixCalendar(2020);
+            console.log('matrix: ' + JSON.stringify(matrix));
+            let currentAhierMonth = matrix.filter(m => m.ahierMonth.month === ahierMonth.month
+                && m.ahierMonth.year.yearNumber === ahierMonth.year.yearNumber)[0];
+            //setMatrixCalender(currentAhierMonth);
 
-            let firstDate: AhierDate = { date: 1, ahierMonth: ahierMonth };
-            //setFirstDateOfMonth(firstDate);
+            // Ahier Date
+            let firstAhierDate: AhierDate = { date: 1, ahierMonth: currentAhierMonth.ahierMonth };
+            setFirstDateOfAhierMonth(firstAhierDate);
+            setFirstDayOfAhierMonth(currentAhierMonth?.firstDayOfAhierMonth);
+
+            // Awal Date
+            let firstAwalDate: AwalDate = { date: 1, awalMonth: currentAhierMonth.awalMonth };
+            setFirstDateOfAwalMonth(firstAwalDate);
+            setFirstDayOfAwalMonth(currentAhierMonth?.firstDayOfAwalMonth);
         }
 
         init();
     }, [ahierMonth]);
 
     function handleGoToToday() {
-        setAhierMonth({month: AhierMonthEnum.BilanSa, year: { nasak: NasakEnum.Takuh, ikasSarak: IkasSarakEnum.Liéh }});
+        let ahierMonth: AhierMonth = { month: AhierMonthEnum.BilanSa, year: { nasak: NasakEnum.Pabuei, ikasSarak: IkasSarakEnum.Jim, yearNumber: 2019 } };
+        setAhierMonth(ahierMonth);
     }
 
     function handleGoToPreviousMonth() {
@@ -47,13 +64,25 @@ export const MonthAhier = (props: MonthAhierProps) => {
     for (let weeks = 0; weeks < 6; weeks++) {
         let cells = []
         for (let days = 0; days < 7; days++) {
-            let cellDate = addAhierDays(firstDateOfMonth, (count - firstDayOfMonth + 1));
+            let cellAhierDate = addAhierDays(firstDateOfAhierMonth, (count - firstDayOfAhierMonth));
             let dateAhier: AhierDate = {
-                date: cellDate.date,
-                ahierMonth: cellDate.ahierMonth
+                date: cellAhierDate.date,
+                ahierMonth: cellAhierDate.ahierMonth
             }
-            cells.push(<DayAhier key={`cell${weeks}-${days}`} dateAhier={dateAhier}></DayAhier>);
-            count++
+
+            let week = 0;
+            if (firstDayOfAwalMonth < firstDayOfAhierMonth) {
+                week = 7;
+            }
+
+            let cellAwalDate = addAwalDays(firstDateOfAwalMonth, (count - firstDayOfAwalMonth - week));
+            let dateAwal: AwalDate = {
+                date: cellAwalDate.date,
+                awalMonth: cellAwalDate.awalMonth
+            }
+
+            cells.push(<DayAhier key={`cell${weeks}-${days}`} dateAhier={dateAhier} dateAwal={dateAwal}></DayAhier>);
+            count++;
         }
 
         rows.push(<tr key={weeks}>{cells}</tr>)
@@ -80,7 +109,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
                     </ButtonToolbar>
                 </Col>
                 <Col md={5} style={{ textAlign: "center" }}>
-                    <h2>{AhierMonthEnum[ahierMonth.month]} {`(${(ahierMonth.month + 1)})`} - {NasakEnum[ahierMonth.year.nasak]} {IkasSarakEnum[ahierMonth.year.ikasSarak]}</h2>
+                    <h2>{AhierMonthEnum[ahierMonth.month]} {`(${(ahierMonth.month + 1)})`} - {NasakEnum[ahierMonth.year.nasak]} {IkasSarakEnum[ahierMonth.year.ikasSarak]} - {ahierMonth.year.yearNumber}</h2>
                 </Col>
                 <Col md={3}></Col>
             </Row>

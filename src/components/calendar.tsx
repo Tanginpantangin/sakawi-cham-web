@@ -13,14 +13,14 @@ export declare type SakawiType = 'sakawiAwal' | 'sakawiAhier' | 'solarCalendar';
 export const Calendar = () => {
     const [year] = useState(new Date().getFullYear());
     const [month] = useState(new Date().getMonth());
-    const [sakawiType] = useState<SakawiType>('sakawiAwal');
+    const [sakawiType] = useState<SakawiType>('sakawiAhier');
 
     // Sakawi Awal
-    let awalMonth: AwalMonth = { month: 0, year: {ikasSarak: IkasSarakEnum.Hak}};
+    let awalMonth: AwalMonth = { month: 0, year: { ikasSarak: IkasSarakEnum.Hak } };
     const [monthAwal] = useState(awalMonth);
 
     // Sakawi Ahier
-    let ahierMonth: AhierMonth = {month: AhierMonthEnum.BilanSa, year: { nasak: NasakEnum.Kabaw, ikasSarak: IkasSarakEnum.Hak }};
+    let ahierMonth: AhierMonth = { month: AhierMonthEnum.BilanSa, year: { nasak: NasakEnum.Pabuei, ikasSarak: IkasSarakEnum.JimLuic, yearNumber: 2019 } };
     const [monthAhier] = useState(ahierMonth);
 
     return (

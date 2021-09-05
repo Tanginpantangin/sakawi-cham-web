@@ -1,7 +1,7 @@
 import dataConfig from '../data/SakawiTakaiCiim.json';
 import { AhierMonthEnum, AwalMonthEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
-import { addAhierYears, AhierYear } from "../model/AhierDate";
-import { AwalDate, AwalYear } from '../model/AwalDate';
+import { addAhierYears, AhierMonth, AhierYear } from "../model/AhierDate";
+import { addAwalMonths, AwalDate, AwalYear } from '../model/AwalDate';
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import { awalMonthArray, awalYearArray, firstDateOfSakawiAhier_Pabuei_JimLuic_2019, firstDateOfSakawiAwal_Lieh_1439, totalDaysOf8AwalYearCycle, yearNumberOfSakawiAwal_Lieh_1439 } from './constant';
 
@@ -121,7 +121,7 @@ export default class Helper {
 
         let resultDate: AwalDate = {
             date: awalDate,
-            awalMonth: {month: awalMonth, year: { ikasSarak: awalYear, yearNumber: awalYearNumber }}
+            awalMonth: { month: awalMonth, year: { ikasSarak: awalYear, yearNumber: awalYearNumber } }
         }
 
         return resultDate;
@@ -137,17 +137,17 @@ export default class Helper {
     static getDayNumbersOfAhierMonth(year: AhierYear, month: AhierMonthEnum) {
         let numberOfDay = 0;
 
-        if (month === AhierMonthEnum.BilanSa || month === AhierMonthEnum.BilanKlau || month === AhierMonthEnum.BilanLima || 
+        if (month === AhierMonthEnum.BilanSa || month === AhierMonthEnum.BilanKlau || month === AhierMonthEnum.BilanLima ||
             month === AhierMonthEnum.BilanTajuh || month === AhierMonthEnum.BilanSalipan || month === AhierMonthEnum.BilanPuis) {
             // Tháng lẻ - "bilan tapak": (30 ngày), gồm: 1,3,5,7,9,11.
             numberOfDay = 30;
-        } else if (month === AhierMonthEnum.BilanDua || month === AhierMonthEnum.BilanPak || month === AhierMonthEnum.BilanNem || 
-            month === AhierMonthEnum.BilanDalipan || month === AhierMonthEnum.BilanSapluh ) {
+        } else if (month === AhierMonthEnum.BilanDua || month === AhierMonthEnum.BilanPak || month === AhierMonthEnum.BilanNem ||
+            month === AhierMonthEnum.BilanDalipan || month === AhierMonthEnum.BilanSapluh) {
             // Tháng chẳn - "bilan u" : (29 ngày), gồm: 2,4,6,8,10. 
             numberOfDay = 29;
-        } else if (month === AhierMonthEnum.BilanMak)  {
+        } else if (month === AhierMonthEnum.BilanMak) {
             // Tháng 12:  
-            if (year.ikasSarak === IkasSarakEnum.Hak || year.ikasSarak === IkasSarakEnum.Dal ||year.ikasSarak === IkasSarakEnum.JimLuic) {
+            if (year.ikasSarak === IkasSarakEnum.Hak || year.ikasSarak === IkasSarakEnum.Dal || year.ikasSarak === IkasSarakEnum.JimLuic) {
                 // năm nhuận (thun "Nâh": Hak, Dal, Jim luic): 30 ngày
                 numberOfDay = 30;
             } else {
@@ -155,7 +155,7 @@ export default class Helper {
                 numberOfDay = 29;
             }
         } else if (month === AhierMonthEnum.BilanBhang) {
-            if (year.ikasSarak === IkasSarakEnum.Hak || year.ikasSarak === IkasSarakEnum.Dal ||year.ikasSarak === IkasSarakEnum.JimLuic) {
+            if (year.ikasSarak === IkasSarakEnum.Hak || year.ikasSarak === IkasSarakEnum.Dal || year.ikasSarak === IkasSarakEnum.JimLuic) {
                 // năm nhuận (thun "Nâh": Hak, Dal, Jim luic): 29 ngày
                 numberOfDay = 29;
             }
@@ -234,37 +234,42 @@ export default class Helper {
 
         const startAhierYear: AhierYear = {
             nasak: NasakEnum.Pabuei,
-            ikasSarak: IkasSarakEnum.Jim,
+            ikasSarak: IkasSarakEnum.JimLuic,
             yearNumber: 2019
         }
-        const startAwalDate = Helper.getAwalDateByGregoryDate(firstDateOfSakawiAhier_Pabuei_JimLuic_2019)
+
         const numberOfAhierYear = toYearAhier - (startAhierYear.yearNumber ?? 0);
+        let newGregoryDate = firstDateOfSakawiAhier_Pabuei_JimLuic_2019;
 
         for (let y = 0; y < numberOfAhierYear; y++) {
-            const newYear = addAhierYears(startAhierYear, y);
-            const numberOfAhierMonth = Helper.getMonthNumbersOfAhierYear(newYear);
+            const ahierYear = addAhierYears(startAhierYear, y);
+            const numberOfAhierMonth = Helper.getMonthNumbersOfAhierYear(ahierYear);
+            let addedGregoryDays = 0;
 
             for (let m = 0; m < numberOfAhierMonth; m++) {
-                const awalYear: AwalYear = {
-                    ikasSarak: startAwalDate.awalMonth.year.ikasSarak,
-                    yearNumber: startAwalDate.awalMonth.year.yearNumber
-                }
+                const ahierMonth: AhierMonth = { month: m, year: ahierYear };
+                const dayNumbersOfAhierMonth = Helper.getDayNumbersOfAhierMonth(ahierYear, m);
+                const firstDayOfAhierMonth = newGregoryDate.getDay();
 
-                const dayNumbersOfAhierMonth = Helper.getDayNumbersOfAhierMonth(newYear, m);
-                const newGregoryDate = Helper.addGregoryDays(firstDateOfSakawiAhier_Pabuei_JimLuic_2019, dayNumbersOfAhierMonth);
+                const awalDate = Helper.getAwalDateByGregoryDate(newGregoryDate);
+                const awalMonth = addAwalMonths(awalDate.awalMonth, 1);
+                const dayNumbersOfAwalMonth = Helper.getDayNumbersOfAwalMonth(awalMonth.year, awalMonth.month);
+                const firstDayOfAwalMonth = Number.parseInt(Helper.getStartDayByAwalMonth(awalMonth.year, awalMonth.month)) - 1; // Sunday is 0 
 
                 let ahierMonthItem: MatrixCalendarType = {
-                    ahierYear: newYear,
-                    ahierMonth: m,
+                    ahierMonth: ahierMonth,
                     dayNumbersOfAhierMonth: dayNumbersOfAhierMonth,
-                    firstDayOfAhierMonth: 5,
+                    firstDayOfAhierMonth: firstDayOfAhierMonth,
                     dateOfGregoryCalendar: newGregoryDate,
-                    awalMonth: startAwalDate.awalMonth,
-                    dayNumbersOfAwalMonth: Helper.getDayNumbersOfAwalMonth(awalYear, m),
-                    firstDayOfAwalMonth: 7
+                    awalMonth: awalMonth,
+                    dayNumbersOfAwalMonth: dayNumbersOfAwalMonth,
+                    firstDayOfAwalMonth: firstDayOfAwalMonth
                 }
 
                 result.push(ahierMonthItem);
+
+                addedGregoryDays += dayNumbersOfAhierMonth;
+                newGregoryDate = Helper.addGregoryDays(firstDateOfSakawiAhier_Pabuei_JimLuic_2019, addedGregoryDays);
             }
         }
 

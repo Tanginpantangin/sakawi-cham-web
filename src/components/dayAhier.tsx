@@ -5,7 +5,7 @@ import { AwalDate } from "../model/AwalDate";
 
 interface DayAhierProps {
     date?: Date;
-    dateAwal?: AwalDate;
+    dateAwal: AwalDate;
     dateAhier: AhierDate;
 }
 
@@ -30,7 +30,9 @@ export const DayAhier = (props: DayAhierProps) => {
                 <Col md={4}></Col>
             </Row>
             <Row>
-                <Col md={4}></Col>
+                <Col md={4}>
+                    {props.dateAwal.date}.{props.dateAwal.awalMonth.month + 1}-{IkasSarakEnum[props.dateAwal.awalMonth.year.ikasSarak]}
+                </Col>
                 <Col style={divStyle} md={4}>
                     {props.dateAhier.date}.{props.dateAhier.ahierMonth.month + 1}.{NasakEnum[props.dateAhier.ahierMonth.year.nasak]}-{IkasSarakEnum[props.dateAhier.ahierMonth.year.ikasSarak]}
                 </Col>
