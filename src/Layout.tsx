@@ -52,10 +52,9 @@ export const Layout = (props: LayoutProps) => {
                         </ListGroup>
                     </Card>
                 </Col>
-                <Col sm={9}>
+                <Col sm={10}>
                     {props.children}
                 </Col>
-                <Col sm={1}></Col>
             </Row>
             {/* Fotter */}
             <Row>

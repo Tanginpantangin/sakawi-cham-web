@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "react-bootstrap";
-import { AhierMonthEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
+import { AhierMonthEnum, IkasSarakEnum, NasakEnum, displayMonthName, displayNasakName, displayIkasSarakName } from "../enums/enum";
 import { addAhierDays, addAhierMonths, AhierDate, AhierMonth } from "../model/AhierDate";
 import { addAwalDays, AwalDate } from "../model/AwalDate";
 import Helper from "../utility/helper";
@@ -117,10 +117,15 @@ export const MonthAhier = (props: MonthAhierProps) => {
                         </ButtonGroup>
                     </ButtonToolbar>
                 </Col>
-                <Col md={5} style={{ textAlign: "center" }}>
-                    <h2>{AhierMonthEnum[ahierMonth.month]} {`(${(ahierMonth.month + 1)})`} - {NasakEnum[ahierMonth.year.nasak]} {IkasSarakEnum[ahierMonth.year.ikasSarak]} - {ahierMonth.year.yearNumber}</h2>
+                <Col md={6} style={{ textAlign: "center" }}>
+                    <div>
+                        <label className='bilan-title'>{displayMonthName(ahierMonth.month)}</label>
+                        {' - '}<label className='bilan-title'>{displayNasakName(ahierMonth.year.nasak)}</label>
+                        {'   '}<label className='ikasSarak-title'>{displayIkasSarakName(ahierMonth.year.ikasSarak)}</label>
+                    </div>
+                    <h3>{AhierMonthEnum[ahierMonth.month]} {`(${(ahierMonth.month + 1)})`} - {NasakEnum[ahierMonth.year.nasak]} {IkasSarakEnum[ahierMonth.year.ikasSarak]} - {ahierMonth.year.yearNumber}</h3>
                 </Col>
-                <Col md={3}></Col>
+                <Col md={2}></Col>
             </Row>
             <Row>
                 <Col md={12}>
