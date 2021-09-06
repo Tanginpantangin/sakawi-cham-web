@@ -1,20 +1,21 @@
 {
   "files": {
-    "main.css": "/SakawiCham/static/css/main.2aac03cb.chunk.css",
-    "main.js": "/SakawiCham/static/js/main.e26ab699.chunk.js",
-    "main.js.map": "/SakawiCham/static/js/main.e26ab699.chunk.js.map",
+    "main.css": "/SakawiCham/static/css/main.1d505268.chunk.css",
+    "main.js": "/SakawiCham/static/js/main.4cc291b9.chunk.js",
+    "main.js.map": "/SakawiCham/static/js/main.4cc291b9.chunk.js.map",
     "runtime-main.js": "/SakawiCham/static/js/runtime-main.6c0599f5.js",
     "runtime-main.js.map": "/SakawiCham/static/js/runtime-main.6c0599f5.js.map",
     "static/js/2.57467fef.chunk.js": "/SakawiCham/static/js/2.57467fef.chunk.js",
     "static/js/2.57467fef.chunk.js.map": "/SakawiCham/static/js/2.57467fef.chunk.js.map",
     "index.html": "/SakawiCham/index.html",
-    "static/css/main.2aac03cb.chunk.css.map": "/SakawiCham/static/css/main.2aac03cb.chunk.css.map",
-    "static/js/2.57467fef.chunk.js.LICENSE.txt": "/SakawiCham/static/js/2.57467fef.chunk.js.LICENSE.txt"
+    "static/css/main.1d505268.chunk.css.map": "/SakawiCham/static/css/main.1d505268.chunk.css.map",
+    "static/js/2.57467fef.chunk.js.LICENSE.txt": "/SakawiCham/static/js/2.57467fef.chunk.js.LICENSE.txt",
+    "static/media/App.css": "/SakawiCham/static/media/NotoSansCham-Regular.c52aed7f.woff"
   },
   "entrypoints": [
     "static/js/runtime-main.6c0599f5.js",
     "static/js/2.57467fef.chunk.js",
-    "static/css/main.2aac03cb.chunk.css",
-    "static/js/main.e26ab699.chunk.js"
+    "static/css/main.1d505268.chunk.css",
+    "static/js/main.4cc291b9.chunk.js"
   ]
 }
