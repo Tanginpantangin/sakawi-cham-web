@@ -17,6 +17,7 @@ export interface AhierYear {
     yearNumber?: number;
 }
 
+//TODO
 export function addAhierDays(currentDate: AhierDate, addedDays: number) {
     let numberOfDays = Helper.getDayNumbersOfAhierMonth(currentDate.ahierMonth.year, currentDate.ahierMonth.month);
     let newDays = currentDate.date + addedDays;
@@ -32,7 +33,7 @@ export function addAhierDays(currentDate: AhierDate, addedDays: number) {
     };
 
     if (newDays > numberOfDays) {
-        if (currentDate.ahierMonth.month < 11) {
+        if (currentDate.ahierMonth.month < Helper.getMonthNumbersOfAhierYear(currentDate.ahierMonth.year)) {
             newMonth = currentDate.ahierMonth.month + 1;
         } else {
             newMonth = 0;
@@ -53,7 +54,8 @@ export function addAhierDays(currentDate: AhierDate, addedDays: number) {
         if (currentDate.ahierMonth.month > 0) {
             newMonth = currentDate.ahierMonth.month - 1;
         } else {
-            newMonth = 11;
+            let previousYear = addAhierYears(currentDate.ahierMonth.year, -1);
+            newMonth = Helper.getMonthNumbersOfAhierYear(previousYear) - 1;
 
             if (currentDate.ahierMonth.year.ikasSarak > 0) {
                 newYear.ikasSarak = currentDate.ahierMonth.year.ikasSarak - 1;
@@ -78,11 +80,10 @@ export function addAhierDays(currentDate: AhierDate, addedDays: number) {
 }
 
 export function addAhierMonths(currentMonth: AhierMonth, addedMonths: number) {
+    let numberOfMonths = Helper.getMonthNumbersOfAhierYear(currentMonth.year);
     let newMonth = currentMonth.month + addedMonths;
-    let quotient = Math.floor(newMonth / 12);
-    let remain = Helper.getMod(newMonth, 12);
-
-    // TODO: years have 13 months
+    let quotient = Math.floor(newMonth / numberOfMonths);
+    let remain = Helper.getMod(newMonth, numberOfMonths);
 
     let result: AhierMonth = {
         month: remain,

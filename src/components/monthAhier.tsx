@@ -27,7 +27,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
     React.useEffect(() => {
         function init() {
             // Build matrix Calendar
-            let matrix = Helper.buildMatrixCalendar(2020);
+            let matrix = Helper.buildMatrixCalendar(2022);
             console.log('matrix: ' + JSON.stringify(matrix));
             let currentAhierMonth = matrix.filter(m => m.ahierMonth.month === ahierMonth.month
                 && m.ahierMonth.year.yearNumber === ahierMonth.year.yearNumber)[0];
@@ -52,7 +52,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
     }, [ahierMonth]);
 
     function handleGoToToday() {
-        let ahierMonth: AhierMonth = { month: AhierMonthEnum.BilanSa, year: { nasak: NasakEnum.Pabuei, ikasSarak: IkasSarakEnum.Jim, yearNumber: 2019 } };
+        let ahierMonth: AhierMonth = { month: AhierMonthEnum.BilanSa, year: { nasak: NasakEnum.Pabuei, ikasSarak: IkasSarakEnum.JimLuic, yearNumber: 2019 } };
         setAhierMonth(ahierMonth);
     }
 
@@ -123,7 +123,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
                         {' - '}<label className='bilan-title'>{displayNasakName(ahierMonth.year.nasak)}</label>
                         {'   '}<label className='ikasSarak-title'>{displayIkasSarakName(ahierMonth.year.ikasSarak)}</label>
                     </div>
-                    <h3>{AhierMonthEnum[ahierMonth.month]} {`(${(ahierMonth.month + 1)})`} - {NasakEnum[ahierMonth.year.nasak]} {IkasSarakEnum[ahierMonth.year.ikasSarak]} - {ahierMonth.year.yearNumber}</h3>
+                    <h5>{AhierMonthEnum[ahierMonth.month]} {`(${(ahierMonth.month + 1)})`} - {NasakEnum[ahierMonth.year.nasak]} {IkasSarakEnum[ahierMonth.year.ikasSarak]} - {ahierMonth.year.yearNumber}</h5>
                 </Col>
                 <Col md={2}></Col>
             </Row>

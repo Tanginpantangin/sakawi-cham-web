@@ -140,7 +140,7 @@ export function displayNasakName(nasak: NasakEnum){
             result = 'ꨓꨆꨭꩍ';
             break;
         case 1:
-            result = 'ꨆꨯꨝꨱ';
+            result = 'ꨆꨝꨥ';
             break;
         case 2:
             result = 'ꨣꨪꨟꨯꨱꩃ';

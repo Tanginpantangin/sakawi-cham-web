@@ -1,7 +1,7 @@
 vscode://vscode.github-authentication/did-authenticate?windowid=1&code=b7e85ce2ea242b5fe1e2&state=1052b7ce-94e7-4f8b-b6eb-4af6774017cc
 
 >> Overview:
-- Rap khik, Ahier nduec
+- "Rap khik, Ahiér nduec"
 
 >> Sakawi Awal:
 - Lịch thuần âm. Cách tính dựa trên chu kỳ mặt trăng
