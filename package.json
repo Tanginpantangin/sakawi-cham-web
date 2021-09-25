@@ -1,6 +1,6 @@
 {
-  "name": "sakawi-cham",
-  "homepage": "https://jayampadra.github.io/SakawiCham",
+  "name": "sakawi-cham-web",
+  "homepage": "https://tanginpantangin.github.io/sakawi-cham-web",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
