@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "react-bootstrap";
 import { AwalMonthEnum, IkasSarakEnum } from "../enums/enum";
-import { addAwalDays, addAwalMonths, AwalDate, AwalMonth } from "../model/AwalDate";
+import { AwalDate, AwalMonth } from "../model/AwalDate";
 import Helper from '../utility/helper';
 import { DayAwal } from "./dayAwal";
 
@@ -52,11 +52,11 @@ export const MonthAwal = (props: MonthAwalProps) => {
     }
 
     function handleGoToPreviousMonth() {
-        setAwalMonth(addAwalMonths(awalMonth, -1));
+        setAwalMonth(Helper.addAwalMonths(awalMonth, -1));
     }
 
     function handleGoToNextMonth() {
-        setAwalMonth(addAwalMonths(awalMonth, 1));
+        setAwalMonth(Helper.addAwalMonths(awalMonth, 1));
     }
 
     // draw Calendar Table
@@ -66,7 +66,7 @@ export const MonthAwal = (props: MonthAwalProps) => {
     for (let weeks = 0; weeks < 6; weeks++) {
         let cells = []
         for (let days = 0; days < 7; days++) {
-            let cellDate = addAwalDays(firstDateOfMonth, (count - firstDayOfMonth + 1));
+            let cellDate = Helper.addAwalDays(firstDateOfMonth, (count - firstDayOfMonth + 1));
             let dateAwal: AwalDate = {
                 date: cellDate.date,
                 awalMonth: cellDate.awalMonth,

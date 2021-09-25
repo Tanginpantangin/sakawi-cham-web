@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "react-bootstrap";
 import { AhierMonthEnum, IkasSarakEnum, NasakEnum, displayMonthName, displayNasakName, displayIkasSarakName } from "../enums/enum";
-import { addAhierDays, addAhierMonths, AhierDate, AhierMonth } from "../model/AhierDate";
-import { addAwalDays, AwalDate } from "../model/AwalDate";
+import { AhierDate, AhierMonth } from "../model/AhierDate";
+import { AwalDate } from "../model/AwalDate";
 import Helper from "../utility/helper";
 import { DayAhier } from "./dayAhier";
 
@@ -57,11 +57,11 @@ export const MonthAhier = (props: MonthAhierProps) => {
     }
 
     function handleGoToPreviousMonth() {
-        setAhierMonth(addAhierMonths(ahierMonth, -1));
+        setAhierMonth(Helper.addAhierMonths(ahierMonth, -1));
     }
 
     function handleGoToNextMonth() {
-        setAhierMonth(addAhierMonths(ahierMonth, 1));
+        setAhierMonth(Helper.addAhierMonths(ahierMonth, 1));
     }
 
     // draw Calendar Table
@@ -71,7 +71,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
     for (let weeks = 0; weeks < 6; weeks++) {
         let cells = []
         for (let days = 0; days < 7; days++) {
-            let cellAhierDate = addAhierDays(firstDateOfAhierMonth, (count - firstDayOfAhierMonth));
+            let cellAhierDate = Helper.addAhierDays(firstDateOfAhierMonth, (count - firstDayOfAhierMonth));
             let dateAhier: AhierDate = {
                 date: cellAhierDate.date,
                 ahierMonth: cellAhierDate.ahierMonth
@@ -82,7 +82,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
                 week = 7;
             }
 
-            let cellAwalDate = addAwalDays(firstDateOfAwalMonth, (count - firstDayOfAwalMonth - week));
+            let cellAwalDate = Helper.addAwalDays(firstDateOfAwalMonth, (count - firstDayOfAwalMonth - week));
             let dateAwal: AwalDate = {
                 date: cellAwalDate.date,
                 awalMonth: cellAwalDate.awalMonth

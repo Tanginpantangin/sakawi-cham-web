@@ -1,6 +1,7 @@
 vscode://vscode.github-authentication/did-authenticate?windowid=1&code=b7e85ce2ea242b5fe1e2&state=1052b7ce-94e7-4f8b-b6eb-4af6774017cc
 
 >> Overview:
+- Sakawi = Saka + Jawi
 - "Rap khik, Ahiér nduec"
 
 >> Sakawi Awal:
@@ -104,3 +105,70 @@ Dhul Hijjah – Muharram 1443
 ---
 Const:
 - dateOf_01.01.
+
+===============
+>> Service:
+[Service-addGregoryDays()]: Done
+
+[Service-addAhierDays()]: InProgress
+[Service-addAhierMonths()]: Done
+[Service-addAhierYears()]: Done
+
+[Service-addAwalDays()]: Done
+[Service-addAwalMonths()]: Done
+[Service-addAwalYears()]: Done
+
+[Service-buildMatrixCalendar()]: InProgress
+[Service-getDayNumbersOfAwalMonth()]: Done
+[Service-getStartDayByAwalMonth()]: Done
+[Service-getAwalDateByGregoryDate()]: Done
+[Service-getGregoryDateByAwalDate()]: ToDo
+
+[Service-getDayNumbersOfAhierMonth()]: Done
+[Service-getMonthNumbersOfAhierYear()]: Done
+
+>> UI:
+[Home-Month-Ahier]
+[Home-Month-Awal]
+[Home-Month-Gregory]
+
+[Home-Year-Ahier]
+[Home-Year-Awal]
+[Home-Year-Gregory]
+
+[Home-Timeline]
+[Home-CountDown]
+
+[Utilities-SearchEvent]
+[Utilities-ChangeDate]
+[Utilities-Horoscope]
+
+[Document]
+[Blog]
+[UserGuide]
+[AboutUs]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

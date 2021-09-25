@@ -1,12 +1,98 @@
 import dataConfig from '../data/SakawiTakaiCiim.json';
 import { AhierMonthEnum, AwalMonthEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
-import { addAhierYears, AhierMonth, AhierYear } from "../model/AhierDate";
-import { addAwalMonths, AwalDate, AwalYear } from '../model/AwalDate';
+import { AhierDate, AhierMonth, AhierYear } from "../model/AhierDate";
+import { AwalDate, AwalMonth, AwalYear } from '../model/AwalDate';
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import { awalMonthArray, awalYearArray, firstDateOfSakawiAhier_Pabuei_JimLuic_2019, firstDateOfSakawiAwal_Lieh_1439, totalDaysOf8AwalYearCycle, yearNumberOfSakawiAwal_Lieh_1439 } from './constant';
 
 export default class Helper {
     //#region Awal
+    static addAwalDays(currentDate: AwalDate, addedDays: number) {
+        let numberOfDays = Helper.getDayNumbersOfAwalMonth(currentDate.awalMonth.year, currentDate.awalMonth.month);
+        let newDays = currentDate.date + addedDays;
+        let newMonth = currentDate.awalMonth.month;
+        let newYear = currentDate.awalMonth.year;
+    
+        let result: AwalDate = {
+            date: 1,
+            awalMonth: {
+                month: AwalMonthEnum.Jamadilakhir,
+                year: { ikasSarak: IkasSarakEnum.Liéh }
+            }
+        };
+    
+        if (newDays > numberOfDays) {
+            if (currentDate.awalMonth.month < 11) {
+                newMonth = currentDate.awalMonth.month + 1;
+            } else {
+                newMonth = 0;
+    
+                if (currentDate.awalMonth.year.ikasSarak < 7) {
+                    newYear.ikasSarak = currentDate.awalMonth.year.ikasSarak + 1;
+                } else {
+                    newYear.ikasSarak = 0;
+                }
+            }
+    
+            result = {
+                date: newDays - numberOfDays,
+                awalMonth: {month:newMonth, year: newYear}
+            };
+    
+        } else if (newDays <= 0) {
+            if (currentDate.awalMonth.month > 0) {
+                newMonth = currentDate.awalMonth.month - 1;
+            } else {
+                newMonth = 11;
+    
+                if (currentDate.awalMonth.year.ikasSarak > 0) {
+                    newYear.ikasSarak = currentDate.awalMonth.year.ikasSarak - 1;
+                } else {
+                    newYear.ikasSarak = 7;
+                }
+            }
+    
+            result = {
+                date: Helper.getDayNumbersOfAwalMonth(currentDate.awalMonth.year, currentDate.awalMonth.month - 1) + newDays,
+                awalMonth: { month: newMonth,year: newYear}
+            };
+        }
+        else {
+            result = {
+                date: newDays,
+                awalMonth: currentDate.awalMonth
+            };
+        }
+    
+        return result;
+    }
+    
+    static addAwalMonths(currentMonth: AwalMonth, addedMonths: number) {
+        let newMonth = currentMonth.month + addedMonths;
+        let quotient = Math.floor(newMonth / 12);
+        let remain = Helper.getMod(newMonth, 12);
+    
+        let result: AwalMonth = {
+            month: remain,
+            year: Helper.addAwalYears(currentMonth.year, quotient)
+        }
+    
+        return result;
+    }
+    
+    static addAwalYears(currentYear: AwalYear, addedYears: number) {
+        let newIkasSarak = currentYear.ikasSarak + addedYears;
+        let remain = Helper.getMod(newIkasSarak, 8);
+        let newYearNumber = (currentYear.yearNumber ?? 0) + addedYears;
+    
+        let result: AwalYear = {
+            ikasSarak: remain,
+            yearNumber: newYearNumber
+        }
+    
+        return result;
+    }
+
     static getDayNumbersOfAwalMonth(year: AwalYear, month: AwalMonthEnum) {
         let numberOfDay = 0;
 
@@ -125,15 +211,104 @@ export default class Helper {
         }
 
         return resultDate;
-    }
-
-    static getMod(n: number, m: number) {
-        const remain = n % m;
-        return Math.floor(remain >= 0 ? remain : remain + m);
-    };
+    }    
     //#endregion
 
     //#region Ahier
+    //TODO
+    static addAhierDays(currentDate: AhierDate, addedDays: number) {
+        let numberOfDays = Helper.getDayNumbersOfAhierMonth(currentDate.ahierMonth.year, currentDate.ahierMonth.month);
+        let newDays = currentDate.date + addedDays;
+        let newMonth = currentDate.ahierMonth.month;
+        let newYear = currentDate.ahierMonth.year;
+
+        let result: AhierDate = {
+            date: 1,
+            ahierMonth: {
+                month: AhierMonthEnum.BilanSa,
+                year: { nasak: NasakEnum.Takuh, ikasSarak: IkasSarakEnum.Liéh }
+            }
+        };
+
+        if (newDays > numberOfDays) {
+            if (currentDate.ahierMonth.month < Helper.getMonthNumbersOfAhierYear(currentDate.ahierMonth.year)) {
+                newMonth = currentDate.ahierMonth.month + 1;
+            } else {
+                newMonth = 0;
+
+                if (currentDate.ahierMonth.year.ikasSarak < 7) {
+                    newYear.ikasSarak = currentDate.ahierMonth.year.ikasSarak + 1;
+                } else {
+                    newYear.ikasSarak = 0;
+                }
+            }
+
+            result = {
+                date: newDays - numberOfDays,
+                ahierMonth: {month:newMonth, year: newYear}
+            };
+
+        } else if (newDays <= 0) {
+            if (currentDate.ahierMonth.month > 0) {
+                newMonth = currentDate.ahierMonth.month - 1;
+            } else {
+                let previousYear = Helper.addAhierYears(currentDate.ahierMonth.year, -1);
+                newMonth = Helper.getMonthNumbersOfAhierYear(previousYear) - 1;
+
+                if (currentDate.ahierMonth.year.ikasSarak > 0) {
+                    newYear.ikasSarak = currentDate.ahierMonth.year.ikasSarak - 1;
+                } else {
+                    newYear.ikasSarak = 7;
+                }
+            }
+
+            result = {
+                date: Helper.getDayNumbersOfAhierMonth(currentDate.ahierMonth.year, currentDate.ahierMonth.month - 1) + newDays,
+                ahierMonth: { month: newMonth,year: newYear}
+            };
+        }
+        else {
+            result = {
+                date: newDays,
+                ahierMonth: currentDate.ahierMonth
+            };
+        }
+
+        return result;
+    }
+
+    static addAhierMonths(currentMonth: AhierMonth, addedMonths: number) {
+        let numberOfMonths = Helper.getMonthNumbersOfAhierYear(currentMonth.year);
+        let newMonth = currentMonth.month + addedMonths;
+        let quotient = Math.floor(newMonth / numberOfMonths);
+        let remain = Helper.getMod(newMonth, numberOfMonths);
+
+        let result: AhierMonth = {
+            month: remain,
+            year: Helper.addAhierYears(currentMonth.year, quotient)
+        }
+
+        return result;
+    }
+
+    static addAhierYears(currentYear: AhierYear, addedYears: number) {
+        let newNasak = (currentYear.nasak + addedYears) % 12;
+        let remainNasak = Helper.getMod(newNasak, 12);
+    
+        let newIkasSarak = (currentYear.ikasSarak + addedYears) % 8;
+        let remainIkasSarak = Helper.getMod(newIkasSarak, 8);
+    
+        let newYearNumber = (currentYear.yearNumber ?? 0) + addedYears;
+    
+        let result: AhierYear = {
+            nasak: remainNasak,
+            ikasSarak: remainIkasSarak,
+            yearNumber: newYearNumber
+        }
+    
+        return result;
+    }
+
     static getDayNumbersOfAhierMonth(year: AhierYear, month: AhierMonthEnum) {
         let numberOfDay = 0;
 
@@ -172,62 +347,15 @@ export default class Helper {
         }
         return 12;
     }
-
-    static getStartDayByAhierMonth(year: AhierYear, month: AhierMonthEnum) {
-        let yearName = IkasSarakEnum[year.ikasSarak];
-        let yearItem = dataConfig.filter(x => x.ArabYear === yearName)[0];
-        let result = '';
-
-        /*switch (month) {
-            case 0:
-                result = yearItem['Month_01'];
-                break;
-            case 1:
-                result = yearItem['Month_02'];
-                break;
-            case 2:
-                result = yearItem['Month_03'];
-                break;
-            case 3:
-                result = yearItem['Month_04'];
-                break;
-            case 4:
-                result = yearItem['Month_05'];
-                break;
-            case 5:
-                result = yearItem['Month_06'];
-                break;
-            case 6:
-                result = yearItem['Month_07'];
-                break;
-            case 7:
-                result = yearItem['Month_08'];
-                break;
-            case 8:
-                result = yearItem['Month_09'];
-                break;
-            case 9:
-                result = yearItem['Month_10'];
-                break;
-            case 10:
-                result = yearItem['Month_11'];
-                break;
-            case 11:
-                result = yearItem['Month_12'];
-                break;
-            default:
-                break;
-        }*/
-
-        return result;
-    }
     //#endregion
 
+    //#region Gregory
     static addGregoryDays(date: Date, numberOfDays: number) {
         let newDt = new Date(date);
         newDt.setDate(date.getDate() + numberOfDays);
         return newDt;
     }
+    //#endregion
 
     static buildMatrixCalendar(toYearAhier: number) {
         let result: MatrixCalendarType[] = [];
@@ -242,7 +370,7 @@ export default class Helper {
         let newGregoryDate = firstDateOfSakawiAhier_Pabuei_JimLuic_2019;
 
         for (let y = 0; y < numberOfAhierYear; y++) {
-            const ahierYear = addAhierYears(startAhierYear, y);
+            const ahierYear = Helper.addAhierYears(startAhierYear, y);
             const numberOfAhierMonth = Helper.getMonthNumbersOfAhierYear(ahierYear);
             let addedGregoryDays = 0;
 
@@ -252,7 +380,7 @@ export default class Helper {
                 const firstDayOfAhierMonth = newGregoryDate.getDay();
 
                 const awalDate = Helper.getAwalDateByGregoryDate(newGregoryDate);
-                const awalMonth = addAwalMonths(awalDate.awalMonth, 1);
+                const awalMonth = Helper.addAwalMonths(awalDate.awalMonth, 1);
                 const dayNumbersOfAwalMonth = Helper.getDayNumbersOfAwalMonth(awalMonth.year, awalMonth.month);
                 const firstDayOfAwalMonth = Number.parseInt(Helper.getStartDayByAwalMonth(awalMonth.year, awalMonth.month)) - 1; // Sunday is 0 
 
@@ -275,4 +403,9 @@ export default class Helper {
 
         return result;
     }
+
+    static getMod(n: number, m: number) {
+        const remain = n % m;
+        return Math.floor(remain >= 0 ? remain : remain + m);
+    };
 }
