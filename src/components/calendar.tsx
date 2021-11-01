@@ -28,7 +28,7 @@ export const Calendar = () => {
             <Row>
                 <Col md={12}>
                     <CountDownBar dateName={"Rija Nagar"} variantType='success' toDate={new Date(2022, 4, 28)} />
-                    <CountDownBar dateName={"Katé"} variantType='info' toDate={new Date(2021, 10, 5)} />
+                    <CountDownBar dateName={"Katé"} variantType='info' toDate={new Date(2021, 9, 5)} />
                     <CountDownBar dateName={"Ramawan"} variantType='warning' toDate={new Date(2022, 4, 2)} />
                 </Col>
             </Row>

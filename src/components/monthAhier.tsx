@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "react-bootstrap";
-import { AhierMonthEnum, IkasSarakEnum, NasakEnum, displayMonthName, displayNasakName, displayIkasSarakName } from "../enums/enum";
+import { AhierMonthEnum, displayIkasSarakName, displayMonthName, displayNasakName, IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate } from "../model/AwalDate";
 import Helper from "../utility/helper";
@@ -21,15 +21,15 @@ export const MonthAhier = (props: MonthAhierProps) => {
     const [firstDateOfAwalMonth, setFirstDateOfAwalMonth] = useState<AwalDate>(firstAwalDate);
     const [firstDayOfAwalMonth, setFirstDayOfAwalMonth] = useState(0);
 
-    const [firstDateOfGregoryMonth, setFirstDateOfGregoryMonth] = useState<Date>(new Date(2019,3,4));
+    const [firstDateOfGregoryMonth, setFirstDateOfGregoryMonth] = useState<Date>(new Date(2019, 3, 4));
     const [firstDayOfGregoryMonth, setFirstDayOfGregoryMonth] = useState(0);
 
     React.useEffect(() => {
         function init() {
             // Build matrix Calendar
-            let matrix = Helper.buildMatrixCalendar(2022);
+            let matrix = Helper.buildMatrixCalendar(2012);
             console.log('matrix: ' + JSON.stringify(matrix));
-            let currentAhierMonth = matrix.filter(m => m.ahierMonth.month === ahierMonth.month
+            /*let currentAhierMonth = matrix.filter(m => m.ahierMonth.month === ahierMonth.month
                 && m.ahierMonth.year.yearNumber === ahierMonth.year.yearNumber)[0];
             //setMatrixCalender(currentAhierMonth);
 
@@ -45,7 +45,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
 
             // Gregory Date
             setFirstDateOfGregoryMonth(currentAhierMonth.dateOfGregoryCalendar);
-            setFirstDayOfGregoryMonth(currentAhierMonth.dateOfGregoryCalendar.getDay());
+            setFirstDayOfGregoryMonth(currentAhierMonth.dateOfGregoryCalendar.getDay());*/
         }
 
         init();
