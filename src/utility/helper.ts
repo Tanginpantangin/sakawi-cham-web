@@ -3,7 +3,7 @@ import { AhierMonthEnum, AwalMonthEnum, IkasSarakEnum, NasakEnum } from "../enum
 import { AhierDate, AhierMonth, AhierYear } from "../model/AhierDate";
 import { AwalDate, AwalMonth, AwalYear } from '../model/AwalDate';
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
-import { awalMonthArray, awalYearArray, firstDateOfSakawiAwal_Lieh_1439, totalDaysOf8AwalYearCycle, yearNumberOfSakawiAwal_Lieh_1439 } from './constant';
+import { awalMonthArray, awalYearArray, firstDateOfSakawiAhier_InaGirai_Lieh_1988, firstDateOfSakawiAwal_Lieh_1407, totalDaysOf8AwalYearCycle, yearNumberOfSakawiAwal_Lieh_1407 } from './constant';
 
 export default class Helper {
     //#region Awal
@@ -168,12 +168,12 @@ export default class Helper {
     }
 
     static getAwalDateByGregoryDate(date: Date) {
-        let differenceInTime = date.getTime() - firstDateOfSakawiAwal_Lieh_1439.getTime();
+        let differenceInTime = date.getTime() - firstDateOfSakawiAwal_Lieh_1407.getTime();
         let differenceInDays = differenceInTime / (1000 * 3600 * 24);
         let remain = Helper.getMod(differenceInDays, totalDaysOf8AwalYearCycle);
         let quotient = Math.floor(Math.abs(differenceInDays) / totalDaysOf8AwalYearCycle);
 
-        let awalYearNumber = yearNumberOfSakawiAwal_Lieh_1439;
+        let awalYearNumber = yearNumberOfSakawiAwal_Lieh_1407;
         let awalYear = IkasSarakEnum.Liéh;
         let awalMonth = AwalMonthEnum.Muharam;
         let awalDate = 0;
@@ -362,13 +362,13 @@ export default class Helper {
 
         //TODO: change to thun 1988
         const startAhierYear: AhierYear = {
-            nasak: NasakEnum.Rimaong,
-            ikasSarak: IkasSarakEnum.Waw,
-            yearNumber: 2010
+            nasak: NasakEnum.InâGirai,
+            ikasSarak: IkasSarakEnum.Liéh,
+            yearNumber: 1988
         }
 
         const numberOfAhierYear = toYearAhier - (startAhierYear.yearNumber ?? 0);
-        let newGregoryDate = new Date(2010, 3, 13);// firstDateOfSakawiAhier_Pabuei_JimLuic_2019;//TODO: change to thun 1988
+        let newGregoryDate = firstDateOfSakawiAhier_InaGirai_Lieh_1988;
 
         for (let y = 0; y < numberOfAhierYear; y++) {
             const ahierYear = Helper.addAhierYears(startAhierYear, y);
@@ -422,10 +422,10 @@ export default class Helper {
 
     static applyGuenGuecRules(matrixPerYear: MatrixCalendarType[]) {
         let monthGuen = -1;
-        let has46RuleAtNextYear = false;
-        let hasGuenRuleAtNextYear = false;
+        let has46RuleOrRijaNagarRuleInNextYear = false;
+        let hasGuenRuleInNextYear = false;
 
-        // Check validations and fix at current year
+        // Check validations and fix in current year
         for (let index = 0; index < matrixPerYear.length; index++) {
             const element = matrixPerYear[index];
 
@@ -441,13 +441,13 @@ export default class Helper {
             }
         }
 
-        // Check validations at next year to fix current year
+        // Check validations in next year to fix current year
         const lastMonthOfCurrentYear = matrixPerYear[matrixPerYear.length - 1];
         const firstGregoryDateOfNextYear = Helper.addGregoryDays(lastMonthOfCurrentYear.dateOfGregoryCalendar, lastMonthOfCurrentYear.dayNumbersOfAhierMonth);
-        has46RuleAtNextYear = Helper.checkHas46RuleAtNextYear(lastMonthOfCurrentYear.ahierMonth.year, firstGregoryDateOfNextYear);
-        hasGuenRuleAtNextYear = Helper.checkHasGuenRuleAtNextYear(lastMonthOfCurrentYear.ahierMonth.year, firstGregoryDateOfNextYear);
+        has46RuleOrRijaNagarRuleInNextYear = Helper.checkHas46RuleOrRijaNagarRuleInNextYear(lastMonthOfCurrentYear.ahierMonth.year, firstGregoryDateOfNextYear);
+        hasGuenRuleInNextYear = Helper.checkHasGuenRuleInNextYear(lastMonthOfCurrentYear.ahierMonth.year, firstGregoryDateOfNextYear);
 
-        if (has46RuleAtNextYear) {
+        if (has46RuleOrRijaNagarRuleInNextYear) {
             // Bilan Mak (12)
             matrixPerYear[11].dayNumbersOfAhierMonth -= 1;
 
@@ -455,11 +455,10 @@ export default class Helper {
             const newDate = Helper.addGregoryDays(matrixPerYear[12].dateOfGregoryCalendar, -1);
             matrixPerYear[12].dateOfGregoryCalendar = newDate;
             matrixPerYear[12].firstDayOfAhierMonth = newDate.getDay();
-        } else if (hasGuenRuleAtNextYear) {
-            // Bilan Mak (12)
-            const bilanMak = matrixPerYear[11];
-            if (Helper.getAhierAwalDaysGap(bilanMak.firstDayOfAhierMonth, bilanMak.firstDayOfAwalMonth) === 2) {
-                bilanMak.dayNumbersOfAhierMonth += 1;
+        } else if (hasGuenRuleInNextYear) {
+            // Bilan (12) or (13)
+            if (Helper.getAhierAwalDaysGap(lastMonthOfCurrentYear.firstDayOfAhierMonth, lastMonthOfCurrentYear.firstDayOfAwalMonth) === 2) {
+                lastMonthOfCurrentYear.dayNumbersOfAhierMonth += 1;
             }
         }
 
@@ -476,21 +475,23 @@ export default class Helper {
         return firstDayOfAhierMonth === firstDayOfAwalMonth;
     }
 
-    static checkHas46RuleAtNextYear(currentYear: AhierYear, firstGregoryDateNextYear: Date) {
+    static checkHas46RuleOrRijaNagarRuleInNextYear(currentYear: AhierYear, firstGregoryDateNextYear: Date) {
         let result = false;
         const nextAhierYear = Helper.addAhierYears(currentYear, 1);
         const matrixNextYear = Helper.renderMatrixPerYear(nextAhierYear, firstGregoryDateNextYear);
         const firstMonth = matrixNextYear[0];
 
         if (nextAhierYear.ikasSarak === IkasSarakEnum.Liéh &&
-            firstMonth.firstDayOfAwalMonth === 5 && firstMonth.firstDayOfAhierMonth !== 3) {
+            firstMonth.firstDayOfAhierMonth === 4 && firstMonth.firstDayOfAwalMonth === 5) {
+            result = true;
+        } else if (firstMonth.firstDayOfAhierMonth === 5 && firstMonth.firstDayOfAwalMonth === 6) {
             result = true;
         }
 
         return result;
     }
 
-    static checkHasGuenRuleAtNextYear(currentYear: AhierYear, firstGregoryDateNextYear: Date) {
+    static checkHasGuenRuleInNextYear(currentYear: AhierYear, firstGregoryDateNextYear: Date) {
         const nextAhierYear = Helper.addAhierYears(currentYear, 1);
         const matrixNextYear = Helper.renderMatrixPerYear(nextAhierYear, firstGregoryDateNextYear);
 

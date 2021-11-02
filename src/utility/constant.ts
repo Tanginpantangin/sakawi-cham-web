@@ -1,9 +1,8 @@
 import { AwalMonthEnum, IkasSarakEnum } from "../enums/enum";
 
-export const firstDateOfSakawiAwal_Lieh_1439 = new Date(2017, 8, 22);//22/09/2017
-export const yearNumberOfSakawiAwal_Lieh_1439 = 1439;
-export const firstDateOfSakawiAwal_Hak_1440 = new Date(2018, 8, 11);
-export const firstDateOfSakawiAhier_Pabuei_JimLuic_2019 = new Date(2019, 3, 4);//04/04/2019
+export const firstDateOfSakawiAwal_Lieh_1407 = new Date(1986, 8, 5);//05/09/1986
+export const yearNumberOfSakawiAwal_Lieh_1407 = 1407;
+export const firstDateOfSakawiAhier_InaGirai_Lieh_1988 = new Date(1988, 3, 16);//16/04/1988
 export const totalDaysOf8AwalYearCycle = 2835;
 
 export const awalYearArray: { no: number; name: IkasSarakEnum; numberOfDays: number }[] = [
