@@ -82,6 +82,14 @@ export enum AhierMonthEnum {
     BilanBhang
 }
 
+export enum GuecTypeEnum {
+    NoneGuec = -1,
+    GuecByNormalRule,
+    GuecByHareiButSukRule,
+    GuecByRijaNagarRule,
+    GuecByKateRamawanRule,
+}
+
 export function displayMonthName(month: AhierMonthEnum) {
     let result = '';
 
@@ -132,7 +140,7 @@ export function displayMonthName(month: AhierMonthEnum) {
     return result;
 }
 
-export function displayNasakName(nasak: NasakEnum){
+export function displayNasakName(nasak: NasakEnum) {
     let result = '';
 
     switch (nasak) {
@@ -179,7 +187,7 @@ export function displayNasakName(nasak: NasakEnum){
     return result;
 }
 
-export function displayIkasSarakName(ikasSarak: IkasSarakEnum){
+export function displayIkasSarakName(ikasSarak: IkasSarakEnum) {
     let result = '';
 
     switch (ikasSarak) {

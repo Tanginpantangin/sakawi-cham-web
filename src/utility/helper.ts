@@ -1,9 +1,9 @@
 import sakawiTakaiCiimConfig from '../data/SakawiTakaiCiim.json';
-import { AhierMonthEnum, AwalMonthEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
+import { AhierMonthEnum, AwalMonthEnum, GuecTypeEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { AhierDate, AhierMonth, AhierYear } from "../model/AhierDate";
 import { AwalDate, AwalMonth, AwalYear } from '../model/AwalDate';
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
-import { awalMonthArray, awalYearArray, firstDateOfSakawiAhier_InaGirai_Lieh_1988, firstDateOfSakawiAwal_Lieh_1407, totalDaysOf8AwalYearCycle, yearNumberOfSakawiAwal_Lieh_1407 } from './constant';
+import { awalMonthArray, awalYearArray, firstDateOfSakawiAwal_Lieh_1407, totalDaysOf8AwalYearCycle, yearNumberOfSakawiAwal_Lieh_1407 } from './constant';
 
 export default class Helper {
     //#region Awal
@@ -361,14 +361,20 @@ export default class Helper {
         let result: MatrixCalendarType[] = [];
 
         //TODO: change to thun 1988
+        // const startAhierYear: AhierYear = {
+        //     nasak: NasakEnum.InâGirai,
+        //     ikasSarak: IkasSarakEnum.Liéh,
+        //     yearNumber: 1988
+        // }
+
         const startAhierYear: AhierYear = {
-            nasak: NasakEnum.InâGirai,
-            ikasSarak: IkasSarakEnum.Liéh,
-            yearNumber: 1988
+            nasak: NasakEnum.Tapay,
+            ikasSarak: IkasSarakEnum.JimLuic,
+            yearNumber: 2035
         }
 
         const numberOfAhierYear = toYearAhier - (startAhierYear.yearNumber ?? 0);
-        let newGregoryDate = firstDateOfSakawiAhier_InaGirai_Lieh_1988;
+        let newGregoryDate = new Date(2035, 3, 8);// firstDateOfSakawiAhier_InaGirai_Lieh_1988;
 
         for (let y = 0; y < numberOfAhierYear; y++) {
             const ahierYear = Helper.addAhierYears(startAhierYear, y);
@@ -422,13 +428,15 @@ export default class Helper {
 
     static applyGuenGuecRules(matrixPerYear: MatrixCalendarType[]) {
         let monthGuen = -1;
-        let has46RuleOrRijaNagarRuleInNextYear = false;
+        let monthGuec = -1;
+        let hasGuecRuleInNextYear = GuecTypeEnum.NoneGuec;
         let hasGuenRuleInNextYear = false;
 
         // Check validations and fix in current year
         for (let index = 0; index < matrixPerYear.length; index++) {
             const element = matrixPerYear[index];
 
+            // Guen
             if (monthGuen === -1 && Helper.checkIsGuenToAddDay(element.firstDayOfAhierMonth, element.firstDayOfAwalMonth)) {
                 monthGuen = index;
                 matrixPerYear[monthGuen - 1].dayNumbersOfAhierMonth += 1;
@@ -439,15 +447,27 @@ export default class Helper {
                 matrixPerYear[index].dateOfGregoryCalendar = newDate;
                 matrixPerYear[index].firstDayOfAhierMonth = newDate.getDay();
             }
+
+            // Guec
+            if (monthGuec === -1 && Helper.checkIsGuecToMinusDay(element.firstDayOfAhierMonth, element.firstDayOfAwalMonth)) {
+                monthGuec = index;
+                matrixPerYear[monthGuec - 1].dayNumbersOfAhierMonth -= 1;
+            }
+
+            if (monthGuec !== -1 && index >= monthGuec) {
+                const newDate = Helper.addGregoryDays(matrixPerYear[index].dateOfGregoryCalendar, -1);
+                matrixPerYear[index].dateOfGregoryCalendar = newDate;
+                matrixPerYear[index].firstDayOfAhierMonth = newDate.getDay();
+            }
         }
 
         // Check validations in next year to fix current year
         const lastMonthOfCurrentYear = matrixPerYear[matrixPerYear.length - 1];
         const firstGregoryDateOfNextYear = Helper.addGregoryDays(lastMonthOfCurrentYear.dateOfGregoryCalendar, lastMonthOfCurrentYear.dayNumbersOfAhierMonth);
-        has46RuleOrRijaNagarRuleInNextYear = Helper.checkHas46RuleOrRijaNagarRuleInNextYear(lastMonthOfCurrentYear.ahierMonth.year, firstGregoryDateOfNextYear);
+        hasGuecRuleInNextYear = Helper.checkHasGuecRuleInNextYear(lastMonthOfCurrentYear.ahierMonth.year, firstGregoryDateOfNextYear);
         hasGuenRuleInNextYear = Helper.checkHasGuenRuleInNextYear(lastMonthOfCurrentYear.ahierMonth.year, firstGregoryDateOfNextYear);
 
-        if (has46RuleOrRijaNagarRuleInNextYear) {
+        if (hasGuecRuleInNextYear !== GuecTypeEnum.NoneGuec) {
             // Bilan Mak (12)
             matrixPerYear[11].dayNumbersOfAhierMonth -= 1;
 
@@ -475,17 +495,28 @@ export default class Helper {
         return firstDayOfAhierMonth === firstDayOfAwalMonth;
     }
 
-    static checkHas46RuleOrRijaNagarRuleInNextYear(currentYear: AhierYear, firstGregoryDateNextYear: Date) {
-        let result = false;
+    static checkHasGuecRuleInNextYear(currentYear: AhierYear, firstGregoryDateNextYear: Date) {
+        let result = GuecTypeEnum.NoneGuec;
+
         const nextAhierYear = Helper.addAhierYears(currentYear, 1);
         const matrixNextYear = Helper.renderMatrixPerYear(nextAhierYear, firstGregoryDateNextYear);
         const firstMonth = matrixNextYear[0];
+        const isKateRamawanConflict = matrixNextYear.some(x =>
+            x.ahierMonth.month === AhierMonthEnum.BilanTajuh &&
+            x.awalMonth.month === AwalMonthEnum.Ramadan &&
+            Helper.getAhierAwalDaysGap(x.firstDayOfAhierMonth, x.firstDayOfAwalMonth) === 1);
+        const hasNormalGuec = matrixNextYear.some(item => Helper.checkIsGuecToMinusDay(item.firstDayOfAhierMonth, item.firstDayOfAwalMonth));
 
-        if (nextAhierYear.ikasSarak === IkasSarakEnum.Liéh &&
-            firstMonth.firstDayOfAhierMonth === 4 && firstMonth.firstDayOfAwalMonth === 5) {
-            result = true;
+        if (hasNormalGuec) {
+            result = GuecTypeEnum.GuecByNormalRule;
+        } else if (nextAhierYear.ikasSarak === IkasSarakEnum.Liéh) {
+            if (firstMonth.firstDayOfAhierMonth === 4 && firstMonth.firstDayOfAwalMonth === 5) {
+                result = GuecTypeEnum.GuecByHareiButSukRule;
+            } else if (isKateRamawanConflict) {
+                result = GuecTypeEnum.GuecByKateRamawanRule;
+            }
         } else if (firstMonth.firstDayOfAhierMonth === 5 && firstMonth.firstDayOfAwalMonth === 6) {
-            result = true;
+            result = GuecTypeEnum.GuecByRijaNagarRule;
         }
 
         return result;
