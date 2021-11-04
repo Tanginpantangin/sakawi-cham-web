@@ -3,7 +3,7 @@ import { AhierMonthEnum, AwalMonthEnum, GuecTypeEnum, IkasSarakEnum, NasakEnum }
 import { AhierDate, AhierMonth, AhierYear } from "../model/AhierDate";
 import { AwalDate, AwalMonth, AwalYear } from '../model/AwalDate';
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
-import { awalMonthArray, awalYearArray, firstDateOfSakawiAwal_Lieh_1407, totalDaysOf8AwalYearCycle, yearNumberOfSakawiAwal_Lieh_1407 } from './constant';
+import { awalMonthArray, awalYearArray, firstDateOfSakawiAhier_InaGirai_Lieh_1988, firstDateOfSakawiAwal_Lieh_1407, totalDaysOf8AwalYearCycle, yearNumberOfSakawiAwal_Lieh_1407 } from './constant';
 
 export default class Helper {
     //#region Awal
@@ -361,20 +361,20 @@ export default class Helper {
         let result: MatrixCalendarType[] = [];
 
         //TODO: change to thun 1988
-        // const startAhierYear: AhierYear = {
-        //     nasak: NasakEnum.InâGirai,
-        //     ikasSarak: IkasSarakEnum.Liéh,
-        //     yearNumber: 1988
-        // }
-
         const startAhierYear: AhierYear = {
-            nasak: NasakEnum.Tapay,
-            ikasSarak: IkasSarakEnum.JimLuic,
-            yearNumber: 2035
+            nasak: NasakEnum.InâGirai,
+            ikasSarak: IkasSarakEnum.Liéh,
+            yearNumber: 1988
         }
 
+        // const startAhierYear: AhierYear = {
+        //     nasak: NasakEnum.UlaAnaih,
+        //     ikasSarak: IkasSarakEnum.Bak,
+        //     yearNumber: 2001
+        // }
+
         const numberOfAhierYear = toYearAhier - (startAhierYear.yearNumber ?? 0);
-        let newGregoryDate = new Date(2035, 3, 8);// firstDateOfSakawiAhier_InaGirai_Lieh_1988;
+        let newGregoryDate = firstDateOfSakawiAhier_InaGirai_Lieh_1988; //new Date(2001, 3, 22); //
 
         for (let y = 0; y < numberOfAhierYear; y++) {
             const ahierYear = Helper.addAhierYears(startAhierYear, y);
