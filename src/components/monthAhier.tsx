@@ -2,66 +2,66 @@ import React, { useState } from "react";
 import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "react-bootstrap";
 import { AhierMonthEnum, displayIkasSarakName, displayMonthName, displayNasakName, IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { AhierDate, AhierMonth } from "../model/AhierDate";
-import { AwalDate } from "../model/AwalDate";
+import { AwalDate, AwalMonth } from "../model/AwalDate";
+import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from "../utility/helper";
 import { DayAhier } from "./dayAhier";
 
 interface MonthAhierProps {
-    ahierMonth: AhierMonth;
+    matrixSakawi: MatrixCalendarType[],
+    currentAhierMonthMatrix: MatrixCalendarType
 }
 
 export const MonthAhier = (props: MonthAhierProps) => {
-    //const [matrixCalender, setMatrixCalender] = useState<MatrixCalendarType>();
-    const [ahierMonth, setAhierMonth] = useState(props.ahierMonth);
-    let firstAhierDate: AhierDate = { date: 1, ahierMonth: props.ahierMonth };
-    const [firstDateOfAhierMonth, setFirstDateOfAhierMonth] = useState<AhierDate>(firstAhierDate);
+    const initialAhierMonth: AhierMonth = { month: AhierMonthEnum.BilanSa, year: { nasak: NasakEnum.Pabuei, ikasSarak: IkasSarakEnum.JimLuic, yearNumber: 2019 } };
+    const initialAwalMonth: AwalMonth = { month: 0, year: { ikasSarak: 0, yearNumber: 1400 } };
+    const initialAhierDate: AhierDate = { date: 1, ahierMonth: initialAhierMonth };
+    const initialAwalDate: AwalDate = { date: 1, awalMonth: initialAwalMonth };
+    const initialGregoryDate: Date = new Date();
+
+    const [currentAhierMonthMatrix, setCurrentAhierMonthMatrix] = useState(props.currentAhierMonthMatrix);
+
+    const [firstDateOfAhierMonth, setFirstDateOfAhierMonth] = useState<AhierDate>(initialAhierDate);
     const [firstDayOfAhierMonth, setFirstDayOfAhierMonth] = useState(0);
 
-    let firstAwalDate: AwalDate = { date: 1, awalMonth: { month: 0, year: { ikasSarak: 0, yearNumber: 1400 } } };
-    const [firstDateOfAwalMonth, setFirstDateOfAwalMonth] = useState<AwalDate>(firstAwalDate);
+    const [firstDateOfAwalMonth, setFirstDateOfAwalMonth] = useState<AwalDate>(initialAwalDate);
     const [firstDayOfAwalMonth, setFirstDayOfAwalMonth] = useState(0);
 
-    const [firstDateOfGregoryMonth, setFirstDateOfGregoryMonth] = useState<Date>(new Date(2019, 3, 4));
+    const [firstDateOfGregoryMonth, setFirstDateOfGregoryMonth] = useState<Date>(initialGregoryDate);
     const [firstDayOfGregoryMonth, setFirstDayOfGregoryMonth] = useState(0);
 
     React.useEffect(() => {
         function init() {
-            // Build matrix Calendar
-            let matrix = Helper.buildMatrixCalendar(2048);
-            console.log('matrix: ' + JSON.stringify(matrix));
-            /*let currentAhierMonth = matrix.filter(m => m.ahierMonth.month === ahierMonth.month
-                && m.ahierMonth.year.yearNumber === ahierMonth.year.yearNumber)[0];
-            //setMatrixCalender(currentAhierMonth);
-
             // Ahier Date
-            let firstAhierDate: AhierDate = { date: 1, ahierMonth: currentAhierMonth.ahierMonth };
+            const firstAhierDate: AhierDate = { date: 1, ahierMonth: currentAhierMonthMatrix.ahierMonth };
             setFirstDateOfAhierMonth(firstAhierDate);
-            setFirstDayOfAhierMonth(currentAhierMonth?.firstDayOfAhierMonth);
+            setFirstDayOfAhierMonth(currentAhierMonthMatrix.firstDayOfAhierMonth);
 
             // Awal Date
-            let firstAwalDate: AwalDate = { date: 1, awalMonth: currentAhierMonth.awalMonth };
+            const firstAwalDate: AwalDate = { date: 1, awalMonth: currentAhierMonthMatrix.awalMonth };
             setFirstDateOfAwalMonth(firstAwalDate);
-            setFirstDayOfAwalMonth(currentAhierMonth?.firstDayOfAwalMonth);
+            setFirstDayOfAwalMonth(currentAhierMonthMatrix.firstDayOfAwalMonth);
 
             // Gregory Date
-            setFirstDateOfGregoryMonth(currentAhierMonth.dateOfGregoryCalendar);
-            setFirstDayOfGregoryMonth(currentAhierMonth.dateOfGregoryCalendar.getDay());*/
+            setFirstDateOfGregoryMonth(currentAhierMonthMatrix.dateOfGregoryCalendar);
+            setFirstDayOfGregoryMonth(currentAhierMonthMatrix.dateOfGregoryCalendar.getDay());
         }
 
         init();
-    }, [ahierMonth]);
+    }, [currentAhierMonthMatrix, props.currentAhierMonthMatrix]);
 
     function handleGoToToday() {
-        let ahierMonth: AhierMonth = { month: AhierMonthEnum.BilanSa, year: { nasak: NasakEnum.Pabuei, ikasSarak: IkasSarakEnum.JimLuic, yearNumber: 2019 } };
-        setAhierMonth(ahierMonth);
+        setCurrentAhierMonthMatrix(props.currentAhierMonthMatrix);
     }
 
     function handleGoToPreviousMonth() {
-        setAhierMonth(Helper.addAhierMonths(ahierMonth, -1));
+        const index = props.matrixSakawi.findIndex(x => x === currentAhierMonthMatrix);
+        setCurrentAhierMonthMatrix(props.matrixSakawi[index - 1]);
     }
 
     function handleGoToNextMonth() {
-        setAhierMonth(Helper.addAhierMonths(ahierMonth, 1));
+        const index = props.matrixSakawi.findIndex(x => x === currentAhierMonthMatrix);
+        setCurrentAhierMonthMatrix(props.matrixSakawi[index + 1]);
     }
 
     // draw Calendar Table
@@ -103,6 +103,8 @@ export const MonthAhier = (props: MonthAhierProps) => {
         tableLayout: "fixed"
     }
 
+    const currentAhierMonth = currentAhierMonthMatrix.ahierMonth;
+
     return (
         <Container>
             <Row>
@@ -119,11 +121,11 @@ export const MonthAhier = (props: MonthAhierProps) => {
                 </Col>
                 <Col md={6} style={{ textAlign: "center" }}>
                     <div>
-                        <label className='bilan-title'>{displayMonthName(ahierMonth.month)}</label>
-                        {' - '}<label className='bilan-title'>{displayNasakName(ahierMonth.year.nasak)}</label>
-                        {'   '}<label className='ikasSarak-title'>{displayIkasSarakName(ahierMonth.year.ikasSarak)}</label>
+                        <label className='bilan-title'>{displayMonthName(currentAhierMonth.month)}</label>
+                        {' - '}<label className='bilan-title'>{displayNasakName(currentAhierMonth.year.nasak)}</label>
+                        {'   '}<label className='ikasSarak-title'>{displayIkasSarakName(currentAhierMonth.year.ikasSarak)}</label>
                     </div>
-                    <h5>{AhierMonthEnum[ahierMonth.month]} {`(${(ahierMonth.month + 1)})`} - {NasakEnum[ahierMonth.year.nasak]} {IkasSarakEnum[ahierMonth.year.ikasSarak]} - {ahierMonth.year.yearNumber}</h5>
+                    <h5>{AhierMonthEnum[currentAhierMonth.month]} {`(${(currentAhierMonth.month + 1)})`} - {NasakEnum[currentAhierMonth.year.nasak]} {IkasSarakEnum[currentAhierMonth.year.ikasSarak]} - {currentAhierMonth.year.yearNumber}</h5>
                 </Col>
                 <Col md={2}></Col>
             </Row>

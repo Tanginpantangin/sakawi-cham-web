@@ -310,8 +310,11 @@ export default class Helper {
     }
 
     static getDayNumbersOfAhierMonth(year: AhierYear, month: AhierMonthEnum) {
-        let numberOfDay = 0;
+        // (maxtrixCalendar: MatrixCalendarType[], ahierMonth: AhierMonth)
+        // const index = maxtrixCalendar.findIndex(x => x.ahierMonth === ahierMonth);
+        // return maxtrixCalendar[index].dayNumbersOfAhierMonth;
 
+        let numberOfDay = 0;
         if (month === AhierMonthEnum.BilanSa || month === AhierMonthEnum.BilanKlau || month === AhierMonthEnum.BilanLima ||
             month === AhierMonthEnum.BilanTajuh || month === AhierMonthEnum.BilanSalipan || month === AhierMonthEnum.BilanPuis) {
             // Tháng lẻ - "bilan tapak": (30 ngày), gồm: 1,3,5,7,9,11.
@@ -360,28 +363,22 @@ export default class Helper {
     static buildMatrixCalendar(toYearAhier: number) {
         let result: MatrixCalendarType[] = [];
 
-        //TODO: change to thun 1988
+        // Choose thun 1988 as a root
         const startAhierYear: AhierYear = {
             nasak: NasakEnum.InâGirai,
             ikasSarak: IkasSarakEnum.Liéh,
             yearNumber: 1988
         }
 
-        // const startAhierYear: AhierYear = {
-        //     nasak: NasakEnum.UlaAnaih,
-        //     ikasSarak: IkasSarakEnum.Bak,
-        //     yearNumber: 2001
-        // }
-
         const numberOfAhierYear = toYearAhier - (startAhierYear.yearNumber ?? 0);
-        let newGregoryDate = firstDateOfSakawiAhier_InaGirai_Lieh_1988; //new Date(2001, 3, 22); //
+        let newGregoryDate = firstDateOfSakawiAhier_InaGirai_Lieh_1988;
 
         for (let y = 0; y < numberOfAhierYear; y++) {
             const ahierYear = Helper.addAhierYears(startAhierYear, y);
             const matrixPerYear = Helper.renderMatrixPerYear(ahierYear, newGregoryDate);
             const validMatrix = Helper.applyGuenGuecRules(matrixPerYear);
 
-            // TODO: Check guen-guec
+            // Check guen-guec rules
             result.push(...validMatrix);
 
             const lastMonthItem = validMatrix[validMatrix.length - 1];
