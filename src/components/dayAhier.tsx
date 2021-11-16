@@ -1,39 +1,44 @@
 import { Col, Row } from "react-bootstrap";
 import { IkasSarakEnum, NasakEnum } from "../enums/enum";
-import { AhierDate } from "../model/AhierDate";
+import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate } from "../model/AwalDate";
 
 interface DayAhierProps {
     dateGregory: Date;
     dateAwal: AwalDate;
     dateAhier: AhierDate;
-}
-
-const GregoryDateStyle: React.CSSProperties = {
-    fontSize: "0.7rem",
-    color: "black",
-    paddingTop: "0.1rem",
-    paddingBottom: "0.1rem",
-}
-
-const ahierDateStyle: React.CSSProperties = {
-    fontSize: "0.7rem",
-    color: "orange",
-    paddingTop: "2rem",
-    paddingBottom: "0.1rem",
-}
-
-const awalDateStyle: React.CSSProperties = {
-    flexDirection: "row",
-    fontSize: "0.7rem",
-    color: "green",
-    paddingTop: "2rem",
-    paddingBottom: "0.1rem",
+    currentAhierMonth: AhierMonth;
 }
 
 export const DayAhier = (props: DayAhierProps) => {
+    const tdStyle: React.CSSProperties = {
+        opacity: (props.dateAhier.ahierMonth !== props.currentAhierMonth) ? 0.3 : 1
+    }
+
+    const GregoryDateStyle: React.CSSProperties = {
+        fontSize: "0.7rem",
+        color: "black",
+        paddingTop: "0.1rem",
+        paddingBottom: "0.1rem",
+    }
+
+    const ahierDateStyle: React.CSSProperties = {
+        fontSize: "0.7rem",
+        color: "orange",
+        paddingTop: "2rem",
+        paddingBottom: "0.1rem",
+    }
+
+    const awalDateStyle: React.CSSProperties = {
+        flexDirection: "row",
+        fontSize: "0.7rem",
+        color: "green",
+        paddingTop: "2rem",
+        paddingBottom: "0.1rem",
+    }
+
     return (
-        <td>
+        <td style={tdStyle}>
             <Row>
                 <Col md={6}></Col>
                 <Col style={GregoryDateStyle} md={6}>

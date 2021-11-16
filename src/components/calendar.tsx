@@ -55,7 +55,7 @@ export const Calendar = () => {
 
         init();
     }, []);
-
+    
     return (
         <>
             <Row>
@@ -66,11 +66,12 @@ export const Calendar = () => {
                 </Col>
             </Row>
             <br />
-            <Row>
-                {sakawiType === 'solarCalendar' && <Month year={year} month={month} />}
-                {sakawiType === 'sakawiAwal' && <MonthAwal awalMonth={monthAwal} />}
-                {sakawiType === 'sakawiAhier' && <MonthAhier matrixSakawi={matrixSakawi} currentAhierMonthMatrix={currentAhierMonth} />}
-            </Row>
+            {matrixSakawi.length > 0 &&
+                <Row>
+                    {sakawiType === 'solarCalendar' && <Month year={year} month={month} />}
+                    {sakawiType === 'sakawiAwal' && <MonthAwal awalMonth={monthAwal} />}
+                    {sakawiType === 'sakawiAhier' && <MonthAhier matrixSakawi={matrixSakawi} currentAhierMonthMatrix={currentAhierMonth} />}
+                </Row>}
         </>
     );
 }

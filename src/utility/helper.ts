@@ -215,9 +215,8 @@ export default class Helper {
     //#endregion
 
     //#region Ahier
-    //TODO
-    static addAhierDays(currentDate: AhierDate, addedDays: number) {
-        let numberOfDays = Helper.getDayNumbersOfAhierMonth(currentDate.ahierMonth.year, currentDate.ahierMonth.month);
+    static addAhierDays(maxtrixCalendar: MatrixCalendarType[], currentDate: AhierDate, addedDays: number) {
+        let numberOfDays = Helper.getActualDayNumbersOfAhierMonth(maxtrixCalendar, currentDate.ahierMonth);
         let newDays = currentDate.date + addedDays;
         let newMonth = currentDate.ahierMonth.month;
         let newYear = currentDate.ahierMonth.year;
@@ -262,8 +261,11 @@ export default class Helper {
                 }
             }
 
+            const previousMonth = Helper.addAhierMonths(currentDate.ahierMonth, -1);
+            const dayNumberOfPreviousMonth = Helper.getActualDayNumbersOfAhierMonth(maxtrixCalendar, previousMonth);
+
             result = {
-                date: Helper.getDayNumbersOfAhierMonth(currentDate.ahierMonth.year, currentDate.ahierMonth.month - 1) + newDays,
+                date: dayNumberOfPreviousMonth + newDays,
                 ahierMonth: { month: newMonth, year: newYear }
             };
         }
@@ -309,11 +311,7 @@ export default class Helper {
         return result;
     }
 
-    static getDayNumbersOfAhierMonth(year: AhierYear, month: AhierMonthEnum) {
-        // (maxtrixCalendar: MatrixCalendarType[], ahierMonth: AhierMonth)
-        // const index = maxtrixCalendar.findIndex(x => x.ahierMonth === ahierMonth);
-        // return maxtrixCalendar[index].dayNumbersOfAhierMonth;
-
+    static getExpectedDayNumbersOfAhierMonth(year: AhierYear, month: AhierMonthEnum) {
         let numberOfDay = 0;
         if (month === AhierMonthEnum.BilanSa || month === AhierMonthEnum.BilanKlau || month === AhierMonthEnum.BilanLima ||
             month === AhierMonthEnum.BilanTajuh || month === AhierMonthEnum.BilanSalipan || month === AhierMonthEnum.BilanPuis) {
@@ -340,6 +338,15 @@ export default class Helper {
         }
 
         return numberOfDay;
+    }
+
+    static getActualDayNumbersOfAhierMonth(maxtrixCalendar: MatrixCalendarType[], ahierMonth: AhierMonth) {
+        const index = maxtrixCalendar.findIndex(x => JSON.stringify(x.ahierMonth) === JSON.stringify(ahierMonth));
+        if (index !== -1) {
+            return maxtrixCalendar[index].dayNumbersOfAhierMonth;
+        } else {
+            return 0;
+        }
     }
 
     static getMonthNumbersOfAhierYear(year: AhierYear) {
@@ -396,7 +403,7 @@ export default class Helper {
 
         for (let m = 0; m < numberOfAhierMonth; m++) {
             const ahierMonth: AhierMonth = { month: m, year: ahierYear };
-            const dayNumbersOfAhierMonth = Helper.getDayNumbersOfAhierMonth(ahierYear, m);
+            const dayNumbersOfAhierMonth = Helper.getExpectedDayNumbersOfAhierMonth(ahierYear, m);
             const firstDayOfAhierMonth = newGregoryDate.getDay();
 
             const awalDate = Helper.getAwalDateByGregoryDate(newGregoryDate);
