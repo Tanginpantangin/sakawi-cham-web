@@ -71,8 +71,8 @@ export const MonthAhier = (props: MonthAhierProps) => {
     for (let weeks = 0; weeks < 6; weeks++) {
         let cells = []
         for (let days = 0; days < 7; days++) {
-            let cellAhierDate = Helper.addAhierDays(props.matrixSakawi, firstDateOfAhierMonth, (count - firstDayOfAhierMonth));
-            let dateAhier: AhierDate = {
+            const cellAhierDate = Helper.addAhierDays(props.matrixSakawi, firstDateOfAhierMonth, (count - firstDayOfAhierMonth));
+            const dateAhier: AhierDate = {
                 date: cellAhierDate.date,
                 ahierMonth: cellAhierDate.ahierMonth
             }
@@ -82,13 +82,14 @@ export const MonthAhier = (props: MonthAhierProps) => {
                 week = 7;
             }
 
-            let cellAwalDate = Helper.addAwalDays(firstDateOfAwalMonth, (count - firstDayOfAwalMonth - week));
-            let dateAwal: AwalDate = {
+            const cellAwalDate = Helper.addAwalDays(firstDateOfAwalMonth, (count - firstDayOfAwalMonth - week));
+            const dateAwal: AwalDate = {
                 date: cellAwalDate.date,
                 awalMonth: cellAwalDate.awalMonth
             }
 
-            let GregoryDate = Helper.addGregoryDays(firstDateOfGregoryMonth, (count - firstDayOfGregoryMonth));
+            const GregoryDate = Helper.addGregoryDays(firstDateOfGregoryMonth, (count - firstDayOfGregoryMonth));
+            const dayNumbersOfCurrentAhierMonth = Helper.getActualDayNumbersOfAhierMonth(props.matrixSakawi, cellAhierDate.ahierMonth);
 
             cells.push(
                 <DayAhier
@@ -97,6 +98,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
                     dateAwal={dateAwal}
                     dateGregory={GregoryDate}
                     currentAhierMonth={currentAhierMonthMatrix.ahierMonth}
+                    dayNumbersOfCurrentAhierMonth={dayNumbersOfCurrentAhierMonth}
                 />
             );
             count++;

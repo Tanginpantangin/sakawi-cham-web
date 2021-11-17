@@ -104,34 +104,34 @@ export function displayMonthName(month: AhierMonthEnum) {
             result = 'ꨝꨪꨤꩆ ꨆꨵꨮꨭ';
             break;
         case 3:
-            result = 'ꨝꨤꩆ ꨛꨩꩀ';
+            result = 'ꨝꨪꨤꩆ ꨛꨩꩀ';
             break;
         case 4:
-            result = 'ꨝꨤꩆ ꨤꨪꨟꨩ';
+            result = 'ꨝꨪꨤꩆ ꨤꨪꨟꨩ';
             break;
         case 5:
-            result = 'ꨝꨤꩆ ꨘꩌ';
+            result = 'ꨝꨪꨤꩆ ꨘꩌ';
             break;
         case 6:
-            result = 'ꨝꨤꩆ ꨓꨎꨭꩍ';
+            result = 'ꨝꨪꨤꩆ ꨓꨎꨭꩍ';
             break;
         case 7:
-            result = 'ꨝꨤꩆ ꨕꨤꨪꨚꩆ';
+            result = 'ꨝꨪꨤꩆ ꨕꨤꨪꨚꩆ';
             break;
         case 8:
-            result = 'ꨝꨤꩆ ꨧꨤꨪꨚꩆ';
+            result = 'ꨝꨪꨤꩆ ꨧꨤꨪꨚꩆ';
             break;
         case 9:
-            result = 'ꨝꨤꩆ ꨧꨚꨵꨭꩍ';
+            result = 'ꨝꨪꨤꩆ ꨧꨚꨵꨭꩍ';
             break;
         case 10:
-            result = 'ꨝꨤꩆ ꨚꨶꨪꩋ';
+            result = 'ꨝꨪꨤꩆ ꨚꨶꨪꩋ';
             break;
         case 11:
-            result = 'ꨝꨤꩆ ꨠꩀ';
+            result = 'ꨝꨪꨤꩆ ꨠꩀ';
             break;
         case 12:
-            result = 'ꨝꨤꩆ ꨞꩃ';
+            result = 'ꨝꨪꨤꩆ ꨞꩃ';
             break;
         default:
             break;

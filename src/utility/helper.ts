@@ -216,10 +216,8 @@ export default class Helper {
 
     //#region Ahier
     static addAhierDays(maxtrixCalendar: MatrixCalendarType[], currentDate: AhierDate, addedDays: number) {
-        let numberOfDays = Helper.getActualDayNumbersOfAhierMonth(maxtrixCalendar, currentDate.ahierMonth);
-        let newDays = currentDate.date + addedDays;
-        let newMonth = currentDate.ahierMonth.month;
-        let newYear = currentDate.ahierMonth.year;
+        const numberOfDays = Helper.getActualDayNumbersOfAhierMonth(maxtrixCalendar, currentDate.ahierMonth);
+        const newDays = currentDate.date + addedDays;
 
         let result: AhierDate = {
             date: 1,
@@ -230,43 +228,17 @@ export default class Helper {
         };
 
         if (newDays > numberOfDays) {
-            if (currentDate.ahierMonth.month < Helper.getMonthNumbersOfAhierYear(currentDate.ahierMonth.year)) {
-                newMonth = currentDate.ahierMonth.month + 1;
-            } else {
-                newMonth = 0;
-
-                if (currentDate.ahierMonth.year.ikasSarak < 7) {
-                    newYear.ikasSarak = currentDate.ahierMonth.year.ikasSarak + 1;
-                } else {
-                    newYear.ikasSarak = 0;
-                }
-            }
-
+            const nextMonth = Helper.addAhierMonths(currentDate.ahierMonth, 1);
             result = {
                 date: newDays - numberOfDays,
-                ahierMonth: { month: newMonth, year: newYear }
+                ahierMonth: nextMonth
             };
-
         } else if (newDays <= 0) {
-            if (currentDate.ahierMonth.month > 0) {
-                newMonth = currentDate.ahierMonth.month - 1;
-            } else {
-                let previousYear = Helper.addAhierYears(currentDate.ahierMonth.year, -1);
-                newMonth = Helper.getMonthNumbersOfAhierYear(previousYear) - 1;
-
-                if (currentDate.ahierMonth.year.ikasSarak > 0) {
-                    newYear.ikasSarak = currentDate.ahierMonth.year.ikasSarak - 1;
-                } else {
-                    newYear.ikasSarak = 7;
-                }
-            }
-
             const previousMonth = Helper.addAhierMonths(currentDate.ahierMonth, -1);
             const dayNumberOfPreviousMonth = Helper.getActualDayNumbersOfAhierMonth(maxtrixCalendar, previousMonth);
-
             result = {
                 date: dayNumberOfPreviousMonth + newDays,
-                ahierMonth: { month: newMonth, year: newYear }
+                ahierMonth: previousMonth
             };
         }
         else {
@@ -280,14 +252,32 @@ export default class Helper {
     }
 
     static addAhierMonths(currentMonth: AhierMonth, addedMonths: number) {
-        let numberOfMonths = Helper.getMonthNumbersOfAhierYear(currentMonth.year);
-        let newMonth = currentMonth.month + addedMonths;
-        let quotient = Math.floor(newMonth / numberOfMonths);
-        let remain = Helper.getMod(newMonth, numberOfMonths);
-
+        const numberOfMonths = Helper.getMonthNumbersOfAhierYear(currentMonth.year);
+        const newMonth = currentMonth.month + addedMonths;
         let result: AhierMonth = {
-            month: remain,
-            year: Helper.addAhierYears(currentMonth.year, quotient)
+            month: currentMonth.month,
+            year: currentMonth.year
+        }
+
+        if (newMonth > numberOfMonths - 1) {
+            const nextYear = Helper.addAhierYears(currentMonth.year, 1);
+            result = {
+                month: newMonth - numberOfMonths,
+                year: nextYear
+            }
+        } else if (newMonth < 0) {
+            const previousYear = Helper.addAhierYears(currentMonth.year, -1);
+            const numberOfMonthsOfPreviousYear = Helper.getMonthNumbersOfAhierYear(previousYear);
+
+            result = {
+                month: numberOfMonthsOfPreviousYear + newMonth,
+                year: previousYear
+            }
+        } else {
+            result = {
+                month: newMonth,
+                year: currentMonth.year
+            }
         }
 
         return result;
@@ -548,5 +538,15 @@ export default class Helper {
         }
 
         return daysGap;
+    }
+
+    static convertToChamDigitUnicode(latinNumber: number) {
+        const ChamDigitArr = ['꩐', '꩑', '꩒', '꩓', '꩔', '꩕', '꩖', '꩗', '꩘', '꩙'];
+        const EnglishDigits = '0123456789';
+        const reg = new RegExp('[' + EnglishDigits + ']', 'g');
+
+        return latinNumber.toString().replace(reg, function (c) {
+            return ChamDigitArr[EnglishDigits.indexOf(c)]
+        });
     }
 }
