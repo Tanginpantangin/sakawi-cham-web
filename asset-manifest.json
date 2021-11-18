@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/sakawi-cham-web/static/css/main.98dfbed4.chunk.css",
-    "main.js": "/sakawi-cham-web/static/js/main.ff12261e.chunk.js",
-    "main.js.map": "/sakawi-cham-web/static/js/main.ff12261e.chunk.js.map",
+    "main.css": "/sakawi-cham-web/static/css/main.a3c74495.chunk.css",
+    "main.js": "/sakawi-cham-web/static/js/main.9a81d1a9.chunk.js",
+    "main.js.map": "/sakawi-cham-web/static/js/main.9a81d1a9.chunk.js.map",
     "runtime-main.js": "/sakawi-cham-web/static/js/runtime-main.ef9d8ae0.js",
     "runtime-main.js.map": "/sakawi-cham-web/static/js/runtime-main.ef9d8ae0.js.map",
-    "static/js/2.bc5a101f.chunk.js": "/sakawi-cham-web/static/js/2.bc5a101f.chunk.js",
-    "static/js/2.bc5a101f.chunk.js.map": "/sakawi-cham-web/static/js/2.bc5a101f.chunk.js.map",
+    "static/js/2.49bcb912.chunk.js": "/sakawi-cham-web/static/js/2.49bcb912.chunk.js",
+    "static/js/2.49bcb912.chunk.js.map": "/sakawi-cham-web/static/js/2.49bcb912.chunk.js.map",
     "index.html": "/sakawi-cham-web/index.html",
-    "static/css/main.98dfbed4.chunk.css.map": "/sakawi-cham-web/static/css/main.98dfbed4.chunk.css.map",
-    "static/js/2.bc5a101f.chunk.js.LICENSE.txt": "/sakawi-cham-web/static/js/2.bc5a101f.chunk.js.LICENSE.txt",
+    "static/css/main.a3c74495.chunk.css.map": "/sakawi-cham-web/static/css/main.a3c74495.chunk.css.map",
+    "static/js/2.49bcb912.chunk.js.LICENSE.txt": "/sakawi-cham-web/static/js/2.49bcb912.chunk.js.LICENSE.txt",
     "static/media/App.css": "/sakawi-cham-web/static/media/NotoSansCham-Regular.c52aed7f.woff"
   },
   "entrypoints": [
     "static/js/runtime-main.ef9d8ae0.js",
-    "static/js/2.bc5a101f.chunk.js",
-    "static/css/main.98dfbed4.chunk.css",
-    "static/js/main.ff12261e.chunk.js"
+    "static/js/2.49bcb912.chunk.js",
+    "static/css/main.a3c74495.chunk.css",
+    "static/js/main.9a81d1a9.chunk.js"
   ]
 }
