@@ -1,5 +1,5 @@
 import { Col, Row } from "react-bootstrap";
-import { IkasSarakEnum } from "../enums/enum";
+import { displayIkasSarakName } from "../enums/enum";
 import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate } from "../model/AwalDate";
 import Helper from "../utility/helper";
@@ -10,6 +10,7 @@ interface DayAhierProps {
     dateAhier: AhierDate;
     currentAhierMonth: AhierMonth;
     dayNumbersOfCurrentAhierMonth: number;
+    dayNumbersOfCurrentAwalMonth: number;
 }
 
 export const DayAhier = (props: DayAhierProps) => {
@@ -18,7 +19,7 @@ export const DayAhier = (props: DayAhierProps) => {
     }
 
     const GregoryDateStyle: React.CSSProperties = {
-        fontSize: "0.7rem",
+        fontSize: "0.8rem",
         color: "black",
         paddingTop: "0.1rem",
         paddingBottom: "0.1rem",
@@ -26,7 +27,7 @@ export const DayAhier = (props: DayAhierProps) => {
     }
 
     const ahierDateStyle: React.CSSProperties = {
-        fontSize: "1.3rem",
+        fontSize: "1.5rem",
         color: "orange",
         paddingTop: "2rem",
         paddingBottom: "0.1rem",
@@ -35,11 +36,11 @@ export const DayAhier = (props: DayAhierProps) => {
 
     const awalDateStyle: React.CSSProperties = {
         flexDirection: "row",
-        fontSize: "0.7rem",
+        fontSize: "0.8rem",
         color: "green",
         paddingTop: "2rem",
-        paddingBottom: "0.1rem",
-        textAlign: "left"
+        paddingBottom: "0.3rem",
+        alignSelf: "end"
     }
 
     function displayGregoryDate(dateGregory: Date) {
@@ -77,11 +78,30 @@ export const DayAhier = (props: DayAhierProps) => {
 
     function displayAwalDate(dateAwal: AwalDate) {
         const monthAwal = dateAwal.awalMonth.month + 1;
+        const bingun = 'ꩃ';
+        const klem = 'ꩌ';
 
         if (dateAwal.date === 1) {
-            return dateAwal.date + "." + monthAwal + "." + IkasSarakEnum[dateAwal.awalMonth.year.ikasSarak];
+            return (
+                <>
+                    <label style={{ margin: 0 }} >{Helper.convertToChamDigitUnicode(dateAwal.date) + bingun + "." + Helper.convertToChamDigitUnicode(monthAwal) + "."}</label>
+                    <label style={{ margin: 0 }} className='ikasSarak-month-cell'>{displayIkasSarakName(dateAwal.awalMonth.year.ikasSarak)}</label>
+                </>
+            )
         } else {
-            return dateAwal.date;
+            if (props.dayNumbersOfCurrentAwalMonth === 30) {
+                if (dateAwal.date <= 15) {
+                    return Helper.convertToChamDigitUnicode(dateAwal.date) + bingun;
+                } else {
+                    return Helper.convertToChamDigitUnicode(dateAwal.date - 15) + klem;
+                }
+            } else {
+                if (dateAwal.date <= 14) {
+                    return Helper.convertToChamDigitUnicode(dateAwal.date) + bingun;
+                } else {
+                    return Helper.convertToChamDigitUnicode(dateAwal.date - 14) + klem;
+                }
+            }
         }
     }
 

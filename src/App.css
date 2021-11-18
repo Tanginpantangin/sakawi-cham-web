@@ -65,6 +65,12 @@
   font-size: 2rem;
 }
 
+.ikasSarak-month-cell {
+  font-family: 'AkharTakai';
+  font-weight: black;
+  font-size: 1.0rem;
+}
+
 @font-face {
   font-family: 'NotoSansCham';
   src: url('fonts/NotoSansCham-Regular.woff') format('woff');

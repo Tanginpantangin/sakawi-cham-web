@@ -90,6 +90,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
 
             const GregoryDate = Helper.addGregoryDays(firstDateOfGregoryMonth, (count - firstDayOfGregoryMonth));
             const dayNumbersOfCurrentAhierMonth = Helper.getActualDayNumbersOfAhierMonth(props.matrixSakawi, cellAhierDate.ahierMonth);
+            const dayNumbersOfCurrentAwalMonth = Helper.getDayNumbersOfAwalMonth(dateAwal.awalMonth.year, dateAwal.awalMonth.month);
 
             cells.push(
                 <DayAhier
@@ -99,6 +100,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
                     dateGregory={GregoryDate}
                     currentAhierMonth={currentAhierMonthMatrix.ahierMonth}
                     dayNumbersOfCurrentAhierMonth={dayNumbersOfCurrentAhierMonth}
+                    dayNumbersOfCurrentAwalMonth={dayNumbersOfCurrentAwalMonth}
                 />
             );
             count++;
@@ -134,6 +136,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
                         <label className='bilan-title'>{displayMonthName(currentAhierMonth.month)}</label>
                         {' - '}<label className='bilan-title'>{displayNasakName(currentAhierMonth.year.nasak)}</label>
                         {'   '}<label className='ikasSarak-title'>{displayIkasSarakName(currentAhierMonth.year.ikasSarak)}</label>
+                        {' - '}<label className='bilan-title'>{Helper.convertToChamDigitUnicode(currentAhierMonth.year.yearNumber ?? 0)}</label>
                     </div>
                     <h5>{AhierMonthEnum[currentAhierMonth.month]} {`(${(currentAhierMonth.month + 1)})`} - {NasakEnum[currentAhierMonth.year.nasak]} {IkasSarakEnum[currentAhierMonth.year.ikasSarak]} - {currentAhierMonth.year.yearNumber}</h5>
                 </Col>
