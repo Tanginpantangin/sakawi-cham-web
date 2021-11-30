@@ -3,10 +3,12 @@ import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "
 import { AwalMonthEnum, IkasSarakEnum } from "../enums/enum";
 import { AwalDate, AwalMonth } from "../model/AwalDate";
 import Helper from '../utility/helper';
+import { SakawiType } from "./calendar";
 import { DayAwal } from "./dayAwal";
 
 interface MonthAwalProps {
-    awalMonth: AwalMonth;
+    awalMonth: AwalMonth,
+    onSelectSakawiType: (type: SakawiType) => void
 }
 
 export const MonthAwal = (props: MonthAwalProps) => {
@@ -88,21 +90,29 @@ export const MonthAwal = (props: MonthAwalProps) => {
     return (
         <Container>
             <Row>
-                <Col md={4} style={{ textAlign: "left" }}>
-                    <ButtonToolbar aria-label="Toolbar with button groups">
-                        <ButtonGroup aria-label="Basic example">
-                            <Button variant="secondary" className="fa fa-chevron-left" onClick={handleGoToPreviousMonth} />
-                            <Button variant="secondary" className="fa fa-chevron-right" onClick={handleGoToNextMonth} />
-                        </ButtonGroup>
-                        <ButtonGroup aria-label="Third group" style={{ marginLeft: ".75em" }}>
-                            <Button variant="secondary" onClick={handleGoToToday}>Today</Button>
+                <Col md={4}>
+                    <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-start" }}>
+                        <ButtonGroup aria-label="Type of calendar">
+                            <Button variant="secondary" onClick={() => props.onSelectSakawiType('sakawiAhier')}>Lịch Chăm</Button>
+                            <Button variant="secondary">Lịch Awal</Button>
+                            <Button variant="secondary" onClick={() => props.onSelectSakawiType('solarCalendar')}>Dương lịch</Button>
                         </ButtonGroup>
                     </ButtonToolbar>
                 </Col>
                 <Col md={5} style={{ textAlign: "center" }}>
                     <h2>{AwalMonthEnum[awalMonth.month]} {`(${(awalMonth.month + 1)})`} - {IkasSarakEnum[awalMonth.year.ikasSarak]}</h2>
                 </Col>
-                <Col md={3}></Col>
+                <Col md={3} style={{ textAlign: "left" }}>
+                    <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-end" }}>
+                        <ButtonGroup aria-label="Third group" style={{ marginRight: ".75em" }}>
+                            <Button variant="secondary" onClick={handleGoToToday}>Today</Button>
+                        </ButtonGroup>
+                        <ButtonGroup aria-label="Basic example">
+                            <Button variant="secondary" className="fa fa-chevron-left" onClick={handleGoToPreviousMonth} />
+                            <Button variant="secondary" className="fa fa-chevron-right" onClick={handleGoToNextMonth} />
+                        </ButtonGroup>
+                    </ButtonToolbar>
+                </Col>
             </Row>
             <Row>
                 <Col md={12}>

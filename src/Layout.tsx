@@ -1,4 +1,4 @@
-import { Card, Col, Container, Row, ListGroup, Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { Card, Col, Container, ListGroup, Nav, Navbar, Row } from "react-bootstrap";
 
 interface LayoutProps {
     children: JSX.Element;
@@ -17,38 +17,34 @@ export const Layout = (props: LayoutProps) => {
         <Container fluid>
             {/* Header */}
             <Row>
-            <Col>
-                <Navbar bg="dark" variant="dark" expand="lg">
-                    <Navbar.Brand href="#home">SAKAWI CHAM</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto my-2 my-lg-0"
-                        style={{ maxHeight: '100px' }}
-                        navbarScroll>
-                            <Nav.Link href="#home">Home</Nav.Link>
-                            <Nav.Link href="#link">Link</Nav.Link>
-                            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                            </NavDropdown>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Navbar>
+                <Col style={{ paddingRight: 0, paddingLeft: 0 }}>
+                    <Navbar bg="dark" variant="dark" expand="lg">
+                        <Navbar.Brand href="#home">SAKAWI CHAM</Navbar.Brand>
+                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                        <Navbar.Collapse id="basic-navbar-nav">
+                            <Nav className="mr-auto my-2 my-lg-0"
+                                style={{ maxHeight: '100px' }}
+                                navbarScroll>
+                                <Nav.Link href="#">Trang chủ</Nav.Link>
+                                <Nav.Link href="#">Tiện ích</Nav.Link>
+                                <Nav.Link href="#">Tài liệu</Nav.Link>
+                                <Nav.Link href="#">Blog</Nav.Link>
+                                <Nav.Link href="#">Hướng dẫn</Nav.Link>
+                                <Nav.Link href="#">Chúng tôi</Nav.Link>
+                            </Nav>
+                        </Navbar.Collapse>
+                    </Navbar>
                 </Col>
             </Row>
-            <br/>
+            <br />
             {/* Body */}
             <Row>
                 <Col sm={2}>
                     <Card>
-                        <Card.Header>Featured</Card.Header>
                         <ListGroup>
-                            <ListGroup.Item>Cras justo odio</ListGroup.Item>
-                            <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-                            <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
+                            <ListGroup.Item>Lịch tháng</ListGroup.Item>
+                            <ListGroup.Item>Lịch năm</ListGroup.Item>
+                            <ListGroup.Item>Sự kiện trong năm</ListGroup.Item>
                         </ListGroup>
                     </Card>
                 </Col>
@@ -58,10 +54,10 @@ export const Layout = (props: LayoutProps) => {
             </Row>
             {/* Fotter */}
             <Row>
-                <Col>
+                <Col style={{ paddingRight: 0, paddingLeft: 0 }}>
                     <p style={footerStyle}>{`© ${new Date().getFullYear()} Sakawi Cham`}</p>
-                </Col> 
+                </Col>
             </Row>
-        </Container>
+        </Container >
     );
 }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Col, Row } from "react-bootstrap";
+import { Alert, Col, Row } from "react-bootstrap";
 import { AhierMonthEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { AhierMonth } from "../model/AhierDate";
 import { AwalMonth } from "../model/AwalDate";
@@ -27,11 +27,12 @@ export const Calendar = () => {
         firstDayOfAwalMonth: 0
     }
 
+    const [showWarning, setShowWarning] = useState(true);
     const [matrixSakawi, setMatrixSakawi] = useState<MatrixCalendarType[]>([]);
     const [currentAhierMonth, setCurrentAhierMonth] = useState<MatrixCalendarType>(initialMatrixCalendarType);
     const [year] = useState(new Date().getFullYear());
     const [month] = useState(new Date().getMonth());
-    const [sakawiType] = useState<SakawiType>('sakawiAhier');
+    const [sakawiType, setSakawiType] = useState<SakawiType>('sakawiAhier');
 
     // Sakawi Awal
     let awalMonth: AwalMonth = { month: 0, year: { ikasSarak: IkasSarakEnum.Hak } };
@@ -40,7 +41,7 @@ export const Calendar = () => {
     React.useEffect(() => {
         function init() {
             // Build matrix Calendar
-            let matrix = Helper.buildMatrixCalendar(2044);
+            let matrix = Helper.buildMatrixCalendar(2046);
             setMatrixSakawi(matrix);
             //console.log('matrix', JSON.stringify(matrix));
 
@@ -55,9 +56,24 @@ export const Calendar = () => {
 
         init();
     }, []);
-    
+
+    function onSelectSakawiType(type: SakawiType) {
+        setSakawiType(type);
+    }
+
     return (
         <>
+            {showWarning &&
+                <Row>
+                    <Col md={12}>
+                        <Alert variant='danger' onClose={() => setShowWarning(false)} dismissible>
+                            <Alert.Heading>Lưu ý!</Alert.Heading>
+                            Sakawi năm hiện tại được tính theo Sakawi của Hội đồng chức sắc phát hành.
+                            Sakawi các năm tiếp theo chỉ mang tính chất tham khảo.
+                        </Alert>
+                    </Col>
+                </Row>
+            }
             <Row>
                 <Col md={12}>
                     <CountDownBar dateName={"Rija Nagar"} variantType='success' toDate={new Date(2022, 4, 28)} />
@@ -69,8 +85,19 @@ export const Calendar = () => {
             {matrixSakawi.length > 0 &&
                 <Row>
                     {sakawiType === 'solarCalendar' && <Month year={year} month={month} />}
-                    {sakawiType === 'sakawiAwal' && <MonthAwal awalMonth={monthAwal} />}
-                    {sakawiType === 'sakawiAhier' && <MonthAhier matrixSakawi={matrixSakawi} currentAhierMonthMatrix={currentAhierMonth} />}
+                    {sakawiType === 'sakawiAwal' &&
+                        <MonthAwal
+                            awalMonth={monthAwal}
+                            onSelectSakawiType={onSelectSakawiType}
+                        />
+                    }
+                    {sakawiType === 'sakawiAhier' &&
+                        <MonthAhier
+                            matrixSakawi={matrixSakawi}
+                            currentAhierMonthMatrix={currentAhierMonth}
+                            onSelectSakawiType={onSelectSakawiType}
+                        />
+                    }
                 </Row>}
         </>
     );

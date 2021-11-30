@@ -15,7 +15,8 @@ interface DayAhierProps {
 
 export const DayAhier = (props: DayAhierProps) => {
     const tdStyle: React.CSSProperties = {
-        opacity: (props.dateAhier.ahierMonth !== props.currentAhierMonth) ? 0.3 : 1
+        opacity: (props.dateAhier.ahierMonth !== props.currentAhierMonth) ? 0.3 : 1,
+        backgroundColor: (props.dateGregory.toLocaleDateString() === new Date().toLocaleDateString()) ? '#FFEFBF' : ''
     }
 
     const GregoryDateStyle: React.CSSProperties = {
@@ -28,7 +29,7 @@ export const DayAhier = (props: DayAhierProps) => {
 
     const ahierDateStyle: React.CSSProperties = {
         fontSize: "1.5rem",
-        color: "orange",
+        color: "#F15A25",
         paddingTop: "2rem",
         paddingBottom: "0.1rem",
         textAlign: "right"
@@ -36,11 +37,21 @@ export const DayAhier = (props: DayAhierProps) => {
 
     const awalDateStyle: React.CSSProperties = {
         flexDirection: "row",
-        fontSize: "0.8rem",
-        color: "green",
+        fontSize: "1rem",
+        color: "#007A3D",
         paddingTop: "2rem",
         paddingBottom: "0.3rem",
         alignSelf: "end"
+    }
+
+    const eventStyle: React.CSSProperties = {
+        display: "block",
+        fontSize: "0.8rem",
+        color: "white",
+        backgroundColor: "#3788d8",
+        paddingLeft: "0.3rem",
+        textAlign: "left",
+        marginBottom: "0.1rem",
     }
 
     function displayGregoryDate(dateGregory: Date) {
@@ -114,8 +125,24 @@ export const DayAhier = (props: DayAhierProps) => {
                 </Col>
             </Row>
             <Row>
-                <Col md={6}></Col>
-                <Col md={6}></Col>
+                {/*TODO*/}
+                <Col md={12} style={{ minHeight: "10px", maxHeight: "25px" }}>
+                    {props.dateAhier.ahierMonth.month === 0 && props.dateAhier.date === 1 &&
+                        <p style={eventStyle}>Akaok thun</p>
+                    }
+                    {props.dateAhier.ahierMonth.month === 0 && props.dateGregory.getDay() === 4 && props.dateAhier.date < 7 &&
+                        <p style={eventStyle}>Rija Nagar</p>
+                    }
+                    {props.dateAhier.ahierMonth.month === 5 && props.dateAhier.date === 29 &&
+                        <p style={eventStyle}>Katé palei Hamu Tanran</p>
+                    }
+                    {props.dateAhier.ahierMonth.month === 6 && props.dateAhier.date === 1 &&
+                        <p style={eventStyle}>Katé angaok bimong</p>
+                    }
+                    {props.dateAwal.awalMonth.month === 8 && props.dateAwal.date === 1 &&
+                        <p style={eventStyle}>Ramâwan</p>
+                    }
+                </Col>
             </Row>
             <Row>
                 <Col style={awalDateStyle} md={6}>

@@ -5,11 +5,13 @@ import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate, AwalMonth } from "../model/AwalDate";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from "../utility/helper";
+import { SakawiType } from "./calendar";
 import { DayAhier } from "./dayAhier";
 
 interface MonthAhierProps {
     matrixSakawi: MatrixCalendarType[],
-    currentAhierMonthMatrix: MatrixCalendarType
+    currentAhierMonthMatrix: MatrixCalendarType,
+    onSelectSakawiType: (type: SakawiType) => void
 }
 
 export const MonthAhier = (props: MonthAhierProps) => {
@@ -109,7 +111,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
         rows.push(<tr key={weeks}>{cells}</tr>)
     }
 
-    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const tableStyle: React.CSSProperties = {
         height: "400px",
         tableLayout: "fixed"
@@ -120,18 +122,16 @@ export const MonthAhier = (props: MonthAhierProps) => {
     return (
         <Container>
             <Row>
-                <Col md={4} style={{ textAlign: "left" }}>
-                    <ButtonToolbar aria-label="Toolbar with button groups">
-                        <ButtonGroup aria-label="Basic example">
-                            <Button variant="secondary" className="fa fa-chevron-left" onClick={handleGoToPreviousMonth} />
-                            <Button variant="secondary" className="fa fa-chevron-right" onClick={handleGoToNextMonth} />
-                        </ButtonGroup>
-                        <ButtonGroup aria-label="Third group" style={{ marginLeft: ".75em" }}>
-                            <Button variant="secondary" onClick={handleGoToToday}>Today</Button>
+                <Col md={4}>
+                    <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-start" }}>
+                        <ButtonGroup aria-label="Type of calendar">
+                            <Button variant="secondary">Lịch Chăm</Button>
+                            <Button variant="secondary" onClick={() => props.onSelectSakawiType('sakawiAwal')}>Lịch Awal</Button>
+                            <Button variant="secondary" onClick={() => props.onSelectSakawiType('solarCalendar')}>Dương lịch</Button>
                         </ButtonGroup>
                     </ButtonToolbar>
                 </Col>
-                <Col md={6} style={{ textAlign: "center" }}>
+                <Col md={5} style={{ textAlign: "center" }}>
                     <div>
                         <label className='bilan-title'>{displayMonthName(currentAhierMonth.month)}</label>
                         {' - '}<label className='bilan-title'>{displayNasakName(currentAhierMonth.year.nasak)}</label>
@@ -140,7 +140,17 @@ export const MonthAhier = (props: MonthAhierProps) => {
                     </div>
                     <h5>{AhierMonthEnum[currentAhierMonth.month]} {`(${(currentAhierMonth.month + 1)})`} - {NasakEnum[currentAhierMonth.year.nasak]} {IkasSarakEnum[currentAhierMonth.year.ikasSarak]} - {currentAhierMonth.year.yearNumber}</h5>
                 </Col>
-                <Col md={2}></Col>
+                <Col md={3}>
+                    <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-end" }}>
+                        <ButtonGroup aria-label="Third group" style={{ marginRight: ".75em" }}>
+                            <Button variant="secondary" onClick={handleGoToToday}>Today</Button>
+                        </ButtonGroup>
+                        <ButtonGroup aria-label="Navigate months">
+                            <Button variant="secondary" className="fa fa-chevron-left" onClick={handleGoToPreviousMonth} />
+                            <Button variant="secondary" className="fa fa-chevron-right" onClick={handleGoToNextMonth} />
+                        </ButtonGroup>
+                    </ButtonToolbar>
+                </Col>
             </Row>
             <Row>
                 <Col md={12}>
