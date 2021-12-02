@@ -1,5 +1,5 @@
 import { Col, Row } from "react-bootstrap";
-import { displayIkasSarakName } from "../enums/enum";
+import { AwalMonthEnum, displayIkasSarakName } from "../enums/enum";
 import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate } from "../model/AwalDate";
 import Helper from "../utility/helper";
@@ -116,6 +116,94 @@ export const DayAhier = (props: DayAhierProps) => {
         }
     }
 
+    function getEvents() {
+        let result: string[] = [];
+
+        if (props.dateAhier.ahierMonth.month === 0 && props.dateAhier.date === 1) {
+            result.push('Akaok thun');
+        }
+
+        if (props.dateAwal.awalMonth.month !== AwalMonthEnum.Ramadan) {
+            if (props.dateAhier.ahierMonth.month === 0 && props.dateGregory.getDay() === 4 && props.dateAhier.date < 7) {
+                result.push('Rija Nagar');
+            }
+        } else {
+            if (props.dateAhier.ahierMonth.month === 0 && props.dateGregory.getDay() === 4 && props.dateAhier.date > 14 && props.dateAhier.date < 21) {
+                result.push('Rija Nagar');
+            }
+        }
+
+        if (props.dateAhier.ahierMonth.month === 5 && props.dateAhier.date === 29) {
+            result.push('Katé palei Hamu Tanran');
+        }
+
+        if (props.dateAhier.ahierMonth.month === 6 && props.dateAhier.date === 1) {
+            result.push('Katé angaok bimong');
+        }
+
+        if (props.dayNumbersOfCurrentAhierMonth === 30) {
+            if (props.dateAhier.ahierMonth.month === 8 && props.dateAhier.date === 16) {
+                result.push('Ca-mbur');
+            }
+        } else {
+            if (props.dateAhier.ahierMonth.month === 8 && props.dateAhier.date === 15) {
+                result.push('Ca-mbur');
+            }
+        }
+
+        if (props.dateAwal.awalMonth.month === 8 && props.dateAwal.date === 1) {
+            result.push('Tamâ ricaow Ramâwan');
+        }
+
+        if (props.dateAwal.awalMonth.month === 8 && props.dateAwal.date === 16) {
+            result.push('Muk trun');
+        }
+
+        if (props.dateAwal.awalMonth.month === 8 && props.dateAwal.date === 21) {
+            result.push('Ong trun');
+        }
+
+        if (props.dateAwal.awalMonth.month === 9 && props.dateAwal.date === 2) {
+            result.push('Talaih aek Ramâwan');
+        }
+
+        if (props.dateAwal.awalMonth.month === 11 && props.dateAwal.date === 1) {
+            result.push('Ikak Waha');
+        }
+
+        if (props.dateAwal.awalMonth.month === 11 && props.dateAwal.date === 11) {
+            result.push('Talaih Waha');
+        }
+
+        if (props.dateAhier.ahierMonth.month === 3 && props.dateGregory.getDay() === 0 && props.dateAhier.date < 7) {
+            result.push('Yuer Yang');
+        }
+
+        // TODO: 
+        // if (props.dateAhier.ahierMonth.month === 10 && props.dateGregory.getDay() === 2 && props.dateAhier.date <= 15) {
+        //     result.push('Peh ba-mbeng Yang');
+        // }
+
+        if ((props.dateAhier.ahierMonth.month === 2
+            || props.dateAhier.ahierMonth.month === 5
+            || props.dateAhier.ahierMonth.month === 7
+            || props.dateAhier.ahierMonth.month === 9
+            || props.dateAhier.ahierMonth.month === 10) && props.dateGregory.getDay() === 3) {
+
+            if (props.dayNumbersOfCurrentAhierMonth === 30) {
+                if (props.dateAhier.date > 15 && (props.dateAhier.date - 15) % 2 === 0) {
+                    result.push('♥️ Lakhah');
+                }
+            } else {
+                if (props.dateAhier.date > 14 && (props.dateAhier.date - 14) % 2 === 0) {
+                    result.push('♥️ Lakhah');
+                }
+            }
+        }
+
+        return result;
+    }
+
     return (
         <td style={tdStyle}>
             <Row>
@@ -125,23 +213,8 @@ export const DayAhier = (props: DayAhierProps) => {
                 </Col>
             </Row>
             <Row>
-                {/*TODO*/}
                 <Col md={12} style={{ minHeight: "10px", maxHeight: "25px" }}>
-                    {props.dateAhier.ahierMonth.month === 0 && props.dateAhier.date === 1 &&
-                        <p style={eventStyle}>Akaok thun</p>
-                    }
-                    {props.dateAhier.ahierMonth.month === 0 && props.dateGregory.getDay() === 4 && props.dateAhier.date < 7 &&
-                        <p style={eventStyle}>Rija Nagar</p>
-                    }
-                    {props.dateAhier.ahierMonth.month === 5 && props.dateAhier.date === 29 &&
-                        <p style={eventStyle}>Katé palei Hamu Tanran</p>
-                    }
-                    {props.dateAhier.ahierMonth.month === 6 && props.dateAhier.date === 1 &&
-                        <p style={eventStyle}>Katé angaok bimong</p>
-                    }
-                    {props.dateAwal.awalMonth.month === 8 && props.dateAwal.date === 1 &&
-                        <p style={eventStyle}>Ramâwan</p>
-                    }
+                    {getEvents().map(item => { return <p style={eventStyle}>{item}</p> })}
                 </Col>
             </Row>
             <Row>

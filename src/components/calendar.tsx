@@ -66,9 +66,9 @@ export const Calendar = () => {
             {showWarning &&
                 <Row>
                     <Col md={12}>
-                        <Alert variant='danger' onClose={() => setShowWarning(false)} dismissible>
+                        <Alert variant='info' onClose={() => setShowWarning(false)} dismissible>
                             <Alert.Heading>Lưu ý!</Alert.Heading>
-                            Sakawi năm hiện tại được tính theo Sakawi của Hội đồng chức sắc phát hành.
+                            Sakawi năm hiện tại được tính theo Sakawi của Hội đồng Chức sắc phát hành.
                             Sakawi các năm tiếp theo chỉ mang tính chất tham khảo.
                         </Alert>
                     </Col>

@@ -143,7 +143,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
                 <Col md={3}>
                     <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-end" }}>
                         <ButtonGroup aria-label="Third group" style={{ marginRight: ".75em" }}>
-                            <Button variant="secondary" onClick={handleGoToToday}>Today</Button>
+                            <Button variant="secondary" onClick={handleGoToToday}>Hôm nay</Button>
                         </ButtonGroup>
                         <ButtonGroup aria-label="Navigate months">
                             <Button variant="secondary" className="fa fa-chevron-left" onClick={handleGoToPreviousMonth} />
