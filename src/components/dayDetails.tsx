@@ -1,26 +1,43 @@
 import { Col, Row } from "react-bootstrap";
 import { AwalMonthEnum, displayIkasSarakName } from "../enums/enum";
 import { AhierDate, AhierMonth } from "../model/AhierDate";
-import { AwalDate } from "../model/AwalDate";
+import { AwalDate, AwalMonth } from "../model/AwalDate";
 import Helper from "../utility/helper";
+import { SakawiType } from "./calendar";
 
-interface DayAhierProps {
+interface DayDetailsProps {
+    sakawiType: SakawiType;
     dateGregory: Date;
     dateAwal: AwalDate;
     dateAhier: AhierDate;
-    currentAhierMonth: AhierMonth;
+    currentAhierMonth?: AhierMonth;
+    currentAwalMonth?: AwalMonth;
     dayNumbersOfCurrentAhierMonth: number;
     dayNumbersOfCurrentAwalMonth: number;
 }
 
-export const DayAhier = (props: DayAhierProps) => {
+export const DayDetails = (props: DayDetailsProps) => {
+    let opacityValue = 1;
+    if (props.sakawiType === "sakawiAhier") {
+        if (props.dateAhier.ahierMonth !== props.currentAhierMonth) {
+            opacityValue = 0.3;
+        }
+    } else if (props.sakawiType === "sakawiAwal") {
+        if (props.dateAwal.awalMonth !== props.currentAwalMonth) {
+            opacityValue = 0.3;
+        }
+    } else {
+        //TODO: sakawiGregory
+        opacityValue = 1;
+    }
+
     const tdStyle: React.CSSProperties = {
-        opacity: (props.dateAhier.ahierMonth !== props.currentAhierMonth) ? 0.3 : 1,
+        opacity: opacityValue,
         backgroundColor: (props.dateGregory.toLocaleDateString() === new Date().toLocaleDateString()) ? '#FFEFBF' : ''
     }
 
     const GregoryDateStyle: React.CSSProperties = {
-        fontSize: "0.8rem",
+        fontSize: props.sakawiType === "sakawiGregory" ? "1.3rem" : "0.8rem",
         color: "black",
         paddingTop: "0.1rem",
         paddingBottom: "0.1rem",
@@ -28,7 +45,7 @@ export const DayAhier = (props: DayAhierProps) => {
     }
 
     const ahierDateStyle: React.CSSProperties = {
-        fontSize: "1.5rem",
+        fontSize: props.sakawiType === "sakawiAhier" ? "1.5rem" : "1rem",
         color: "#F15A25",
         paddingTop: "2rem",
         paddingBottom: "0.1rem",
@@ -37,10 +54,11 @@ export const DayAhier = (props: DayAhierProps) => {
 
     const awalDateStyle: React.CSSProperties = {
         flexDirection: "row",
-        fontSize: "1rem",
+        fontSize: props.sakawiType === "sakawiAwal" ? "1.5rem" : "1rem",
         color: "#007A3D",
         paddingTop: "2rem",
         paddingBottom: "0.3rem",
+        paddingRight: "0.3rem",
         alignSelf: "end"
     }
 
@@ -214,7 +232,7 @@ export const DayAhier = (props: DayAhierProps) => {
             </Row>
             <Row>
                 <Col md={12} style={{ minHeight: "10px", maxHeight: "25px" }}>
-                    {getEvents().map(item => { return <p style={eventStyle}>{item}</p> })}
+                    {getEvents().map((item, index) => { return <p key={index} style={eventStyle}>{item}</p> })}
                 </Col>
             </Row>
             <Row>

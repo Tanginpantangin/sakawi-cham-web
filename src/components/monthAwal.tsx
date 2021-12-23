@@ -1,64 +1,72 @@
 import React, { useState } from "react";
 import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "react-bootstrap";
-import { AwalMonthEnum, IkasSarakEnum } from "../enums/enum";
+import { AhierMonthEnum, AwalMonthEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
+import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate, AwalMonth } from "../model/AwalDate";
+import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from '../utility/helper';
 import { SakawiType } from "./calendar";
-import { DayAwal } from "./dayAwal";
+import { DayDetails } from "./dayDetails";
 
 interface MonthAwalProps {
-    awalMonth: AwalMonth,
+    matrixSakawi: MatrixCalendarType[],
+    currentAwalMonthMatrix: MatrixCalendarType,
     onSelectSakawiType: (type: SakawiType) => void
 }
 
 export const MonthAwal = (props: MonthAwalProps) => {
-    const [awalMonth, setAwalMonth] = useState(props.awalMonth);
-    let firstDate: AwalDate = { date: 1, awalMonth: props.awalMonth };
-    const [firstDateOfMonth, setFirstDateOfMonth] = useState<AwalDate>(firstDate);
-    const [firstDayOfMonth, setFirstDayOfMonth] = useState(0);
+    const initialAhierMonth: AhierMonth = { month: AhierMonthEnum.BilanSa, year: { nasak: NasakEnum.Pabuei, ikasSarak: IkasSarakEnum.JimLuic, yearNumber: 2019 } };
+    const initialAwalMonth: AwalMonth = { month: 0, year: { ikasSarak: 0, yearNumber: 1400 } };
+    const initialAhierDate: AhierDate = { date: 1, ahierMonth: initialAhierMonth };
+    const initialAwalDate: AwalDate = { date: 1, awalMonth: initialAwalMonth };
+    const initialGregoryDate: Date = new Date();
+
+    const [currentAwalMonthMatrix, setCurrentAwalMonthMatrix] = useState(props.currentAwalMonthMatrix);
+
+    const [firstDateOfAhierMonth, setFirstDateOfAhierMonth] = useState<AhierDate>(initialAhierDate);
+    const [firstDayOfAhierMonth, setFirstDayOfAhierMonth] = useState(0);
+
+    const [firstDateOfAwalMonth, setFirstDateOfAwalMonth] = useState<AwalDate>(initialAwalDate);
+    const [firstDayOfAwalMonth, setFirstDayOfAwalMonth] = useState(0);
+
+    const [firstDateOfGregoryMonth, setFirstDateOfGregoryMonth] = useState<Date>(initialGregoryDate);
+    //const [firstDayOfGregoryMonth, setFirstDayOfGregoryMonth] = useState(0);
 
     React.useEffect(() => {
         function init() {
-            // Read Sakawi Takai Ciim
-            let startDay = Number.parseInt(Helper.getStartDayByAwalMonth(awalMonth.year, awalMonth.month));
-            //setFirstDayOfMonth(startDay);
+            //console.log('props.currentAwalMonthMatrix', JSON.stringify(props.currentAwalMonthMatrix));
 
-            let firstDate: AwalDate = { date: 1, awalMonth: awalMonth };
-            //setFirstDateOfMonth(firstDate);
+            // Ahier Date
+            const firstAhierDate: AhierDate = { date: 1, ahierMonth: currentAwalMonthMatrix.ahierMonth };
+            setFirstDateOfAhierMonth(firstAhierDate);
+            setFirstDayOfAhierMonth(currentAwalMonthMatrix.firstDayOfAhierMonth);
+
+            // Awal Date
+            const firstAwalDate: AwalDate = { date: 1, awalMonth: currentAwalMonthMatrix.awalMonth };
+            setFirstDateOfAwalMonth(firstAwalDate);
+            setFirstDayOfAwalMonth(currentAwalMonthMatrix.firstDayOfAwalMonth);
+
+            // Gregory Date
+            setFirstDateOfGregoryMonth(currentAwalMonthMatrix.dateOfGregoryCalendar);
+            //setFirstDayOfGregoryMonth(currentAwalMonthMatrix.dateOfGregoryCalendar.getDay());
         }
 
         init();
-    }, [awalMonth]);
+    }, [currentAwalMonthMatrix, props.currentAwalMonthMatrix]);
+
 
     function handleGoToToday() {
-        /*let result = Helper.getAwalDateByGregoryDate(new Date(2016, 9, 2));
-        console.log('2016, 9, 2 => ', JSON.stringify(result));*/
-
-        /*let startAhierYear: AhierYear = {
-            nasak: Nasak.Pabuei,
-            ikasSarak: IkasSarak.Jim,
-            yearNumber: 2019
-        }
-
-        let newYear = addAhierYears(startAhierYear, -1);
-        console.log('new year: ' + JSON.stringify(newYear))*/
-
-        let matrix = Helper.buildMatrixCalendar(2020);
-        console.log('matrix: ' + JSON.stringify(matrix))
-
-        /*const awalMonth: AwalMonth = { month: 0, year: { ikasSarak: IkasSarakEnum.Liéh, yearNumber: 2020 } };
-        let newMonth = addAwalMonths(awalMonth, -13);
-        console.log('addAwalMonths : ' + JSON.stringify(newMonth))*/
-
-        setAwalMonth({ month: 0, year: { ikasSarak: IkasSarakEnum.Liéh } });
+        setCurrentAwalMonthMatrix(props.currentAwalMonthMatrix);
     }
 
     function handleGoToPreviousMonth() {
-        setAwalMonth(Helper.addAwalMonths(awalMonth, -1));
+        const index = props.matrixSakawi.findIndex(x => x === currentAwalMonthMatrix);
+        setCurrentAwalMonthMatrix(props.matrixSakawi[index - 1]);
     }
 
     function handleGoToNextMonth() {
-        setAwalMonth(Helper.addAwalMonths(awalMonth, 1));
+        const index = props.matrixSakawi.findIndex(x => x === currentAwalMonthMatrix);
+        setCurrentAwalMonthMatrix(props.matrixSakawi[index + 1]);
     }
 
     // draw Calendar Table
@@ -68,24 +76,55 @@ export const MonthAwal = (props: MonthAwalProps) => {
     for (let weeks = 0; weeks < 6; weeks++) {
         let cells = []
         for (let days = 0; days < 7; days++) {
-            let cellDate = Helper.addAwalDays(firstDateOfMonth, (count - firstDayOfMonth + 1));
-            let dateAwal: AwalDate = {
-                date: cellDate.date,
-                awalMonth: cellDate.awalMonth,
+            // let week = 0;
+            // if (firstDayOfAwalMonth < firstDayOfAhierMonth) {
+            //     week = 7;
+            // }
+
+            const daysGap = Helper.getAhierAwalDaysGap(firstDayOfAhierMonth, firstDayOfAwalMonth);
+
+            const cellAwalDate = Helper.addAwalDays(firstDateOfAwalMonth, (count - firstDayOfAwalMonth));
+            const dateAwal: AwalDate = {
+                date: cellAwalDate.date,
+                awalMonth: cellAwalDate.awalMonth
             }
 
-            cells.push(<DayAwal key={`cell${weeks}-${days}`} dateAwal={dateAwal}></DayAwal>);
-            count++
+            const cellAhierDate = Helper.addAhierDays(props.matrixSakawi, firstDateOfAhierMonth, (count + daysGap));
+            const dateAhier: AhierDate = {
+                date: cellAhierDate.date,
+                ahierMonth: cellAhierDate.ahierMonth
+            }
+
+            const GregoryDate = Helper.addGregoryDays(firstDateOfGregoryMonth, (count + daysGap));
+            const dayNumbersOfCurrentAhierMonth = Helper.getActualDayNumbersOfAhierMonth(props.matrixSakawi, cellAhierDate.ahierMonth);
+            const dayNumbersOfCurrentAwalMonth = Helper.getDayNumbersOfAwalMonth(dateAwal.awalMonth.year, dateAwal.awalMonth.month);
+
+            cells.push(
+                <DayDetails
+                    sakawiType="sakawiAwal"
+                    key={`sakawiAwal-cell-${weeks}-${days}`}
+                    dateAhier={dateAhier}
+                    dateAwal={dateAwal}
+                    dateGregory={GregoryDate}
+                    currentAhierMonth={currentAwalMonthMatrix.ahierMonth}
+                    currentAwalMonth={currentAwalMonthMatrix.awalMonth}
+                    dayNumbersOfCurrentAhierMonth={dayNumbersOfCurrentAhierMonth}
+                    dayNumbersOfCurrentAwalMonth={dayNumbersOfCurrentAwalMonth}
+                />
+            );
+            count++;
         }
 
-        rows.push(<tr key={weeks}>{cells}</tr>)
+        rows.push(<tr key={`sakawiAwal-row-${weeks}`}>{cells}</tr>)
     }
 
-    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const dayNames = ["Adit", "Thom", "Angar", "But", "Jip", "Suk", "Sanacar"];
     const tableStyle: React.CSSProperties = {
         height: "400px",
         tableLayout: "fixed"
     }
+
+    const currentAwalMonth = currentAwalMonthMatrix.awalMonth;
 
     return (
         <Container>
@@ -95,17 +134,17 @@ export const MonthAwal = (props: MonthAwalProps) => {
                         <ButtonGroup aria-label="Type of calendar">
                             <Button variant="secondary" onClick={() => props.onSelectSakawiType('sakawiAhier')}>Lịch Chăm</Button>
                             <Button variant="secondary">Lịch Awal</Button>
-                            <Button variant="secondary" onClick={() => props.onSelectSakawiType('solarCalendar')}>Dương lịch</Button>
+                            <Button variant="secondary" onClick={() => props.onSelectSakawiType('sakawiGregory')}>Dương lịch</Button>
                         </ButtonGroup>
                     </ButtonToolbar>
                 </Col>
                 <Col md={5} style={{ textAlign: "center" }}>
-                    <h2>{AwalMonthEnum[awalMonth.month]} {`(${(awalMonth.month + 1)})`} - {IkasSarakEnum[awalMonth.year.ikasSarak]}</h2>
+                    <h2>{AwalMonthEnum[currentAwalMonth.month]} {`(${(currentAwalMonth.month + 1)})`} - {IkasSarakEnum[currentAwalMonth.year.ikasSarak]} - {currentAwalMonth.year.yearNumber}</h2>
                 </Col>
                 <Col md={3} style={{ textAlign: "left" }}>
                     <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-end" }}>
                         <ButtonGroup aria-label="Third group" style={{ marginRight: ".75em" }}>
-                            <Button variant="secondary" onClick={handleGoToToday}>Today</Button>
+                            <Button variant="secondary" onClick={handleGoToToday}>Hôm nay</Button>
                         </ButtonGroup>
                         <ButtonGroup aria-label="Basic example">
                             <Button variant="secondary" className="fa fa-chevron-left" onClick={handleGoToPreviousMonth} />
@@ -116,7 +155,7 @@ export const MonthAwal = (props: MonthAwalProps) => {
             </Row>
             <Row>
                 <Col md={12}>
-                    <Table striped bordered hover style={tableStyle}>
+                    <Table bordered hover style={tableStyle}>
                         <thead>
                             <tr>
                                 {dayNames.map((d, index) =>

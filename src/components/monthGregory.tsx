@@ -1,27 +1,27 @@
 import React, { useState } from "react";
 import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "react-bootstrap";
-import { AhierMonthEnum, displayIkasSarakName, displayMonthName, displayNasakName, IkasSarakEnum, NasakEnum } from "../enums/enum";
+import { AhierMonthEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate, AwalMonth } from "../model/AwalDate";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
-import Helper from "../utility/helper";
+import Helper from '../utility/helper';
 import { SakawiType } from "./calendar";
 import { DayDetails } from "./dayDetails";
 
-interface MonthAhierProps {
+interface MonthGregoryProps {
     matrixSakawi: MatrixCalendarType[],
-    currentAhierMonthMatrix: MatrixCalendarType,
+    currentGregoryMonthMatrix: MatrixCalendarType,
     onSelectSakawiType: (type: SakawiType) => void
 }
 
-export const MonthAhier = (props: MonthAhierProps) => {
+export const MonthGregory = (props: MonthGregoryProps) => {
     const initialAhierMonth: AhierMonth = { month: AhierMonthEnum.BilanSa, year: { nasak: NasakEnum.Pabuei, ikasSarak: IkasSarakEnum.JimLuic, yearNumber: 2019 } };
     const initialAwalMonth: AwalMonth = { month: 0, year: { ikasSarak: 0, yearNumber: 1400 } };
     const initialAhierDate: AhierDate = { date: 1, ahierMonth: initialAhierMonth };
     const initialAwalDate: AwalDate = { date: 1, awalMonth: initialAwalMonth };
     const initialGregoryDate: Date = new Date();
 
-    const [currentAhierMonthMatrix, setCurrentAhierMonthMatrix] = useState(props.currentAhierMonthMatrix);
+    const [currentGregoryMonthMatrix, setCurrentGregoryMonthMatrix] = useState(props.currentGregoryMonthMatrix);
 
     const [firstDateOfAhierMonth, setFirstDateOfAhierMonth] = useState<AhierDate>(initialAhierDate);
     const [firstDayOfAhierMonth, setFirstDayOfAhierMonth] = useState(0);
@@ -30,40 +30,39 @@ export const MonthAhier = (props: MonthAhierProps) => {
     const [firstDayOfAwalMonth, setFirstDayOfAwalMonth] = useState(0);
 
     const [firstDateOfGregoryMonth, setFirstDateOfGregoryMonth] = useState<Date>(initialGregoryDate);
-    const [firstDayOfGregoryMonth, setFirstDayOfGregoryMonth] = useState(0);
 
     React.useEffect(() => {
         function init() {
             // Ahier Date
-            const firstAhierDate: AhierDate = { date: 1, ahierMonth: currentAhierMonthMatrix.ahierMonth };
+            const firstAhierDate: AhierDate = { date: 1, ahierMonth: currentGregoryMonthMatrix.ahierMonth };
             setFirstDateOfAhierMonth(firstAhierDate);
-            setFirstDayOfAhierMonth(currentAhierMonthMatrix.firstDayOfAhierMonth);
+            setFirstDayOfAhierMonth(currentGregoryMonthMatrix.firstDayOfAhierMonth);
 
             // Awal Date
-            const firstAwalDate: AwalDate = { date: 1, awalMonth: currentAhierMonthMatrix.awalMonth };
+            const firstAwalDate: AwalDate = { date: 1, awalMonth: currentGregoryMonthMatrix.awalMonth };
             setFirstDateOfAwalMonth(firstAwalDate);
-            setFirstDayOfAwalMonth(currentAhierMonthMatrix.firstDayOfAwalMonth);
+            setFirstDayOfAwalMonth(currentGregoryMonthMatrix.firstDayOfAwalMonth);
 
             // Gregory Date
-            setFirstDateOfGregoryMonth(currentAhierMonthMatrix.dateOfGregoryCalendar);
-            setFirstDayOfGregoryMonth(currentAhierMonthMatrix.dateOfGregoryCalendar.getDay());
+            setFirstDateOfGregoryMonth(currentGregoryMonthMatrix.dateOfGregoryCalendar);
+            //setFirstDayOfGregoryMonth(currentGregoryMonthMatrix.dateOfGregoryCalendar.getDay());
         }
 
         init();
-    }, [currentAhierMonthMatrix, props.currentAhierMonthMatrix]);
+    }, [currentGregoryMonthMatrix, props.currentGregoryMonthMatrix]);
 
     function handleGoToToday() {
-        setCurrentAhierMonthMatrix(props.currentAhierMonthMatrix);
+        setCurrentGregoryMonthMatrix(props.currentGregoryMonthMatrix);
     }
 
     function handleGoToPreviousMonth() {
-        const index = props.matrixSakawi.findIndex(x => x === currentAhierMonthMatrix);
-        setCurrentAhierMonthMatrix(props.matrixSakawi[index - 1]);
+        const index = props.matrixSakawi.findIndex(x => x === currentGregoryMonthMatrix);
+        setCurrentGregoryMonthMatrix(props.matrixSakawi[index - 1]);
     }
 
     function handleGoToNextMonth() {
-        const index = props.matrixSakawi.findIndex(x => x === currentAhierMonthMatrix);
-        setCurrentAhierMonthMatrix(props.matrixSakawi[index + 1]);
+        const index = props.matrixSakawi.findIndex(x => x === currentGregoryMonthMatrix);
+        setCurrentGregoryMonthMatrix(props.matrixSakawi[index + 1]);
     }
 
     // draw Calendar Table
@@ -73,35 +72,33 @@ export const MonthAhier = (props: MonthAhierProps) => {
     for (let weeks = 0; weeks < 6; weeks++) {
         let cells = []
         for (let days = 0; days < 7; days++) {
-            let week = 0;
-            if (firstDayOfAwalMonth < firstDayOfAhierMonth) {
-                week = 7;
-            }
+            const daysGap = Helper.getAhierAwalDaysGap(firstDayOfAhierMonth, firstDayOfAwalMonth);
 
-            const cellAhierDate = Helper.addAhierDays(props.matrixSakawi, firstDateOfAhierMonth, (count - firstDayOfAhierMonth));
-            const dateAhier: AhierDate = {
-                date: cellAhierDate.date,
-                ahierMonth: cellAhierDate.ahierMonth
-            }
-
-            const cellAwalDate = Helper.addAwalDays(firstDateOfAwalMonth, (count - firstDayOfAwalMonth - week));
+            const cellAwalDate = Helper.addAwalDays(firstDateOfAwalMonth, (count - firstDayOfAwalMonth));
             const dateAwal: AwalDate = {
                 date: cellAwalDate.date,
                 awalMonth: cellAwalDate.awalMonth
             }
 
-            const GregoryDate = Helper.addGregoryDays(firstDateOfGregoryMonth, (count - firstDayOfGregoryMonth));
+            const cellAhierDate = Helper.addAhierDays(props.matrixSakawi, firstDateOfAhierMonth, (count + daysGap));
+            const dateAhier: AhierDate = {
+                date: cellAhierDate.date,
+                ahierMonth: cellAhierDate.ahierMonth
+            }
+
+            const GregoryDate = Helper.addGregoryDays(firstDateOfGregoryMonth, (count + daysGap));
             const dayNumbersOfCurrentAhierMonth = Helper.getActualDayNumbersOfAhierMonth(props.matrixSakawi, cellAhierDate.ahierMonth);
             const dayNumbersOfCurrentAwalMonth = Helper.getDayNumbersOfAwalMonth(dateAwal.awalMonth.year, dateAwal.awalMonth.month);
 
             cells.push(
                 <DayDetails
-                    sakawiType="sakawiAhier"
-                    key={`sakawiAhier-cell-${weeks}-${days}`}
+                    sakawiType="sakawiGregory"
+                    key={`sakawiGregory-cell-${weeks}-${days}`}
                     dateAhier={dateAhier}
                     dateAwal={dateAwal}
                     dateGregory={GregoryDate}
-                    currentAhierMonth={currentAhierMonthMatrix.ahierMonth}
+                    currentAhierMonth={currentGregoryMonthMatrix.ahierMonth}
+                    currentAwalMonth={currentGregoryMonthMatrix.awalMonth}
                     dayNumbersOfCurrentAhierMonth={dayNumbersOfCurrentAhierMonth}
                     dayNumbersOfCurrentAwalMonth={dayNumbersOfCurrentAwalMonth}
                 />
@@ -109,44 +106,36 @@ export const MonthAhier = (props: MonthAhierProps) => {
             count++;
         }
 
-        rows.push(<tr key={`sakawiAhier-row-${weeks}`}>{cells}</tr>)
+        rows.push(<tr key={`sakawiGregory-row-${weeks}`}>{cells}</tr>)
     }
 
-    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const tableStyle: React.CSSProperties = {
         height: "400px",
         tableLayout: "fixed"
     }
 
-    const currentAhierMonth = currentAhierMonthMatrix.ahierMonth;
-
     return (
         <Container>
             <Row>
                 <Col md={4}>
-                    <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-start" }}>
+                    <ButtonToolbar aria-label="Toolbar with button groups">
                         <ButtonGroup aria-label="Type of calendar">
-                            <Button variant="secondary">Lịch Chăm</Button>
+                            <Button variant="secondary" onClick={() => props.onSelectSakawiType('sakawiAhier')}>Lịch Chăm</Button>
                             <Button variant="secondary" onClick={() => props.onSelectSakawiType('sakawiAwal')}>Lịch Awal</Button>
-                            <Button variant="secondary" onClick={() => props.onSelectSakawiType('sakawiGregory')}>Dương lịch</Button>
+                            <Button variant="secondary">Dương lịch</Button>
                         </ButtonGroup>
                     </ButtonToolbar>
                 </Col>
                 <Col md={5} style={{ textAlign: "center" }}>
-                    <div>
-                        <label className='bilan-title'>{displayMonthName(currentAhierMonth.month)}</label>
-                        {' - '}<label className='bilan-title'>{displayNasakName(currentAhierMonth.year.nasak)}</label>
-                        {'   '}<label className='ikasSarak-title'>{displayIkasSarakName(currentAhierMonth.year.ikasSarak)}</label>
-                        {' - '}<label className='bilan-title'>{Helper.convertToChamDigitUnicode(currentAhierMonth.year.yearNumber ?? 0)}</label>
-                    </div>
-                    <h5>{AhierMonthEnum[currentAhierMonth.month]} {`(${(currentAhierMonth.month + 1)})`} - {NasakEnum[currentAhierMonth.year.nasak]} {IkasSarakEnum[currentAhierMonth.year.ikasSarak]} - {currentAhierMonth.year.yearNumber}</h5>
+                    <h2>{currentGregoryMonthMatrix.dateOfGregoryCalendar.getMonth} {currentGregoryMonthMatrix.dateOfGregoryCalendar.setFullYear}</h2>
                 </Col>
-                <Col md={3}>
+                <Col md={3} style={{ textAlign: "left" }}>
                     <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-end" }}>
                         <ButtonGroup aria-label="Third group" style={{ marginRight: ".75em" }}>
                             <Button variant="secondary" onClick={handleGoToToday}>Hôm nay</Button>
                         </ButtonGroup>
-                        <ButtonGroup aria-label="Navigate months">
+                        <ButtonGroup aria-label="Basic example">
                             <Button variant="secondary" className="fa fa-chevron-left" onClick={handleGoToPreviousMonth} />
                             <Button variant="secondary" className="fa fa-chevron-right" onClick={handleGoToNextMonth} />
                         </ButtonGroup>
