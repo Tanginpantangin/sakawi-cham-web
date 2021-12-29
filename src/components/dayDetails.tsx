@@ -72,10 +72,12 @@ export const DayDetails = (props: DayDetailsProps) => {
         marginBottom: "0.1rem",
     }
 
-    function displayGregoryDate(dateGregory: Date) {
+    function displayGregoryDate(sakawiType: SakawiType, dateAhier: AhierDate, dateAwal: AwalDate, dateGregory: Date) {
         const monthGregogy = dateGregory.getMonth() + 1;
 
-        if (dateGregory.getDate() === 1) {
+        if (dateGregory.getDate() === 1 ||
+            (sakawiType === "sakawiAwal" && dateAwal.date === 1) ||
+            (sakawiType === "sakawiAhier" && dateAhier.date === 1)) {
             return dateGregory.getDate() + "." + monthGregogy + "." + dateGregory.getFullYear();
         } else {
             return dateGregory.getDate();
@@ -227,7 +229,7 @@ export const DayDetails = (props: DayDetailsProps) => {
             <Row>
                 <Col md={6}></Col>
                 <Col style={GregoryDateStyle} md={6}>
-                    {displayGregoryDate(props.dateGregory)}
+                    {displayGregoryDate(props.sakawiType, props.dateAhier, props.dateAwal, props.dateGregory)}
                 </Col>
             </Row>
             <Row>

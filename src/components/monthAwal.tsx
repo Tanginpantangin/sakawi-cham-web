@@ -30,7 +30,7 @@ export const MonthAwal = (props: MonthAwalProps) => {
     const [firstDayOfAwalMonth, setFirstDayOfAwalMonth] = useState(0);
 
     const [firstDateOfGregoryMonth, setFirstDateOfGregoryMonth] = useState<Date>(initialGregoryDate);
-    //const [firstDayOfGregoryMonth, setFirstDayOfGregoryMonth] = useState(0);
+    const [firstDayOfGregoryMonth, setFirstDayOfGregoryMonth] = useState(0);
 
     React.useEffect(() => {
         function init() {
@@ -48,7 +48,7 @@ export const MonthAwal = (props: MonthAwalProps) => {
 
             // Gregory Date
             setFirstDateOfGregoryMonth(currentAwalMonthMatrix.dateOfGregoryCalendar);
-            //setFirstDayOfGregoryMonth(currentAwalMonthMatrix.dateOfGregoryCalendar.getDay());
+            setFirstDayOfGregoryMonth(currentAwalMonthMatrix.dateOfGregoryCalendar.getDay());
         }
 
         init();
@@ -76,26 +76,24 @@ export const MonthAwal = (props: MonthAwalProps) => {
     for (let weeks = 0; weeks < 6; weeks++) {
         let cells = []
         for (let days = 0; days < 7; days++) {
-            // let week = 0;
-            // if (firstDayOfAwalMonth < firstDayOfAhierMonth) {
-            //     week = 7;
-            // }
+            let week = 0;
+            if (firstDayOfAwalMonth < firstDayOfAhierMonth) {
+                week = 7;
+            }
 
-            const daysGap = Helper.getAhierAwalDaysGap(firstDayOfAhierMonth, firstDayOfAwalMonth);
-
-            const cellAwalDate = Helper.addAwalDays(firstDateOfAwalMonth, (count - firstDayOfAwalMonth));
+            const cellAwalDate = Helper.addAwalDays(firstDateOfAwalMonth, count - firstDayOfAwalMonth);
             const dateAwal: AwalDate = {
                 date: cellAwalDate.date,
                 awalMonth: cellAwalDate.awalMonth
             }
 
-            const cellAhierDate = Helper.addAhierDays(props.matrixSakawi, firstDateOfAhierMonth, (count + daysGap));
+            const cellAhierDate = Helper.addAhierDays(props.matrixSakawi, firstDateOfAhierMonth, count - firstDayOfAhierMonth + week);
             const dateAhier: AhierDate = {
                 date: cellAhierDate.date,
                 ahierMonth: cellAhierDate.ahierMonth
             }
 
-            const GregoryDate = Helper.addGregoryDays(firstDateOfGregoryMonth, (count + daysGap));
+            const GregoryDate = Helper.addGregoryDays(firstDateOfGregoryMonth, count - firstDayOfGregoryMonth + week);
             const dayNumbersOfCurrentAhierMonth = Helper.getActualDayNumbersOfAhierMonth(props.matrixSakawi, cellAhierDate.ahierMonth);
             const dayNumbersOfCurrentAwalMonth = Helper.getDayNumbersOfAwalMonth(dateAwal.awalMonth.year, dateAwal.awalMonth.month);
 

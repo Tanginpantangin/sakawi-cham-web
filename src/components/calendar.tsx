@@ -41,7 +41,7 @@ export const Calendar = () => {
             // Build matrix Calendar
             let matrix = Helper.buildMatrixCalendar(2046);
             setMatrixSakawi(matrix);
-            //console.log('matrix', JSON.stringify(matrix));
+            console.log('matrix', JSON.stringify(matrix));
 
             // Set current matrix item 
             const currentAhierMonth = matrix.filter(m =>
