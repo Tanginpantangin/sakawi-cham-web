@@ -57,7 +57,7 @@ export const Calendar = () => {
             }
 
             const currentGregoryMonth = matrix.filter(m =>
-                Helper.addGregoryDays(m.dateOfGregoryCalendar, m.dayNumbersOfAwalMonth) > new Date())[0];
+                Helper.addGregoryDays(m.dateOfGregoryCalendar, m.dayNumbersOfAwalMonth) > new Date())[0];//TODO
             if (currentGregoryMonth) {
                 setCurrentGregoryMonth(currentGregoryMonth);
             }

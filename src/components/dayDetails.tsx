@@ -12,6 +12,7 @@ interface DayDetailsProps {
     dateAhier: AhierDate;
     currentAhierMonth?: AhierMonth;
     currentAwalMonth?: AwalMonth;
+    currentGregoryMonth?: number;
     dayNumbersOfCurrentAhierMonth: number;
     dayNumbersOfCurrentAwalMonth: number;
 }
@@ -24,6 +25,10 @@ export const DayDetails = (props: DayDetailsProps) => {
         }
     } else if (props.sakawiType === "sakawiAwal") {
         if (props.dateAwal.awalMonth !== props.currentAwalMonth) {
+            opacityValue = 0.3;
+        }
+    } else if (props.sakawiType === "sakawiGregory") {
+        if (props.dateGregory.getMonth() !== props.currentGregoryMonth) {
             opacityValue = 0.3;
         }
     } else {

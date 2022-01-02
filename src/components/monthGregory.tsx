@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "react-bootstrap";
+import { Col, Container, Row, Table } from "react-bootstrap";
 import { AhierMonthEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate, AwalMonth } from "../model/AwalDate";
@@ -7,6 +7,7 @@ import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from '../utility/helper';
 import { SakawiType } from "./calendar";
 import { DayDetails } from "./dayDetails";
+import { MonthNavigation } from "./monthNavigation";
 
 interface MonthGregoryProps {
     matrixSakawi: MatrixCalendarType[],
@@ -30,9 +31,15 @@ export const MonthGregory = (props: MonthGregoryProps) => {
     const [firstDayOfAwalMonth, setFirstDayOfAwalMonth] = useState(0);
 
     const [firstDateOfGregoryMonth, setFirstDateOfGregoryMonth] = useState<Date>(initialGregoryDate);
+    const [firstDayOfGregoryMonth, setFirstDayOfGregoryMonth] = useState(0);
 
     React.useEffect(() => {
         function init() {
+            // Gregory Date
+            const firstGregoryDate = new Date(currentGregoryMonthMatrix.dateOfGregoryCalendar.getFullYear(), currentGregoryMonthMatrix.dateOfGregoryCalendar.getMonth(), 1);
+            setFirstDateOfGregoryMonth(firstGregoryDate);
+            setFirstDayOfGregoryMonth(firstGregoryDate.getDay());
+
             // Ahier Date
             const firstAhierDate: AhierDate = { date: 1, ahierMonth: currentGregoryMonthMatrix.ahierMonth };
             setFirstDateOfAhierMonth(firstAhierDate);
@@ -42,10 +49,6 @@ export const MonthGregory = (props: MonthGregoryProps) => {
             const firstAwalDate: AwalDate = { date: 1, awalMonth: currentGregoryMonthMatrix.awalMonth };
             setFirstDateOfAwalMonth(firstAwalDate);
             setFirstDayOfAwalMonth(currentGregoryMonthMatrix.firstDayOfAwalMonth);
-
-            // Gregory Date
-            setFirstDateOfGregoryMonth(currentGregoryMonthMatrix.dateOfGregoryCalendar);
-            //setFirstDayOfGregoryMonth(currentGregoryMonthMatrix.dateOfGregoryCalendar.getDay());
         }
 
         init();
@@ -72,7 +75,10 @@ export const MonthGregory = (props: MonthGregoryProps) => {
     for (let weeks = 0; weeks < 6; weeks++) {
         let cells = []
         for (let days = 0; days < 7; days++) {
-            const daysGap = Helper.getAhierAwalDaysGap(firstDayOfAhierMonth, firstDayOfAwalMonth);
+            let week = 0;
+            if (firstDayOfAwalMonth < firstDayOfAhierMonth) {
+                week = 7;
+            }
 
             const cellAwalDate = Helper.addAwalDays(firstDateOfAwalMonth, (count - firstDayOfAwalMonth));
             const dateAwal: AwalDate = {
@@ -80,13 +86,13 @@ export const MonthGregory = (props: MonthGregoryProps) => {
                 awalMonth: cellAwalDate.awalMonth
             }
 
-            const cellAhierDate = Helper.addAhierDays(props.matrixSakawi, firstDateOfAhierMonth, (count + daysGap));
+            const cellAhierDate = Helper.addAhierDays(props.matrixSakawi, firstDateOfAhierMonth, count - firstDayOfAhierMonth + week);
             const dateAhier: AhierDate = {
                 date: cellAhierDate.date,
                 ahierMonth: cellAhierDate.ahierMonth
             }
 
-            const GregoryDate = Helper.addGregoryDays(firstDateOfGregoryMonth, (count + daysGap));
+            const GregoryDate = Helper.addGregoryDays(firstDateOfGregoryMonth, count - firstDayOfGregoryMonth);
             const dayNumbersOfCurrentAhierMonth = Helper.getActualDayNumbersOfAhierMonth(props.matrixSakawi, cellAhierDate.ahierMonth);
             const dayNumbersOfCurrentAwalMonth = Helper.getDayNumbersOfAwalMonth(dateAwal.awalMonth.year, dateAwal.awalMonth.month);
 
@@ -99,6 +105,7 @@ export const MonthGregory = (props: MonthGregoryProps) => {
                     dateGregory={GregoryDate}
                     currentAhierMonth={currentGregoryMonthMatrix.ahierMonth}
                     currentAwalMonth={currentGregoryMonthMatrix.awalMonth}
+                    currentGregoryMonth={currentGregoryMonthMatrix.dateOfGregoryCalendar.getMonth()}
                     dayNumbersOfCurrentAhierMonth={dayNumbersOfCurrentAhierMonth}
                     dayNumbersOfCurrentAwalMonth={dayNumbersOfCurrentAwalMonth}
                 />
@@ -118,6 +125,15 @@ export const MonthGregory = (props: MonthGregoryProps) => {
     return (
         <Container>
             <Row>
+                <MonthNavigation
+                    sakawiType="sakawiGregory"
+                    onClickToday={handleGoToToday}
+                    onClickPreviousMonth={handleGoToPreviousMonth}
+                    onClickNextMonth={handleGoToNextMonth}
+                    onSelectSakawiType={type => props.onSelectSakawiType(type)}
+                />
+            </Row>
+            {/* <Row>
                 <Col md={4}>
                     <ButtonToolbar aria-label="Toolbar with button groups">
                         <ButtonGroup aria-label="Type of calendar">
@@ -141,7 +157,7 @@ export const MonthGregory = (props: MonthGregoryProps) => {
                         </ButtonGroup>
                     </ButtonToolbar>
                 </Col>
-            </Row>
+            </Row> */}
             <Row>
                 <Col md={12}>
                     <Table bordered hover style={tableStyle}>

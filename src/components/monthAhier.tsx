@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "react-bootstrap";
-import { AhierMonthEnum, displayIkasSarakName, displayMonthName, displayNasakName, IkasSarakEnum, NasakEnum } from "../enums/enum";
+import { Col, Container, Row, Table } from "react-bootstrap";
+import { AhierMonthEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate, AwalMonth } from "../model/AwalDate";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from "../utility/helper";
 import { SakawiType } from "./calendar";
 import { DayDetails } from "./dayDetails";
+import { MonthNavigation } from "./monthNavigation";
 
 interface MonthAhierProps {
     matrixSakawi: MatrixCalendarType[],
@@ -118,40 +119,17 @@ export const MonthAhier = (props: MonthAhierProps) => {
         tableLayout: "fixed"
     }
 
-    const currentAhierMonth = currentAhierMonthMatrix.ahierMonth;
-
     return (
         <Container>
             <Row>
-                <Col md={4}>
-                    <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-start" }}>
-                        <ButtonGroup aria-label="Type of calendar">
-                            <Button variant="secondary">Lịch Chăm</Button>
-                            <Button variant="secondary" onClick={() => props.onSelectSakawiType('sakawiAwal')}>Lịch Awal</Button>
-                            <Button variant="secondary" onClick={() => props.onSelectSakawiType('sakawiGregory')}>Dương lịch</Button>
-                        </ButtonGroup>
-                    </ButtonToolbar>
-                </Col>
-                <Col md={5} style={{ textAlign: "center" }}>
-                    <div>
-                        <label className='bilan-title'>{displayMonthName(currentAhierMonth.month)}</label>
-                        {' - '}<label className='bilan-title'>{displayNasakName(currentAhierMonth.year.nasak)}</label>
-                        {'   '}<label className='ikasSarak-title'>{displayIkasSarakName(currentAhierMonth.year.ikasSarak)}</label>
-                        {' - '}<label className='bilan-title'>{Helper.convertToChamDigitUnicode(currentAhierMonth.year.yearNumber ?? 0)}</label>
-                    </div>
-                    <h5>{AhierMonthEnum[currentAhierMonth.month]} {`(${(currentAhierMonth.month + 1)})`} - {NasakEnum[currentAhierMonth.year.nasak]} {IkasSarakEnum[currentAhierMonth.year.ikasSarak]} - {currentAhierMonth.year.yearNumber}</h5>
-                </Col>
-                <Col md={3}>
-                    <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-end" }}>
-                        <ButtonGroup aria-label="Third group" style={{ marginRight: ".75em" }}>
-                            <Button variant="secondary" onClick={handleGoToToday}>Hôm nay</Button>
-                        </ButtonGroup>
-                        <ButtonGroup aria-label="Navigate months">
-                            <Button variant="secondary" className="fa fa-chevron-left" onClick={handleGoToPreviousMonth} />
-                            <Button variant="secondary" className="fa fa-chevron-right" onClick={handleGoToNextMonth} />
-                        </ButtonGroup>
-                    </ButtonToolbar>
-                </Col>
+                <MonthNavigation
+                    sakawiType="sakawiAhier"
+                    currentAhierMonth={currentAhierMonthMatrix.ahierMonth}
+                    onClickToday={handleGoToToday}
+                    onClickPreviousMonth={handleGoToPreviousMonth}
+                    onClickNextMonth={handleGoToNextMonth}
+                    onSelectSakawiType={type => props.onSelectSakawiType(type)}
+                />
             </Row>
             <Row>
                 <Col md={12}>

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { Button, ButtonGroup, ButtonToolbar, Col, Container, Row, Table } from "react-bootstrap";
-import { AhierMonthEnum, AwalMonthEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
+import { Col, Container, Row, Table } from "react-bootstrap";
+import { AhierMonthEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate, AwalMonth } from "../model/AwalDate";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from '../utility/helper';
 import { SakawiType } from "./calendar";
 import { DayDetails } from "./dayDetails";
+import { MonthNavigation } from "./monthNavigation";
 
 interface MonthAwalProps {
     matrixSakawi: MatrixCalendarType[],
@@ -122,11 +123,19 @@ export const MonthAwal = (props: MonthAwalProps) => {
         tableLayout: "fixed"
     }
 
-    const currentAwalMonth = currentAwalMonthMatrix.awalMonth;
-
     return (
         <Container>
             <Row>
+                <MonthNavigation
+                    sakawiType="sakawiAwal"
+                    currentAwalMonth={currentAwalMonthMatrix.awalMonth}
+                    onClickToday={handleGoToToday}
+                    onClickPreviousMonth={handleGoToPreviousMonth}
+                    onClickNextMonth={handleGoToNextMonth}
+                    onSelectSakawiType={type => props.onSelectSakawiType(type)}
+                />
+            </Row>
+            {/* <Row>
                 <Col md={4}>
                     <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-start" }}>
                         <ButtonGroup aria-label="Type of calendar">
@@ -150,7 +159,7 @@ export const MonthAwal = (props: MonthAwalProps) => {
                         </ButtonGroup>
                     </ButtonToolbar>
                 </Col>
-            </Row>
+            </Row> */}
             <Row>
                 <Col md={12}>
                     <Table bordered hover style={tableStyle}>
