@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { ProgressBar } from "react-bootstrap";
-import { VariantType } from "../enums/enum";
+import { Col, ProgressBar, Row } from "react-bootstrap";
+import { EventType, VariantType } from "../enums/enum";
 
 export interface CountDownBarProps {
-    dateName: string;
-    variantType: VariantType;
-    toDate: Date;
+    eventType: EventType;
+    eventDate: Date;
 }
 
 export const CountDownBar = (props: CountDownBarProps) => {
@@ -22,12 +21,12 @@ export const CountDownBar = (props: CountDownBarProps) => {
     });
 
     function init() {
-        if (!props.toDate) {
+        if (!props.eventDate) {
             return;
         }
 
         const now = new Date().getTime();
-        const distance = props.toDate.getTime() - now;
+        const distance = props.eventDate.getTime() - now;
         const timeOfYear = 365 * 24 * 60 * 60 * 1000;
         const percent = distance / timeOfYear * 100;
         setPercent(percent);
@@ -44,8 +43,40 @@ export const CountDownBar = (props: CountDownBarProps) => {
         setSeconds(seconds);
     }
 
+    let dd = props.eventDate.getDate();
+    let mm = props.eventDate.getMonth() + 1;
+    const yyyy = props.eventDate.getFullYear();
+    const ddStr = dd < 10 ? '0' + dd : dd;
+    const mmStr = mm < 10 ? '0' + mm : mm;
+    const dateStr = ddStr + '/' + mmStr + '/' + yyyy;
+
+    let variantType: VariantType;
+    switch (props.eventType) {
+        case "Rija Nagar":
+            variantType = 'success';
+            break;
+        case "Katé angaok bimong":
+            variantType = 'info';
+            break;
+        case "Tamâ ricaow Ramâwan":
+            variantType = 'warning';
+            break;
+
+        default:
+            variantType = 'warning';
+            break;
+    }
+
     return (
-        <ProgressBar variant={props.variantType.toString()} now={percent}
-            label={`${props.dateName}: còn ${days} ngày - ${("0" + hours).slice(-2)}h${("0" + minutes).slice(-2)}'${("0" + seconds).slice(-2)}"`} />
+        <Row>
+            <Col md={12}>
+                <div style={{ marginBottom: "0.1rem" }}>
+                    <span style={{ fontWeight: "bold" }}>{`${props.eventType}:`}</span>
+                    <span>{` ${dateStr}`}</span>
+                    <span>{` - Còn: ${days} ngày ${("0" + hours).slice(-2)}h${("0" + minutes).slice(-2)}'${("0" + seconds).slice(-2)}"`}</span>
+                </div>
+                <ProgressBar style={{ height: "0.5rem", marginBottom: "5px" }} variant={variantType.toString()} now={percent} />
+            </Col>
+        </Row>
     );
 }

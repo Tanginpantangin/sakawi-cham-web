@@ -86,9 +86,9 @@ export const Calendar = () => {
             }
             <Row>
                 <Col md={12}>
-                    <CountDownBar dateName={"Rija Nagar"} variantType='success' toDate={new Date(2022, 4, 5)} />
-                    <CountDownBar dateName={"Katé"} variantType='info' toDate={new Date(2022, 9, 5)} />
-                    <CountDownBar dateName={"Ramâwan"} variantType='warning' toDate={new Date(2022, 3, 2)} />
+                    <CountDownBar eventType="Rija Nagar" eventDate={new Date(2022, 4, 5)} />
+                    <CountDownBar eventType="Katé angaok bimong" eventDate={new Date(2022, 9, 24)} />
+                    <CountDownBar eventType="Tamâ ricaow Ramâwan" eventDate={new Date(2022, 3, 2)} />
                 </Col>
             </Row>
             <br />

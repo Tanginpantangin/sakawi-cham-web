@@ -65,17 +65,19 @@ export const MonthNavigation = (props: MonthNavigationProps) => {
                             {' - '}<label className='bilan-title'>{Helper.convertToChamDigitUnicode(props.currentAhierMonth.year.yearNumber ?? 0)}</label>
                         </div>
                         <h5>
-                            {AhierMonthEnum[props.currentAhierMonth.month]} {`(${(props.currentAhierMonth.month + 1)})`} -
-                            {NasakEnum[props.currentAhierMonth.year.nasak]} {IkasSarakEnum[props.currentAhierMonth.year.ikasSarak]} -
-                            {props.currentAhierMonth.year.yearNumber}
+                            {AhierMonthEnum[props.currentAhierMonth.month]} {`(${(props.currentAhierMonth.month + 1)})`}
+                            {' - '}{NasakEnum[props.currentAhierMonth.year.nasak]} {IkasSarakEnum[props.currentAhierMonth.year.ikasSarak]}
+                            {' - '}{props.currentAhierMonth.year.yearNumber}
                         </h5>
                     </>
                 }
                 {props.sakawiType === 'sakawiAwal' && props.currentAwalMonth &&
                     <>
-                        <h2>{AwalMonthEnum[props.currentAwalMonth.month]} {`(${(props.currentAwalMonth.month + 1)})`} -
-                            {IkasSarakEnum[props.currentAwalMonth.year.ikasSarak]} -
-                            {props.currentAwalMonth.year.yearNumber}</h2>
+                        <h2>
+                            {AwalMonthEnum[props.currentAwalMonth.month]} {`(${(props.currentAwalMonth.month + 1)})`}
+                            {' - '}{IkasSarakEnum[props.currentAwalMonth.year.ikasSarak]}
+                            {' - '}{props.currentAwalMonth.year.yearNumber}
+                        </h2>
                     </>
                 }
             </Col>
