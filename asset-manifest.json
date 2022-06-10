@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/sakawi-cham-web/static/css/main.9a751e45.chunk.css",
-    "main.js": "/sakawi-cham-web/static/js/main.74b16a70.chunk.js",
-    "main.js.map": "/sakawi-cham-web/static/js/main.74b16a70.chunk.js.map",
-    "runtime-main.js": "/sakawi-cham-web/static/js/runtime-main.ef9d8ae0.js",
-    "runtime-main.js.map": "/sakawi-cham-web/static/js/runtime-main.ef9d8ae0.js.map",
-    "static/js/2.1d413208.chunk.js": "/sakawi-cham-web/static/js/2.1d413208.chunk.js",
-    "static/js/2.1d413208.chunk.js.map": "/sakawi-cham-web/static/js/2.1d413208.chunk.js.map",
-    "index.html": "/sakawi-cham-web/index.html",
-    "static/css/main.9a751e45.chunk.css.map": "/sakawi-cham-web/static/css/main.9a751e45.chunk.css.map",
-    "static/js/2.1d413208.chunk.js.LICENSE.txt": "/sakawi-cham-web/static/js/2.1d413208.chunk.js.LICENSE.txt",
-    "static/media/App.css": "/sakawi-cham-web/static/media/NotoSansCham-Regular.c52aed7f.woff"
+    "main.css": "/static/css/main.4533e7af.chunk.css",
+    "main.js": "/static/js/main.fd04195f.chunk.js",
+    "main.js.map": "/static/js/main.fd04195f.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.d0f01ae3.js",
+    "runtime-main.js.map": "/static/js/runtime-main.d0f01ae3.js.map",
+    "static/js/2.c44ce343.chunk.js": "/static/js/2.c44ce343.chunk.js",
+    "static/js/2.c44ce343.chunk.js.map": "/static/js/2.c44ce343.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.4533e7af.chunk.css.map": "/static/css/main.4533e7af.chunk.css.map",
+    "static/js/2.c44ce343.chunk.js.LICENSE.txt": "/static/js/2.c44ce343.chunk.js.LICENSE.txt",
+    "static/media/App.css": "/static/media/NotoSansCham-Regular.c52aed7f.woff"
   },
   "entrypoints": [
-    "static/js/runtime-main.ef9d8ae0.js",
-    "static/js/2.1d413208.chunk.js",
-    "static/css/main.9a751e45.chunk.css",
-    "static/js/main.74b16a70.chunk.js"
+    "static/js/runtime-main.d0f01ae3.js",
+    "static/js/2.c44ce343.chunk.js",
+    "static/css/main.4533e7af.chunk.css",
+    "static/js/main.fd04195f.chunk.js"
   ]
 }
