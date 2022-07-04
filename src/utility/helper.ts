@@ -1,7 +1,8 @@
 import sakawiTakaiCiimConfig from '../data/SakawiTakaiCiim.json';
-import { AhierMonthEnum, AwalMonthEnum, GuecTypeEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
+import { AhierMonthEnum, AwalMonthEnum, GuecTypeEnum, GuenTypeEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { AhierDate, AhierMonth, AhierYear } from "../model/AhierDate";
 import { AwalDate, AwalMonth, AwalYear } from '../model/AwalDate';
+import { FullCalendarType } from '../model/FullCalendarType';
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import { awalMonthArray, awalYearArray, firstDateOfSakawiAhier_InaGirai_Lieh_1988, firstDateOfSakawiAwal_Lieh_1407, totalDaysOf8AwalYearCycle, yearNumberOfSakawiAwal_Lieh_1407 } from './constant';
 
@@ -10,9 +11,6 @@ export default class Helper {
     static addAwalDays(currentDate: AwalDate, addedDays: number) {
         let numberOfDays = Helper.getDayNumbersOfAwalMonth(currentDate.awalMonth.year, currentDate.awalMonth.month);
         let newDays = currentDate.date + addedDays;
-        let newMonth = currentDate.awalMonth.month;
-        let newYear = currentDate.awalMonth.year;
-
         let result: AwalDate = {
             date: 1,
             awalMonth: {
@@ -22,39 +20,17 @@ export default class Helper {
         };
 
         if (newDays > numberOfDays) {
-            if (currentDate.awalMonth.month < 11) {
-                newMonth = currentDate.awalMonth.month + 1;
-            } else {
-                newMonth = 0;
-
-                if (currentDate.awalMonth.year.ikasSarak < 7) {
-                    newYear.ikasSarak = currentDate.awalMonth.year.ikasSarak + 1;
-                } else {
-                    newYear.ikasSarak = 0;
-                }
-            }
-
+            const nextMonth = Helper.addAwalMonths(currentDate.awalMonth, 1);
             result = {
                 date: newDays - numberOfDays,
-                awalMonth: { month: newMonth, year: newYear }
+                awalMonth: nextMonth
             };
 
         } else if (newDays <= 0) {
-            if (currentDate.awalMonth.month > 0) {
-                newMonth = currentDate.awalMonth.month - 1;
-            } else {
-                newMonth = 11;
-
-                if (currentDate.awalMonth.year.ikasSarak > 0) {
-                    newYear.ikasSarak = currentDate.awalMonth.year.ikasSarak - 1;
-                } else {
-                    newYear.ikasSarak = 7;
-                }
-            }
-
+            const previousMonth = Helper.addAwalMonths(currentDate.awalMonth, -1);
             result = {
-                date: Helper.getDayNumbersOfAwalMonth(currentDate.awalMonth.year, currentDate.awalMonth.month - 1) + newDays,
-                awalMonth: { month: newMonth, year: newYear }
+                date: Helper.getDayNumbersOfAwalMonth(previousMonth.year, previousMonth.month) + newDays,
+                awalMonth: previousMonth
             };
         }
         else {
@@ -352,13 +328,14 @@ export default class Helper {
     //#region Gregory
     static addGregoryDays(date: Date, numberOfDays: number) {
         let newDt = new Date(date);
-        newDt.setDate(date.getDate() + numberOfDays);
+        newDt.setDate(newDt.getDate() + numberOfDays);
         return newDt;
     }
     //#endregion
 
     static buildMatrixCalendar(toYearAhier: number) {
-        let result: MatrixCalendarType[] = [];
+        let matrixCalendar: MatrixCalendarType[] = [];
+        let fullCalendar: FullCalendarType[] = [];
 
         // Choose thun 1988 as a root
         const startAhierYear: AhierYear = {
@@ -367,22 +344,34 @@ export default class Helper {
             yearNumber: 1988
         }
 
+        // TO-TEST
+        // const startAhierYear: AhierYear = {
+        //     nasak: NasakEnum.Rimaong,
+        //     ikasSarak: IkasSarakEnum.Jim,
+        //     yearNumber: 2022
+        // }
+
         const numberOfAhierYear = toYearAhier - (startAhierYear.yearNumber ?? 0);
         let newGregoryDate = firstDateOfSakawiAhier_InaGirai_Lieh_1988;
+        //let newGregoryDate = new Date(2022, 3, 30);//16/04/1988
 
         for (let y = 0; y < numberOfAhierYear; y++) {
             const ahierYear = Helper.addAhierYears(startAhierYear, y);
             const matrixPerYear = Helper.renderMatrixPerYear(ahierYear, newGregoryDate);
             const validMatrix = Helper.applyGuenGuecRules(matrixPerYear);
+            matrixCalendar.push(...validMatrix);
 
-            // Check guen-guec rules
-            result.push(...validMatrix);
+            const calendarDetails = Helper.renderCalendarDetails(validMatrix);
+            fullCalendar.push(...calendarDetails);
 
             const lastMonthItem = validMatrix[validMatrix.length - 1];
             newGregoryDate = Helper.addGregoryDays(lastMonthItem.dateOfGregoryCalendar, lastMonthItem.dayNumbersOfAhierMonth);
         }
 
-        return result;
+        return {
+            matrixCalendar,
+            fullCalendar
+        };
     }
 
     static renderMatrixPerYear(ahierYear: AhierYear, firstGregoryDate: Date) {
@@ -404,6 +393,10 @@ export default class Helper {
             let ahierMonthItem: MatrixCalendarType = {
                 ahierMonth: ahierMonth,
                 dayNumbersOfAhierMonth: dayNumbersOfAhierMonth,
+                hasGuen: false,
+                typeOfGuen: GuenTypeEnum.None,
+                hasGuec: false,
+                typeOfGuec: GuecTypeEnum.None,
                 firstDayOfAhierMonth: firstDayOfAhierMonth,
                 dateOfGregoryCalendar: newGregoryDate,
                 awalMonth: awalMonth,
@@ -423,7 +416,7 @@ export default class Helper {
     static applyGuenGuecRules(matrixPerYear: MatrixCalendarType[]) {
         let monthGuen = -1;
         let monthGuec = -1;
-        let hasGuecRuleInNextYear = GuecTypeEnum.NoneGuec;
+        let guecTypeInNextYear = GuecTypeEnum.None;
         let hasGuenRuleInNextYear = false;
 
         // Check validations and fix in current year
@@ -434,6 +427,8 @@ export default class Helper {
             if (monthGuen === -1 && Helper.checkIsGuenToAddDay(element.firstDayOfAhierMonth, element.firstDayOfAwalMonth)) {
                 monthGuen = index;
                 matrixPerYear[monthGuen - 1].dayNumbersOfAhierMonth += 1;
+                matrixPerYear[monthGuen - 1].hasGuen = true;
+                matrixPerYear[monthGuen - 1].typeOfGuen = GuenTypeEnum.GuenByNormalRule;
             }
 
             if (monthGuen !== -1 && index >= monthGuen) {
@@ -446,6 +441,8 @@ export default class Helper {
             if (monthGuec === -1 && Helper.checkIsGuecToMinusDay(element.firstDayOfAhierMonth, element.firstDayOfAwalMonth)) {
                 monthGuec = index;
                 matrixPerYear[monthGuec - 1].dayNumbersOfAhierMonth -= 1;
+                matrixPerYear[monthGuec - 1].hasGuec = true;
+                matrixPerYear[monthGuec - 1].typeOfGuec = GuecTypeEnum.GuecByNormalRule;
             }
 
             if (monthGuec !== -1 && index >= monthGuec) {
@@ -458,12 +455,14 @@ export default class Helper {
         // Check validations in next year to fix current year
         const lastMonthOfCurrentYear = matrixPerYear[matrixPerYear.length - 1];
         const firstGregoryDateOfNextYear = Helper.addGregoryDays(lastMonthOfCurrentYear.dateOfGregoryCalendar, lastMonthOfCurrentYear.dayNumbersOfAhierMonth);
-        hasGuecRuleInNextYear = Helper.checkHasGuecRuleInNextYear(lastMonthOfCurrentYear.ahierMonth.year, firstGregoryDateOfNextYear);
+        guecTypeInNextYear = Helper.checkHasGuecRuleInNextYear(lastMonthOfCurrentYear.ahierMonth.year, firstGregoryDateOfNextYear);
         hasGuenRuleInNextYear = Helper.checkHasGuenRuleInNextYear(lastMonthOfCurrentYear.ahierMonth.year, firstGregoryDateOfNextYear);
 
-        if (hasGuecRuleInNextYear !== GuecTypeEnum.NoneGuec) {
+        if (guecTypeInNextYear !== GuecTypeEnum.None) {
             // Bilan Mak (12)
             matrixPerYear[11].dayNumbersOfAhierMonth -= 1;
+            matrixPerYear[11].hasGuec = true;
+            matrixPerYear[11].typeOfGuec = guecTypeInNextYear;
 
             // Bilan Bhang (13)
             const newDate = Helper.addGregoryDays(matrixPerYear[12].dateOfGregoryCalendar, -1);
@@ -473,11 +472,54 @@ export default class Helper {
             // Bilan (12) or (13)
             if (Helper.getAhierAwalDaysGap(lastMonthOfCurrentYear.firstDayOfAhierMonth, lastMonthOfCurrentYear.firstDayOfAwalMonth) === 2) {
                 lastMonthOfCurrentYear.dayNumbersOfAhierMonth += 1;
+                lastMonthOfCurrentYear.hasGuen = true;
+                lastMonthOfCurrentYear.typeOfGuen = GuenTypeEnum.GuenByNormalRule;
             }
         }
 
-        //TODO
         return [...matrixPerYear];
+    }
+
+    static renderCalendarDetails(matrixPerYear: MatrixCalendarType[]) {
+        let fullCalendar: FullCalendarType[] = [];
+
+        for (let index = 0; index < matrixPerYear.length; index++) {
+            const element = matrixPerYear[index];
+            const firstDateOfAhierMonth: AhierDate = { date: 1, ahierMonth: element.ahierMonth };
+            const firstDateOfAwalMonth: AwalDate = { date: 1, awalMonth: element.awalMonth };
+            const firstDateOfGregoryMonth = element.dateOfGregoryCalendar;
+            const daysGap = Helper.getAhierAwalDaysGap(element.firstDayOfAhierMonth, element.firstDayOfAwalMonth);
+
+            for (let days = 0; days < element.dayNumbersOfAhierMonth; days++) {
+                const addedAhierDate = Helper.addAhierDays(matrixPerYear, firstDateOfAhierMonth, days);
+                const dateAhier: AhierDate = {
+                    date: addedAhierDate.date,
+                    ahierMonth: addedAhierDate.ahierMonth
+                }
+
+                const addedAwalDate = Helper.addAwalDays(firstDateOfAwalMonth, days - daysGap);
+                const dateAwal: AwalDate = {
+                    date: addedAwalDate.date,
+                    awalMonth: addedAwalDate.awalMonth
+                }
+
+                const dateGregory = Helper.addGregoryDays(firstDateOfGregoryMonth, days);
+
+                let monthDetailsCalendar: FullCalendarType = {
+                    dateAhier: dateAhier,
+                    dateAwal: dateAwal,
+                    dateGregory: dateGregory,
+                    typeOfGuen: days === element.dayNumbersOfAhierMonth - 1 ? element.typeOfGuen : undefined,
+                    typeOfGuec: days === element.dayNumbersOfAhierMonth - 1 ? element.typeOfGuec : undefined,
+                    hasGuen: days === element.dayNumbersOfAhierMonth - 1 ? element.hasGuen : undefined,
+                    hasGuec: days === element.dayNumbersOfAhierMonth - 1 ? element.hasGuec : undefined
+                }
+
+                fullCalendar.push(monthDetailsCalendar);
+            }
+        }
+
+        return fullCalendar;
     }
 
     static checkIsGuenToAddDay(firstDayOfAhierMonth: number, firstDayOfAwalMonth: number) {
@@ -490,7 +532,7 @@ export default class Helper {
     }
 
     static checkHasGuecRuleInNextYear(currentYear: AhierYear, firstGregoryDateNextYear: Date) {
-        let result = GuecTypeEnum.NoneGuec;
+        let result = GuecTypeEnum.None;
 
         const nextAhierYear = Helper.addAhierYears(currentYear, 1);
         const matrixNextYear = Helper.renderMatrixPerYear(nextAhierYear, firstGregoryDateNextYear);

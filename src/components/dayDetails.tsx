@@ -20,20 +20,17 @@ interface DayDetailsProps {
 export const DayDetails = (props: DayDetailsProps) => {
     let opacityValue = 1;
     if (props.sakawiType === "sakawiAhier") {
-        if (props.dateAhier.ahierMonth !== props.currentAhierMonth) {
+        if (JSON.stringify(props.dateAhier.ahierMonth) !== JSON.stringify(props.currentAhierMonth)) {
             opacityValue = 0.3;
         }
     } else if (props.sakawiType === "sakawiAwal") {
-        if (props.dateAwal.awalMonth !== props.currentAwalMonth) {
+        if (JSON.stringify(props.dateAwal.awalMonth) !== JSON.stringify(props.currentAwalMonth)) {
             opacityValue = 0.3;
         }
     } else if (props.sakawiType === "sakawiGregory") {
         if (props.dateGregory.getMonth() !== props.currentGregoryMonth) {
             opacityValue = 0.3;
         }
-    } else {
-        //TODO: sakawiGregory
-        opacityValue = 1;
     }
 
     const tdStyle: React.CSSProperties = {

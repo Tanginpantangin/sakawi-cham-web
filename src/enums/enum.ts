@@ -84,11 +84,16 @@ export enum AhierMonthEnum {
 }
 
 export enum GuecTypeEnum {
-    NoneGuec = -1,
+    None = -1,
     GuecByNormalRule,
     GuecByHareiButSukRule,
     GuecByRijaNagarRule,
     GuecByKateRamawanRule,
+}
+
+export enum GuenTypeEnum {
+    None = -1,
+    GuenByNormalRule
 }
 
 export function displayMonthName(month: AhierMonthEnum) {
