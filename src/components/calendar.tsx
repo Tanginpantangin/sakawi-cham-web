@@ -37,9 +37,8 @@ export const Calendar = () => {
     const [fullSakawi, setFullSakawi] = useState<FullCalendarType[]>([]);
     const [currentAhierMonth, setCurrentAhierMonth] = useState<MatrixCalendarType>(initialMatrixCalendarType);
     const [currentAwalMonth, setCurrentAwalMonth] = useState<MatrixCalendarType>(initialMatrixCalendarType);
-    const [currentGregoryMonth, setCurrentGregoryMonth] = useState<MatrixCalendarType>(initialMatrixCalendarType);
-    // const [year] = useState(new Date().getFullYear());
-    // const [month] = useState(new Date().getMonth());
+    const [currentGregoryMonth] = useState(new Date().getMonth());
+    const [currentGregoryYear] = useState(new Date().getFullYear());
     const [sakawiType, setSakawiType] = useState<SakawiType>('sakawiAhier');
 
     React.useEffect(() => {
@@ -72,12 +71,6 @@ export const Calendar = () => {
                 Helper.addGregoryDays(m.dateOfGregoryCalendar, m.dayNumbersOfAwalMonth) > new Date())[0];
             if (currentAwalMonth) {
                 setCurrentAwalMonth(currentAwalMonth);
-            }
-
-            const currentGregoryMonth = matrix.matrixCalendar.filter(m =>
-                Helper.addGregoryDays(m.dateOfGregoryCalendar, m.dayNumbersOfAwalMonth) > new Date())[0];//TODO
-            if (currentGregoryMonth) {
-                setCurrentGregoryMonth(currentGregoryMonth);
             }
         }
 
@@ -115,7 +108,9 @@ export const Calendar = () => {
                     {sakawiType === 'sakawiGregory' &&
                         <MonthGregory
                             matrixSakawi={matrixSakawi}
-                            currentGregoryMonthMatrix={currentGregoryMonth}
+                            fullSakawi={fullSakawi}
+                            currentGregoryMonth={currentGregoryMonth}
+                            currentGregoryYear={currentGregoryYear}
                             onSelectSakawiType={onSelectSakawiType}
                         />
                     }
@@ -130,6 +125,7 @@ export const Calendar = () => {
                     {sakawiType === 'sakawiAhier' &&
                         <MonthAhier
                             matrixSakawi={matrixSakawi}
+                            fullSakawi={fullSakawi}
                             currentAhierMonthMatrix={currentAhierMonth}
                             onSelectSakawiType={onSelectSakawiType}
                         />

@@ -21,7 +21,7 @@ export const MonthAwal = (props: MonthAwalProps) => {
     React.useEffect(() => {
         function init() {
             // Get date list will be display at current month
-            const firstDayOfCurrentAwalMonthIndex = props.fullSakawi.findIndex(x => x.dateAwal.date === 1 && JSON.stringify(x.dateAwal.awalMonth) === JSON.stringify(currentAwalMonthMatrix.awalMonth)); //TODO
+            const firstDayOfCurrentAwalMonthIndex = props.fullSakawi.findIndex(x => x.dateAwal.date === 1 && JSON.stringify(x.dateAwal.awalMonth) === JSON.stringify(currentAwalMonthMatrix.awalMonth));
             const firstIndex = firstDayOfCurrentAwalMonthIndex - currentAwalMonthMatrix.firstDayOfAwalMonth;
             const lastIndex = firstIndex + 41; // 42 - 1 cells
             const datesOfCurrentMonth = props.fullSakawi.filter((item, index) => index >= firstIndex && index <= lastIndex);
@@ -37,17 +37,16 @@ export const MonthAwal = (props: MonthAwalProps) => {
     }
 
     function handleGoToPreviousMonth() {
-        const index = props.matrixSakawi.findIndex(x => x === currentAwalMonthMatrix);
+        const index = props.matrixSakawi.findIndex(x => JSON.stringify(x) === JSON.stringify(currentAwalMonthMatrix));
         setCurrentAwalMonthMatrix(props.matrixSakawi[index - 1]);
     }
 
     function handleGoToNextMonth() {
-        const index = props.matrixSakawi.findIndex(x => x === currentAwalMonthMatrix);
+        const index = props.matrixSakawi.findIndex(x => JSON.stringify(x) === JSON.stringify(currentAwalMonthMatrix));
         setCurrentAwalMonthMatrix(props.matrixSakawi[index + 1]);
     }
 
     // draw Calendar Table
-    //let count = 0;
     let cells: JSX.Element[] = [];
     let rows: JSX.Element[] = [];
 

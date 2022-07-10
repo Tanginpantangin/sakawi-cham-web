@@ -13,6 +13,7 @@ interface DayDetailsProps {
     currentAhierMonth?: AhierMonth;
     currentAwalMonth?: AwalMonth;
     currentGregoryMonth?: number;
+    currentGregoryYear?: number;
     dayNumbersOfCurrentAhierMonth: number;
     dayNumbersOfCurrentAwalMonth: number;
 }
@@ -28,7 +29,8 @@ export const DayDetails = (props: DayDetailsProps) => {
             opacityValue = 0.3;
         }
     } else if (props.sakawiType === "sakawiGregory") {
-        if (props.dateGregory.getMonth() !== props.currentGregoryMonth) {
+        if (props.dateGregory.getMonth() !== props.currentGregoryMonth
+            || props.dateGregory.getFullYear() !== props.currentGregoryYear) {
             opacityValue = 0.3;
         }
     }
@@ -80,7 +82,7 @@ export const DayDetails = (props: DayDetailsProps) => {
         if (dateGregory.getDate() === 1 ||
             (sakawiType === "sakawiAwal" && dateAwal.date === 1) ||
             (sakawiType === "sakawiAhier" && dateAhier.date === 1)) {
-            return dateGregory.getDate() + "." + monthGregogy + "." + dateGregory.getFullYear();
+            return dateGregory.getDate() + "." + monthGregogy;
         } else {
             return dateGregory.getDate();
         }

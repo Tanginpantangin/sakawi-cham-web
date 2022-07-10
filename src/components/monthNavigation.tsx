@@ -10,6 +10,7 @@ interface MonthNavigationProps {
     currentAhierMonth?: AhierMonth;
     currentAwalMonth?: AwalMonth;
     currentGregoryMonth?: number;
+    currentGregoryYear?: number;
     onSelectSakawiType: (type: SakawiType) => void
     onClickToday: () => void;
     onClickPreviousMonth: () => void;
@@ -17,40 +18,15 @@ interface MonthNavigationProps {
 }
 
 export const MonthNavigation = (props: MonthNavigationProps) => {
-    // const [radioValue, setRadioValue] = useState('sakawiAhier');
-    // const radioButtons = [
-    //     { name: 'Lịch Chăm', value: 'sakawiAhier' },
-    //     { name: 'Lịch Awal', value: 'sakawiAwal' },
-    //     { name: 'Dương lịch', value: 'sakawiGregory' },
-    // ];
+    const currentGregoryMonth = props.currentGregoryMonth ? props.currentGregoryMonth + 1 : 1;
 
     return (
         <>
             <Col md={4}>
                 <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-start" }}>
-                    {/* <ButtonGroup>
-                        {radioButtons.map((radio, idx) => (
-                            <ToggleButton
-                                key={idx}
-                                id={`radio-${idx}`}
-                                type="radio"
-                                variant="secondary"
-                                //variant={idx % 2 ? 'outline-success' : 'outline-danger'}
-                                name="radio"
-                                value={radio.value}
-                                checked={radioValue === radio.value}
-                                onChange={(e) => {
-                                    props.onSelectSakawiType(e.currentTarget.value as SakawiType);
-                                    setRadioValue(e.currentTarget.value);
-                                }}
-                            >
-                                {radio.name}
-                            </ToggleButton>
-                        ))}
-                    </ButtonGroup> */}
                     <ButtonGroup aria-label="Type of calendar">
                         <Button variant="secondary" onClick={() => props.onSelectSakawiType('sakawiAhier')}>Lịch Chăm</Button>
-                        <Button variant="secondary" onClick={() => props.onSelectSakawiType('sakawiAwal')}>Lịch Awal</Button>
+                        <Button variant="secondary" onClick={() => props.onSelectSakawiType('sakawiAwal')}>Lịch Arab</Button>
                         <Button variant="secondary" onClick={() => props.onSelectSakawiType('sakawiGregory')}>Dương lịch</Button>
                     </ButtonGroup>
                 </ButtonToolbar>
@@ -72,13 +48,14 @@ export const MonthNavigation = (props: MonthNavigationProps) => {
                     </>
                 }
                 {props.sakawiType === 'sakawiAwal' && props.currentAwalMonth &&
-                    <>
-                        <h2>
-                            {AwalMonthEnum[props.currentAwalMonth.month]} {`(${(props.currentAwalMonth.month + 1)})`}
-                            {' - '}{IkasSarakEnum[props.currentAwalMonth.year.ikasSarak]}
-                            {' - '}{props.currentAwalMonth.year.yearNumber}
-                        </h2>
-                    </>
+                    <h2>
+                        {AwalMonthEnum[props.currentAwalMonth.month]} {`(${(props.currentAwalMonth.month + 1)})`}
+                        {' - '}{IkasSarakEnum[props.currentAwalMonth.year.ikasSarak]}
+                        {' - '}{props.currentAwalMonth.year.yearNumber}
+                    </h2>
+                }
+                {props.sakawiType === 'sakawiGregory' &&
+                    <h2>{`Tháng ${currentGregoryMonth} - Năm ${props.currentGregoryYear}`}</h2>
                 }
             </Col>
             <Col md={3}>
