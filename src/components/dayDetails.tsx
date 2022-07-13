@@ -147,13 +147,11 @@ export const DayDetails = (props: DayDetailsProps) => {
             result.push('Akaok thun');
         }
 
-        if (props.dateAwal.awalMonth.month !== AwalMonthEnum.Ramadan) {
-            if (props.dateAhier.ahierMonth.month === 0 && props.dateGregory.getDay() === 4 && props.dateAhier.date < 7) {
-                result.push('Rija Nagar');
-            }
-        } else {
-            if (props.dateAhier.ahierMonth.month === 0 && props.dateGregory.getDay() === 4 && props.dateAhier.date > 14 && props.dateAhier.date < 21) {
-                result.push('Rija Nagar');
+        if (props.dateAhier.ahierMonth.month === 0 && props.dateGregory.getDay() === 4) {
+            if (props.dateAwal.awalMonth.month !== AwalMonthEnum.Ramadan) {
+                if (props.dateAhier.date < 7 || (props.dateAhier.date > 14 && props.dateAhier.date < 20)) {
+                    result.push('Rija Nagar');
+                }
             }
         }
 

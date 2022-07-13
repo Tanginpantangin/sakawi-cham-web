@@ -51,19 +51,27 @@ export const CountDownBar = (props: CountDownBarProps) => {
     const dateStr = ddStr + '/' + mmStr + '/' + yyyy;
 
     let variantType: VariantType;
+    let displayEventName = '';
     switch (props.eventType) {
+        case "Akaok thun":
+            variantType = 'primary';
+            displayEventName = 'Năm mới Cham';
+            break;
         case "Rija Nagar":
-            variantType = 'success';
+            variantType = 'danger';
+            displayEventName = props.eventType;
             break;
         case "Katé angaok bimong":
-            variantType = 'info';
+            variantType = 'warning';
+            displayEventName = 'Katé';
             break;
         case "Tamâ ricaow Ramâwan":
-            variantType = 'warning';
+            variantType = 'success';
+            displayEventName = 'Ramâwan';
             break;
-
         default:
             variantType = 'warning';
+            displayEventName = props.eventType;
             break;
     }
 
@@ -71,7 +79,7 @@ export const CountDownBar = (props: CountDownBarProps) => {
         <Row>
             <Col md={12}>
                 <div style={{ marginBottom: "0.1rem" }}>
-                    <span style={{ fontWeight: "bold" }}>{`${props.eventType}:`}</span>
+                    <span style={{ fontWeight: "bold" }}>{`${displayEventName}:`}</span>
                     <span>{` ${dateStr}`}</span>
                     <span>{` - Còn: ${days} ngày ${("0" + hours).slice(-2)}h${("0" + minutes).slice(-2)}'${("0" + seconds).slice(-2)}"`}</span>
                 </div>

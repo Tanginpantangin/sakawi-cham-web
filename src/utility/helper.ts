@@ -1,3 +1,4 @@
+import { CountDownBarProps } from '../components/countDownBar';
 import sakawiTakaiCiimConfig from '../data/SakawiTakaiCiim.json';
 import { AhierMonthEnum, AwalMonthEnum, GuecTypeEnum, GuenTypeEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { AhierDate, AhierMonth, AhierYear } from "../model/AhierDate";
@@ -590,5 +591,102 @@ export default class Helper {
         return latinNumber.toString().replace(reg, function (c) {
             return ChamDigitArr[EnglishDigits.indexOf(c)]
         });
+    }
+
+    static getNextEvents(fullCalendar: FullCalendarType[]) {
+        let result: CountDownBarProps[] = [];
+        let addedAkaokThun = false;
+        let addedRijaNagar = false;
+        //let addedKateHamuTanran = false;
+        let addedKate = false;
+        let addedRamawan = false;
+        // let addedMukTrun = false;
+        // let addedOngTrun = false;
+        // let addedTalaihRamawan = false;
+        // let addedIkakWaha = false;
+        // let addedTalaihWaha = false;
+        // let addedYuerYang = false;
+
+        fullCalendar.forEach(function (item, index) {
+            if (item.dateGregory < new Date()) {
+                return;
+            }
+
+            if (!addedAkaokThun && item.dateAhier.ahierMonth.month === 0 && item.dateAhier.date === 1) {
+                result.push({ eventType: 'Akaok thun', eventDate: item.dateGregory });
+                addedAkaokThun = true;
+            }
+
+            if (!addedRijaNagar && item.dateAhier.ahierMonth.month === 0 && item.dateGregory.getDay() === 4) {
+                if (item.dateAwal.awalMonth.month !== AwalMonthEnum.Ramadan) {
+                    if (item.dateAhier.date < 7 || (item.dateAhier.date > 14 && item.dateAhier.date < 20)) {
+                        result.push({ eventType: 'Rija Nagar', eventDate: item.dateGregory });
+                        addedRijaNagar = true;
+                    }
+                }
+            }
+
+            /*if (!addedKateHamuTanran && item.dateAhier.ahierMonth.month === 5 && item.dateAhier.date === 29) {
+                result.push({ eventType: 'Katé palei Hamu Tanran', eventDate: item.dateGregory });
+                addedKateHamuTanran = true;
+            }*/
+
+            if (!addedKate && item.dateAhier.ahierMonth.month === 6 && item.dateAhier.date === 1) {
+                result.push({ eventType: 'Katé angaok bimong', eventDate: item.dateGregory });
+                addedKate = true;
+            }
+
+            /*if (item.dayNumbersOfCurrentAhierMonth === 30) {
+                if (item.dateAhier.ahierMonth.month === 8 && item.dateAhier.date === 16) {
+                    result.push('Ca-mbur');
+                }
+            } else {
+                if (item.dateAhier.ahierMonth.month === 8 && item.dateAhier.date === 15) {
+                    result.push('Ca-mbur');
+                }
+            }*/
+
+            if (!addedRamawan && item.dateAwal.awalMonth.month === 8 && item.dateAwal.date === 1) {
+                result.push({ eventType: 'Tamâ ricaow Ramâwan', eventDate: item.dateGregory });
+                addedRamawan = true;
+            }
+
+            /*if (!addedMukTrun && item.dateAwal.awalMonth.month === 8 && item.dateAwal.date === 16) {
+                result.push({ eventType: 'Muk trun', eventDate: item.dateGregory });
+                addedMukTrun = true;
+            }
+
+            if (!addedOngTrun && item.dateAwal.awalMonth.month === 8 && item.dateAwal.date === 21) {
+                result.push({ eventType: 'Ong trun', eventDate: item.dateGregory });
+                addedOngTrun = true;
+            }
+
+            if (!addedTalaihRamawan && item.dateAwal.awalMonth.month === 9 && item.dateAwal.date === 2) {
+                result.push({ eventType: 'Talaih aek Ramâwan', eventDate: item.dateGregory });
+                addedTalaihRamawan = true;
+            }
+
+            if (!addedIkakWaha && item.dateAwal.awalMonth.month === 11 && item.dateAwal.date === 1) {
+                result.push({ eventType: 'Ikak Waha', eventDate: item.dateGregory });
+                addedIkakWaha = true;
+            }
+
+            if (!addedTalaihWaha && item.dateAwal.awalMonth.month === 11 && item.dateAwal.date === 11) {
+                result.push({ eventType: 'Talaih Waha', eventDate: item.dateGregory });
+                addedTalaihWaha = true;
+            }
+
+            if (!addedYuerYang && item.dateAhier.ahierMonth.month === 3 && item.dateGregory.getDay() === 0 && item.dateAhier.date < 7) {
+                result.push({ eventType: 'Yuer Yang', eventDate: item.dateGregory });
+                addedYuerYang = true;
+            }*/
+
+            // Break loop: just look up in a year later (30 days x 13 months)
+            if (item.dateGregory > Helper.addGregoryDays(new Date(), 390)) {
+                return;
+            }
+        });
+
+        return result;
     }
 }

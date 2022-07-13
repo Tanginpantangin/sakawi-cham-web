@@ -6,7 +6,7 @@ import { AwalMonth } from "../model/AwalDate";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from "../utility/helper";
-import { CountDownBar } from "./countDownBar";
+import { CountDownBar, CountDownBarProps } from "./countDownBar";
 import { MonthAhier } from "./monthAhier";
 import { MonthAwal } from "./monthAwal";
 import { MonthGregory } from "./monthGregory";
@@ -40,6 +40,7 @@ export const Calendar = () => {
     const [currentGregoryMonth] = useState(new Date().getMonth());
     const [currentGregoryYear] = useState(new Date().getFullYear());
     const [sakawiType, setSakawiType] = useState<SakawiType>('sakawiAhier');
+    const [nextEvents, setNextEvents] = useState<CountDownBarProps[]>([]);
 
     React.useEffect(() => {
         function init() {
@@ -72,6 +73,9 @@ export const Calendar = () => {
             if (currentAwalMonth) {
                 setCurrentAwalMonth(currentAwalMonth);
             }
+
+            const nextEvents = Helper.getNextEvents(matrix.fullCalendar);
+            setNextEvents(nextEvents);
         }
 
         init();
@@ -88,7 +92,7 @@ export const Calendar = () => {
                     <Col md={12}>
                         <Alert variant='info' onClose={() => setShowWarning(false)} dismissible>
                             <Alert.Heading>Lưu ý!</Alert.Heading>
-                            - Ứng dụng đang trong quá trình phát triển nên còn nhiều thiếu sót, rất mong nhận được nhiều góp ý để sản phẩm được hoàn thiện hơn.
+                            - Ứng dụng đang trong quá trình phát triển nên không tránh khỏi những thiếu sót, rất mong nhận được nhiều góp ý để sản phẩm được hoàn thiện hơn.
                             <br />- Ứng dụng này chỉ mang tính chất tham khảo, Sakawi chính thức được Hội đồng Chức sắc phát hành từng năm.
                         </Alert>
                     </Col>
@@ -96,9 +100,9 @@ export const Calendar = () => {
             }
             <Row>
                 <Col md={12}>
-                    <CountDownBar eventType="Rija Nagar" eventDate={new Date(2022, 4, 5)} />
-                    <CountDownBar eventType="Katé angaok bimong" eventDate={new Date(2022, 9, 24)} />
-                    <CountDownBar eventType="Tamâ ricaow Ramâwan" eventDate={new Date(2022, 3, 2)} />
+                    {nextEvents.map((item) =>
+                        <CountDownBar eventType={item.eventType} eventDate={item.eventDate} />
+                    )}
                 </Col>
             </Row>
             <br />
