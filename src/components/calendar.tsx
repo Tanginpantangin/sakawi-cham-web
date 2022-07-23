@@ -1,45 +1,17 @@
 import React, { useState } from "react";
 import { Alert, Col, Row } from "react-bootstrap";
-import { AhierMonthEnum, GuecTypeEnum, GuenTypeEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
-import { AhierMonth } from "../model/AhierDate";
-import { AwalMonth } from "../model/AwalDate";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from "../utility/helper";
 import { CountDownBar, CountDownBarProps } from "./countDownBar";
-import { MonthAhier } from "./monthAhier";
-import { MonthAwal } from "./monthAwal";
-import { MonthGregory } from "./monthGregory";
+import { MonthCalendar } from "./monthCalendar";
 
 export declare type SakawiType = 'sakawiAwal' | 'sakawiAhier' | 'sakawiGregory';
 
 export const Calendar = () => {
-    const initialAhierMonth: AhierMonth = { month: AhierMonthEnum.BilanSa, year: { nasak: NasakEnum.Pabuei, ikasSarak: IkasSarakEnum.JimLuic, yearNumber: 2019 } };
-    const initialAwalMonth: AwalMonth = { month: 0, year: { ikasSarak: 0, yearNumber: 1400 } };
-    const initialGregoryDate: Date = new Date();
-
-    const initialMatrixCalendarType: MatrixCalendarType = {
-        ahierMonth: initialAhierMonth,
-        dayNumbersOfAhierMonth: 0,
-        firstDayOfAhierMonth: 0,
-        hasGuen: false,
-        typeOfGuen: GuenTypeEnum.None,
-        hasGuec: false,
-        typeOfGuec: GuecTypeEnum.None,
-        dateOfGregoryCalendar: initialGregoryDate,
-        awalMonth: initialAwalMonth,
-        dayNumbersOfAwalMonth: 0,
-        firstDayOfAwalMonth: 0
-    }
-
     const [showWarning, setShowWarning] = useState(true);
     const [matrixSakawi, setMatrixSakawi] = useState<MatrixCalendarType[]>([]);
     const [fullSakawi, setFullSakawi] = useState<FullCalendarType[]>([]);
-    const [currentAhierMonth, setCurrentAhierMonth] = useState<MatrixCalendarType>(initialMatrixCalendarType);
-    const [currentAwalMonth, setCurrentAwalMonth] = useState<MatrixCalendarType>(initialMatrixCalendarType);
-    const [currentGregoryMonth] = useState(new Date().getMonth());
-    const [currentGregoryYear] = useState(new Date().getFullYear());
-    const [sakawiType, setSakawiType] = useState<SakawiType>('sakawiAhier');
     const [nextEvents, setNextEvents] = useState<CountDownBarProps[]>([]);
 
     React.useEffect(() => {
@@ -61,29 +33,12 @@ export const Calendar = () => {
             console.log('fullCalfirstDateOfAwalMonthendar', JSON.stringify(firstDateOfAwalMonth));
             console.log('addedAwalDate', JSON.stringify(addedAwalDate));*/
 
-            // Set current matrix item 
-            const currentAhierMonth = matrix.matrixCalendar.filter(m =>
-                Helper.addGregoryDays(m.dateOfGregoryCalendar, m.dayNumbersOfAhierMonth) > new Date())[0];
-            if (currentAhierMonth) {
-                setCurrentAhierMonth(currentAhierMonth);
-            }
-
-            const currentAwalMonth = matrix.matrixCalendar.filter(m =>
-                Helper.addGregoryDays(m.dateOfGregoryCalendar, m.dayNumbersOfAwalMonth) > new Date())[0];
-            if (currentAwalMonth) {
-                setCurrentAwalMonth(currentAwalMonth);
-            }
-
             const nextEvents = Helper.getNextEvents(matrix.fullCalendar);
             setNextEvents(nextEvents);
         }
 
         init();
-    }, [sakawiType]);
-
-    function onSelectSakawiType(type: SakawiType) {
-        setSakawiType(type);
-    }
+    }, []);
 
     return (
         <>
@@ -100,8 +55,8 @@ export const Calendar = () => {
             }
             <Row>
                 <Col md={12}>
-                    {nextEvents.map((item) =>
-                        <CountDownBar eventType={item.eventType} eventDate={item.eventDate} />
+                    {nextEvents.map((item, index) =>
+                        <CountDownBar key={index} eventType={item.eventType} eventDate={item.eventDate} />
                     )}
                 </Col>
             </Row>
@@ -109,31 +64,10 @@ export const Calendar = () => {
             {
                 matrixSakawi.length > 0 &&
                 <Row>
-                    {sakawiType === 'sakawiGregory' &&
-                        <MonthGregory
-                            matrixSakawi={matrixSakawi}
-                            fullSakawi={fullSakawi}
-                            currentGregoryMonth={currentGregoryMonth}
-                            currentGregoryYear={currentGregoryYear}
-                            onSelectSakawiType={onSelectSakawiType}
-                        />
-                    }
-                    {sakawiType === 'sakawiAwal' &&
-                        <MonthAwal
-                            matrixSakawi={matrixSakawi}
-                            fullSakawi={fullSakawi}
-                            currentAwalMonthMatrix={currentAwalMonth}
-                            onSelectSakawiType={onSelectSakawiType}
-                        />
-                    }
-                    {sakawiType === 'sakawiAhier' &&
-                        <MonthAhier
-                            matrixSakawi={matrixSakawi}
-                            fullSakawi={fullSakawi}
-                            currentAhierMonthMatrix={currentAhierMonth}
-                            onSelectSakawiType={onSelectSakawiType}
-                        />
-                    }
+                    <MonthCalendar
+                        matrixSakawi={matrixSakawi}
+                        fullSakawi={fullSakawi}
+                    />
                 </Row>
             }
         </>

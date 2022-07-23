@@ -1,49 +1,32 @@
 import React, { useState } from "react";
-import { Col, Container, Row, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from "../utility/helper";
-import { SakawiType } from "./calendar";
 import { DayDetails } from "./dayDetails";
-import { MonthNavigation } from "./monthNavigation";
 
 interface MonthAhierProps {
     matrixSakawi: MatrixCalendarType[],
     fullSakawi: FullCalendarType[],
-    currentAhierMonthMatrix: MatrixCalendarType,
-    onSelectSakawiType: (type: SakawiType) => void
+    currentAhierMonthMatrix: MatrixCalendarType
 }
 
 export const MonthAhier = (props: MonthAhierProps) => {
     const [datesOfCurrentMonth, setDatesOfCurrentMonth] = useState<FullCalendarType[]>([]);
-    const [currentAhierMonthMatrix, setCurrentAhierMonthMatrix] = useState(props.currentAhierMonthMatrix);
 
     React.useEffect(() => {
         function init() {
             // Get date list will be display at current month
-            const firstDayOfCurrentAhierMonthIndex = props.fullSakawi.findIndex(x => x.dateAhier.date === 1 && JSON.stringify(x.dateAhier.ahierMonth) === JSON.stringify(currentAhierMonthMatrix.ahierMonth));
-            const firstIndex = firstDayOfCurrentAhierMonthIndex - currentAhierMonthMatrix.firstDayOfAhierMonth;
+            const firstDayOfCurrentAhierMonthIndex = props.fullSakawi.findIndex(x => x.dateAhier.date === 1
+                && JSON.stringify(x.dateAhier.ahierMonth) === JSON.stringify(props.currentAhierMonthMatrix.ahierMonth));
+            const firstIndex = firstDayOfCurrentAhierMonthIndex - props.currentAhierMonthMatrix.firstDayOfAhierMonth;
             const lastIndex = firstIndex + 41; // 42 - 1 cells
             const datesOfCurrentMonth = props.fullSakawi.filter((item, index) => index >= firstIndex && index <= lastIndex);
             setDatesOfCurrentMonth(datesOfCurrentMonth);
         }
 
         init();
-    }, [currentAhierMonthMatrix.ahierMonth, currentAhierMonthMatrix.firstDayOfAhierMonth, props.fullSakawi]);
-
-    function handleGoToToday() {
-        setCurrentAhierMonthMatrix(props.currentAhierMonthMatrix);
-    }
-
-    function handleGoToPreviousMonth() {
-        const index = props.matrixSakawi.findIndex(x => JSON.stringify(x) === JSON.stringify(currentAhierMonthMatrix));
-        setCurrentAhierMonthMatrix(props.matrixSakawi[index - 1]);
-    }
-
-    function handleGoToNextMonth() {
-        const index = props.matrixSakawi.findIndex(x => JSON.stringify(x) === JSON.stringify(currentAhierMonthMatrix));
-        setCurrentAhierMonthMatrix(props.matrixSakawi[index + 1]);
-    }
+    }, [props.currentAhierMonthMatrix.ahierMonth, props.currentAhierMonthMatrix.firstDayOfAhierMonth, props.fullSakawi]);
 
     // draw Calendar Table
     let cells: JSX.Element[] = [];
@@ -60,8 +43,8 @@ export const MonthAhier = (props: MonthAhierProps) => {
                 dateAhier={item.dateAhier}
                 dateAwal={item.dateAwal}
                 dateGregory={item.dateGregory}
-                currentAhierMonth={currentAhierMonthMatrix.ahierMonth}
-                currentAwalMonth={currentAhierMonthMatrix.awalMonth}
+                currentAhierMonth={props.currentAhierMonthMatrix.ahierMonth}
+                currentAwalMonth={props.currentAhierMonthMatrix.awalMonth}
                 dayNumbersOfCurrentAhierMonth={dayNumbersOfCurrentAhierMonth}
                 dayNumbersOfCurrentAwalMonth={dayNumbersOfCurrentAwalMonth}
             />
@@ -80,33 +63,17 @@ export const MonthAhier = (props: MonthAhierProps) => {
     }
 
     return (
-        <Container>
-            <Row>
-                <MonthNavigation
-                    sakawiType="sakawiAhier"
-                    currentAhierMonth={currentAhierMonthMatrix.ahierMonth}
-                    onClickToday={handleGoToToday}
-                    onClickPreviousMonth={handleGoToPreviousMonth}
-                    onClickNextMonth={handleGoToNextMonth}
-                    onSelectSakawiType={type => props.onSelectSakawiType(type)}
-                />
-            </Row>
-            <Row>
-                <Col md={12}>
-                    <Table bordered hover style={tableStyle}>
-                        <thead>
-                            <tr>
-                                {dayNames.map((d, index) =>
-                                    <th style={{ padding: "2px", textAlign: "center" }} key={index}>{d}</th>
-                                )}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {rows}
-                        </tbody>
-                    </Table>
-                </Col>
-            </Row>
-        </Container>
+        <Table bordered hover style={tableStyle}>
+            <thead>
+                <tr>
+                    {dayNames.map((d, index) =>
+                        <th style={{ padding: "2px", textAlign: "center" }} key={index}>{d}</th>
+                    )}
+                </tr>
+            </thead>
+            <tbody>
+                {rows}
+            </tbody>
+        </Table>
     );
 }

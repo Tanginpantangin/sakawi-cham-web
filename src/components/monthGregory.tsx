@@ -1,35 +1,30 @@
 import React, { useState } from "react";
-import { Col, Container, Row, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from '../utility/helper';
-import { SakawiType } from "./calendar";
 import { DayDetails } from "./dayDetails";
-import { MonthNavigation } from "./monthNavigation";
 
 interface MonthGregoryProps {
     matrixSakawi: MatrixCalendarType[],
     fullSakawi: FullCalendarType[],
     currentGregoryMonth: number,
-    currentGregoryYear: number,
-    onSelectSakawiType: (type: SakawiType) => void
+    currentGregoryYear: number
 }
 
 export const MonthGregory = (props: MonthGregoryProps) => {
     const [datesOfCurrentMonth, setDatesOfCurrentMonth] = useState<FullCalendarType[]>([]);
-    const [currentGregoryMonth, setCurrentGregoryMonth] = useState(props.currentGregoryMonth);
-    const [currentGregoryYear, setCurrentGregoryYear] = useState(props.currentGregoryYear);
 
     React.useEffect(() => {
         function init() {
             // Gregory Date
-            const firstGregoryDate = new Date(currentGregoryYear, currentGregoryMonth, 1);
+            const firstGregoryDate = new Date(props.currentGregoryYear, props.currentGregoryMonth, 1);
 
             // Get date list will be display at current month
             const firstDayOfCurrentGregoryMonthIndex = props.fullSakawi.findIndex(x =>
                 x.dateGregory.getDate() === 1
-                && x.dateGregory.getMonth() === currentGregoryMonth
-                && x.dateGregory.getFullYear() === currentGregoryYear);
+                && x.dateGregory.getMonth() === props.currentGregoryMonth
+                && x.dateGregory.getFullYear() === props.currentGregoryYear);
             const firstIndex = firstDayOfCurrentGregoryMonthIndex - firstGregoryDate.getDay();
             const lastIndex = firstIndex + 41; // 42 - 1 cells
             const datesOfCurrentMonth = props.fullSakawi.filter((item, index) => index >= firstIndex && index <= lastIndex);
@@ -37,32 +32,7 @@ export const MonthGregory = (props: MonthGregoryProps) => {
         }
 
         init();
-    }, [currentGregoryMonth, currentGregoryYear, props.fullSakawi]);
-
-    function handleGoToToday() {
-        setCurrentGregoryMonth(props.currentGregoryMonth);
-        setCurrentGregoryYear(props.currentGregoryYear);
-    }
-
-    function handleGoToPreviousMonth() {
-        if (currentGregoryMonth === 0) {
-            setCurrentGregoryMonth(11);
-            setCurrentGregoryYear(currentGregoryYear - 1);
-        } else {
-            setCurrentGregoryMonth(currentGregoryMonth - 1);
-            setCurrentGregoryYear(currentGregoryYear);
-        }
-    }
-
-    function handleGoToNextMonth() {
-        if (currentGregoryMonth === 11) {
-            setCurrentGregoryMonth(0);
-            setCurrentGregoryYear(currentGregoryYear + 1);
-        } else {
-            setCurrentGregoryMonth(currentGregoryMonth + 1);
-            setCurrentGregoryYear(currentGregoryYear);
-        }
-    }
+    }, [props.currentGregoryMonth, props.currentGregoryYear, props.fullSakawi]);
 
     // draw Calendar Table
     let cells: JSX.Element[] = [];
@@ -79,8 +49,8 @@ export const MonthGregory = (props: MonthGregoryProps) => {
                 dateAhier={item.dateAhier}
                 dateAwal={item.dateAwal}
                 dateGregory={item.dateGregory}
-                currentGregoryMonth={currentGregoryMonth}
-                currentGregoryYear={currentGregoryYear}
+                currentGregoryMonth={props.currentGregoryMonth}
+                currentGregoryYear={props.currentGregoryYear}
                 dayNumbersOfCurrentAhierMonth={dayNumbersOfCurrentAhierMonth}
                 dayNumbersOfCurrentAwalMonth={dayNumbersOfCurrentAwalMonth}
             />
@@ -99,34 +69,17 @@ export const MonthGregory = (props: MonthGregoryProps) => {
     }
 
     return (
-        <Container>
-            <Row>
-                <MonthNavigation
-                    sakawiType="sakawiGregory"
-                    currentGregoryMonth={currentGregoryMonth}
-                    currentGregoryYear={currentGregoryYear}
-                    onClickToday={handleGoToToday}
-                    onClickPreviousMonth={handleGoToPreviousMonth}
-                    onClickNextMonth={handleGoToNextMonth}
-                    onSelectSakawiType={type => props.onSelectSakawiType(type)}
-                />
-            </Row>
-            <Row>
-                <Col md={12}>
-                    <Table bordered hover style={tableStyle}>
-                        <thead>
-                            <tr>
-                                {dayNames.map((d, index) =>
-                                    <th style={{ padding: "2px", textAlign: "center" }} key={index}>{d}</th>
-                                )}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {rows}
-                        </tbody>
-                    </Table>
-                </Col>
-            </Row>
-        </Container>
+        <Table bordered hover style={tableStyle}>
+            <thead>
+                <tr>
+                    {dayNames.map((d, index) =>
+                        <th style={{ padding: "2px", textAlign: "center" }} key={index}>{d}</th>
+                    )}
+                </tr>
+            </thead>
+            <tbody>
+                {rows}
+            </tbody>
+        </Table>
     );
 }

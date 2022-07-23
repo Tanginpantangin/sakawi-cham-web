@@ -19,7 +19,7 @@ export const Layout = (props: LayoutProps) => {
             <Row>
                 <Col style={{ paddingRight: 0, paddingLeft: 0 }}>
                     <Navbar bg="dark" variant="dark" expand="lg">
-                        <Navbar.Brand href="#home"><label className="logo">꩜</label><label className="branding-text">SAKAWI CHAM</label></Navbar.Brand>
+                        <Navbar.Brand href="#home"><label className="logo">꩜</label><label className="branding-text">SAKAWI</label></Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="mr-auto my-2 my-lg-0"
@@ -55,7 +55,7 @@ export const Layout = (props: LayoutProps) => {
             {/* Fotter */}
             <Row>
                 <Col style={{ paddingRight: 0, paddingLeft: 0 }}>
-                    <p style={footerStyle}>{`© ${new Date().getFullYear()} Sakawi Cham`}</p>
+                    <p style={footerStyle}>{`© ${new Date().getFullYear()} Sakawi`}</p>
                 </Col>
             </Row>
         </Container >
