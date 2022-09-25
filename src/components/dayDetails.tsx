@@ -40,40 +40,27 @@ export const DayDetails = (props: DayDetailsProps) => {
         backgroundColor: (props.dateGregory.toLocaleDateString() === new Date().toLocaleDateString()) ? '#FFEFBF' : ''
     }
 
-    const GregoryDateStyle: React.CSSProperties = {
-        fontSize: props.sakawiType === "sakawiGregory" ? "1.3rem" : "0.8rem",
-        color: "black",
-        paddingTop: "0.1rem",
-        paddingBottom: "0.1rem",
-        textAlign: "right"
-    }
+    let gregoryDateClass = 'gregory-date';
+    let ahierDateClass = 'ahier-date';
+    let awalDateClass = 'awal-date';
+    let ikasSarakMonthCellClass = 'ikasSarak-month-cell';
 
-    const ahierDateStyle: React.CSSProperties = {
-        fontSize: props.sakawiType === "sakawiAhier" ? "1.5rem" : "1rem",
-        color: "#F15A25",
-        paddingTop: "2rem",
-        paddingBottom: "0.1rem",
-        textAlign: "right"
-    }
+    switch (props.sakawiType) {
+        case "sakawiGregory":
+            gregoryDateClass += ' active'
+            break;
 
-    const awalDateStyle: React.CSSProperties = {
-        flexDirection: "row",
-        fontSize: props.sakawiType === "sakawiAwal" ? "1.5rem" : "1rem",
-        color: "#007A3D",
-        paddingTop: "2rem",
-        paddingBottom: "0.3rem",
-        paddingRight: "0.3rem",
-        alignSelf: "end"
-    }
+        case "sakawiAhier":
+            ahierDateClass += ' active'
+            break;
 
-    const eventStyle: React.CSSProperties = {
-        display: "block",
-        fontSize: "0.8rem",
-        color: "white",
-        backgroundColor: "#3788d8",
-        paddingLeft: "0.3rem",
-        textAlign: "left",
-        marginBottom: "0.1rem",
+        case "sakawiAwal":
+            awalDateClass += ' active'
+            ikasSarakMonthCellClass += ' active'
+            break;
+
+        default:
+            break;
     }
 
     function displayGregoryDate(sakawiType: SakawiType, dateAhier: AhierDate, dateAwal: AwalDate, dateGregory: Date) {
@@ -120,7 +107,7 @@ export const DayDetails = (props: DayDetailsProps) => {
             return (
                 <>
                     <label style={{ margin: 0 }} >{Helper.convertToChamDigitUnicode(dateAwal.date) + bingun + "." + Helper.convertToChamDigitUnicode(monthAwal) + "."}</label>
-                    <label style={{ margin: 0 }} className='ikasSarak-month-cell'>{displayIkasSarakName(dateAwal.awalMonth.year.ikasSarak)}</label>
+                    <label style={{ margin: 0 }} className={ikasSarakMonthCellClass}>{displayIkasSarakName(dateAwal.awalMonth.year.ikasSarak)}</label>
                 </>
             )
         } else {
@@ -229,23 +216,21 @@ export const DayDetails = (props: DayDetailsProps) => {
     return (
         <td style={tdStyle}>
             <Row>
-                <Col md={6}></Col>
-                <Col style={GregoryDateStyle} md={6}>
+                <Col xs={6} sm={6} md={6}></Col>
+                <Col className={gregoryDateClass} xs={6} sm={6} md={6}>
                     {displayGregoryDate(props.sakawiType, props.dateAhier, props.dateAwal, props.dateGregory)}
                 </Col>
             </Row>
             <Row>
-                <Col md={12} style={{ minHeight: "10px", maxHeight: "25px" }}>
-                    {getEvents().map((item, index) => { return <p key={index} style={eventStyle}>{item}</p> })}
+                <Col xs={12} sm={12} md={12} style={{ minHeight: "10px", maxHeight: "25px" }}>
+                    {getEvents().map((item, index) => { return <p key={index} className='event-name'>{item}</p> })}
                 </Col>
             </Row>
             <Row>
-                <Col style={awalDateStyle} md={6}>
-                    {/* {props.dateAwal.date}.{props.dateAwal.awalMonth.month + 1}-{IkasSarakEnum[props.dateAwal.awalMonth.year.ikasSarak]} */}
+                <Col className={awalDateClass} xs={6} sm={6} md={6}>
                     {displayAwalDate(props.dateAwal)}
                 </Col>
-                <Col style={ahierDateStyle} md={6}>
-                    {/* {props.dateAhier.date}.{props.dateAhier.ahierMonth.month + 1}.{NasakEnum[props.dateAhier.ahierMonth.year.nasak]}.{IkasSarakEnum[props.dateAhier.ahierMonth.year.ikasSarak]} */}
+                <Col className={ahierDateClass} xs={6} sm={6} md={6}>
                     {displayAhierDate(props.dateAhier)}
                 </Col>
             </Row>

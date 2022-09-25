@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, ButtonToolbar, Col } from "react-bootstrap";
-import { AhierMonthEnum, AwalMonthEnum, displayIkasSarakName, displayMonthName, displayNasakName, IkasSarakEnum, NasakEnum } from "../enums/enum";
+import { AwalMonthEnum, displayIkasSarakName, displayMonthName, displayNasakName, IkasSarakEnum } from "../enums/enum";
 import { AhierMonth } from "../model/AhierDate";
 import { AwalMonth } from "../model/AwalDate";
 import Helper from "../utility/helper";
@@ -25,8 +25,8 @@ export const MonthNavigation = (props: MonthNavigationProps) => {
             <Col md={4}>
                 <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-start" }}>
                     <ButtonGroup aria-label="Type of calendar">
-                        <Button variant="outline-secondary" active={props.sakawiType === 'sakawiAhier'} onClick={() => props.onSelectSakawiType('sakawiAhier')}>Lịch Chăm</Button>
-                        <Button variant="outline-secondary" active={props.sakawiType === 'sakawiAwal'} onClick={() => props.onSelectSakawiType('sakawiAwal')}>Lịch Arab</Button>
+                        <Button variant="outline-secondary" active={props.sakawiType === 'sakawiAhier'} onClick={() => props.onSelectSakawiType('sakawiAhier')}>Lịch Cham</Button>
+                        <Button variant="outline-secondary" active={props.sakawiType === 'sakawiAwal'} onClick={() => props.onSelectSakawiType('sakawiAwal')}>Lịch Jawi</Button>
                         <Button variant="outline-secondary" active={props.sakawiType === 'sakawiGregory'} onClick={() => props.onSelectSakawiType('sakawiGregory')}>Dương lịch</Button>
                     </ButtonGroup>
                 </ButtonToolbar>
@@ -35,27 +35,27 @@ export const MonthNavigation = (props: MonthNavigationProps) => {
                 {props.sakawiType === 'sakawiAhier' && props.currentAhierMonth &&
                     <>
                         <div>
-                            <label className='bilan-title'>{displayMonthName(props.currentAhierMonth.month)}</label>
-                            {' - '}<label className='bilan-title'>{displayNasakName(props.currentAhierMonth.year.nasak)}</label>
-                            {' - '}<label className='ikasSarak-title'>{displayIkasSarakName(props.currentAhierMonth.year.ikasSarak)}</label>
+                            <label className='bilan-title'>{displayMonthName(props.currentAhierMonth.month).akharThrahName}</label>
+                            {' - '}<label className='bilan-title'>{displayNasakName(props.currentAhierMonth.year.nasak).akharThrahName}</label>
+                            {'   '}<label className='ikasSarak-title'>{displayIkasSarakName(props.currentAhierMonth.year.ikasSarak)}</label>
                             {' - '}<label className='bilan-title'>{Helper.convertToChamDigitUnicode(props.currentAhierMonth.year.yearNumber ?? 0)}</label>
                         </div>
                         <h5>
-                            {AhierMonthEnum[props.currentAhierMonth.month]} {`(${(props.currentAhierMonth.month + 1)})`}
-                            {' - '}{NasakEnum[props.currentAhierMonth.year.nasak]} {IkasSarakEnum[props.currentAhierMonth.year.ikasSarak]}
+                            {displayMonthName(props.currentAhierMonth.month).rumiName} {`(${(props.currentAhierMonth.month + 1)})`}
+                            {' - '}{displayNasakName(props.currentAhierMonth.year.nasak).rumiName} {IkasSarakEnum[props.currentAhierMonth.year.ikasSarak]}
                             {' - '}{props.currentAhierMonth.year.yearNumber}
                         </h5>
                     </>
                 }
                 {props.sakawiType === 'sakawiAwal' && props.currentAwalMonth &&
-                    <h2>
+                    <h5>
                         {AwalMonthEnum[props.currentAwalMonth.month]} {`(${(props.currentAwalMonth.month + 1)})`}
                         {' - '}{IkasSarakEnum[props.currentAwalMonth.year.ikasSarak]}
                         {' - '}{props.currentAwalMonth.year.yearNumber}
-                    </h2>
+                    </h5>
                 }
                 {props.sakawiType === 'sakawiGregory' &&
-                    <h2>{`Tháng ${currentGregoryMonth} - Năm ${props.currentGregoryYear}`}</h2>
+                    <h5>{`Tháng ${currentGregoryMonth} - ${props.currentGregoryYear}`}</h5>
                 }
             </Col>
             <Col md={3}>

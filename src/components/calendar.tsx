@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert, Col, Row } from "react-bootstrap";
+import { Alert, Col, Container, Form, Row } from "react-bootstrap";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from "../utility/helper";
@@ -7,9 +7,11 @@ import { CountDownBar, CountDownBarProps } from "./countDownBar";
 import { MonthCalendar } from "./monthCalendar";
 
 export declare type SakawiType = 'sakawiAwal' | 'sakawiAhier' | 'sakawiGregory';
+export declare type AreaType = 'NinhThuan' | 'BinhThuan';
 
 export const Calendar = () => {
     const [showWarning, setShowWarning] = useState(true);
+    const [areaType, setAreaType] = useState<AreaType>('BinhThuan');
     const [matrixSakawi, setMatrixSakawi] = useState<MatrixCalendarType[]>([]);
     const [fullSakawi, setFullSakawi] = useState<FullCalendarType[]>([]);
     const [nextEvents, setNextEvents] = useState<CountDownBarProps[]>([]);
@@ -41,10 +43,10 @@ export const Calendar = () => {
     }, []);
 
     return (
-        <>
+        <Container>
             {showWarning &&
                 <Row>
-                    <Col md={12}>
+                    <Col sm={12} md={12} lg={12}>
                         <Alert variant='info' onClose={() => setShowWarning(false)} dismissible>
                             <Alert.Heading>Lưu ý!</Alert.Heading>
                             - Ứng dụng đang trong quá trình phát triển nên không tránh khỏi những thiếu sót, rất mong nhận được nhiều góp ý để sản phẩm được hoàn thiện hơn.
@@ -53,8 +55,32 @@ export const Calendar = () => {
                     </Col>
                 </Row>
             }
+            {/* TODO: show radio Sakawi NT or BT */}
             <Row>
-                <Col md={12}>
+                <Col md={4}>
+                    <Form>
+                        <div className="mb-3">
+                            <Form.Check
+                                inline
+                                disabled
+                                type={"radio"}
+                                label={`Sakawi Ninh Thuận`}
+                                checked={areaType === "NinhThuan"}
+                                onChange={() => { setAreaType('NinhThuan') }}
+                            />
+                            <Form.Check
+                                inline
+                                type={"radio"}
+                                label={`Sakawi Bình Thuận`}
+                                checked={areaType === "BinhThuan"}
+                                onChange={() => { setAreaType('BinhThuan') }}
+                            />
+                        </div>
+                    </Form>
+                </Col>
+            </Row>
+            <Row>
+                <Col sm={12} md={12} lg={12}>
                     {nextEvents.map((item, index) =>
                         <CountDownBar key={index} eventType={item.eventType} eventDate={item.eventDate} />
                     )}
@@ -70,6 +96,14 @@ export const Calendar = () => {
                     />
                 </Row>
             }
-        </>
+            {/*{
+                <Row>
+                    <YearCalendar
+                        matrixSakawi={matrixSakawi}
+                        fullSakawi={fullSakawi}
+                    />
+                </Row>
+            }*/}
+        </Container>
     );
 }

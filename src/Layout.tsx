@@ -1,4 +1,4 @@
-import { Card, Col, Container, ListGroup, Nav, Navbar, Row } from "react-bootstrap";
+import { Col, Container, Nav, Navbar, Row } from "react-bootstrap";
 
 interface LayoutProps {
     children: JSX.Element;
@@ -39,7 +39,7 @@ export const Layout = (props: LayoutProps) => {
             <br />
             {/* Body */}
             <Row>
-                <Col sm={2}>
+                {/* <Col sm={2}>
                     <Card>
                         <ListGroup>
                             <ListGroup.Item>Lịch tháng</ListGroup.Item>
@@ -47,8 +47,8 @@ export const Layout = (props: LayoutProps) => {
                             <ListGroup.Item>Sự kiện trong năm</ListGroup.Item>
                         </ListGroup>
                     </Card>
-                </Col>
-                <Col sm={10}>
+                </Col> */}
+                <Col sm={12} md={12} lg={12}>
                     {props.children}
                 </Col>
             </Row>

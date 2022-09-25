@@ -1,38 +1,45 @@
 import React, { useState } from "react";
 import { Table } from "react-bootstrap";
+import { AhierYear } from "../model/AhierDate";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
-import Helper from "../utility/helper";
-import { DayDetails } from "./dayDetails";
 
-interface MonthAhierProps {
+interface YearAhierProps {
     matrixSakawi: MatrixCalendarType[],
     fullSakawi: FullCalendarType[],
-    currentAhierMonthMatrix: MatrixCalendarType
+    currentAhierYear: AhierYear
 }
 
-export const MonthAhier = (props: MonthAhierProps) => {
-    const [datesOfCurrentMonth, setDatesOfCurrentMonth] = useState<FullCalendarType[]>([]);
+
+interface MonthsPerYear {
+    month: string,
+    datesOfMonth: FullCalendarType[]
+}
+
+export const YearAhier = (props: YearAhierProps) => {
+    const [datesOfCurrentYear, setDatesOfCurrentYear] = useState<FullCalendarType[]>([]);
 
     React.useEffect(() => {
         function init() {
             // Get date list will be display at current month
-            const firstDayOfCurrentAhierMonthIndex = props.fullSakawi.findIndex(x => x.dateAhier.date === 1
-                && JSON.stringify(x.dateAhier.ahierMonth) === JSON.stringify(props.currentAhierMonthMatrix.ahierMonth));
-            const firstIndex = firstDayOfCurrentAhierMonthIndex - props.currentAhierMonthMatrix.firstDayOfAhierMonth;
-            const lastIndex = firstIndex + 41; // 42 - 1 cells
-            const datesOfCurrentMonth = props.fullSakawi.filter((item, index) => index >= firstIndex && index <= lastIndex);
-            setDatesOfCurrentMonth(datesOfCurrentMonth);
+            const firstIndex = props.fullSakawi.findIndex(x => JSON.stringify(x.dateAhier.ahierMonth.year) === JSON.stringify(props.currentAhierYear));
+            const lastIndex = props.fullSakawi.map(x => x.dateAhier.ahierMonth.year.yearNumber).lastIndexOf(props.currentAhierYear.yearNumber);
+            const datesOfCurrentYear = props.fullSakawi.filter((item, index) => index >= firstIndex && index <= lastIndex);
+            setDatesOfCurrentYear(datesOfCurrentYear);
+            //console.log('datesOfCurrentYear', JSON.stringify(datesOfCurrentYear));
+            const lastMonth = lastIndex !== -1 ? props.fullSakawi[lastIndex].dateAhier.ahierMonth.month : 0;
+            console.log('lastIndex', lastIndex);
+            console.log('lastMonth', lastMonth);
         }
 
         init();
-    }, [props.currentAhierMonthMatrix.ahierMonth, props.currentAhierMonthMatrix.firstDayOfAhierMonth, props.fullSakawi]);
+    }, [props.currentAhierYear, props.fullSakawi]);
 
     // draw Calendar Table
     let cells: JSX.Element[] = [];
     let rows: JSX.Element[] = [];
 
-    datesOfCurrentMonth.forEach((item, index) => {
+    /*datesOfCurrentYear.forEach((item, index) => {
         const dayNumbersOfCurrentAhierMonth = Helper.getActualDayNumbersOfAhierMonth(props.matrixSakawi, item.dateAhier.ahierMonth);
         const dayNumbersOfCurrentAwalMonth = Helper.getDayNumbersOfAwalMonth(item.dateAwal.awalMonth.year, item.dateAwal.awalMonth.month);
 
@@ -54,9 +61,15 @@ export const MonthAhier = (props: MonthAhierProps) => {
             rows.push(<tr key={`sakawiAhier-row-${index}`}>{cells}</tr>);
             cells = [];
         }
-    })
+    })*/
 
-    const dayNames = ["Adit", "Thom", "Angar", "But", "Jip", "Suk", "Sanacar"]
+    const dayOfWeekNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    let dayNames = [];
+    for (let index = 0; index < 6; index++) {
+        dayNames.push(...dayOfWeekNames);
+    }
+    console.log('dayNames', JSON.stringify(dayNames));
+
     const tableStyle: React.CSSProperties = {
         height: "400px",
         tableLayout: "fixed"
@@ -67,7 +80,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
             <thead>
                 <tr>
                     {dayNames.map((d, index) =>
-                        <th className="ahier-day-name" style={{ padding: "2px", textAlign: "center" }} key={index}>{d}</th>
+                        <th style={{ padding: "2px", textAlign: "center" }} key={index}>{d}</th>
                     )}
                 </tr>
             </thead>

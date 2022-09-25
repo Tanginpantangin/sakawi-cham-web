@@ -10,9 +10,6 @@ export interface CountDownBarProps {
 export const CountDownBar = (props: CountDownBarProps) => {
     const [percent, setPercent] = useState(100);
     const [days, setDays] = useState(0);
-    const [hours, setHours] = useState(0);
-    const [minutes, setMinutes] = useState(0);
-    const [seconds, setSeconds] = useState(0);
 
     useEffect(() => {
         setTimeout(() => {
@@ -33,14 +30,8 @@ export const CountDownBar = (props: CountDownBarProps) => {
 
         // Time calculations for days, hours, minutes and seconds
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
         setDays(days);
-        setHours(hours);
-        setMinutes(minutes);
-        setSeconds(seconds);
     }
 
     let dd = props.eventDate.getDate();
@@ -55,7 +46,7 @@ export const CountDownBar = (props: CountDownBarProps) => {
     switch (props.eventType) {
         case "Akaok thun":
             variantType = 'primary';
-            displayEventName = 'Năm mới Cham';
+            displayEventName = 'Năm mới';
             break;
         case "Rija Nagar":
             variantType = 'danger';
@@ -77,13 +68,13 @@ export const CountDownBar = (props: CountDownBarProps) => {
 
     return (
         <Row>
-            <Col md={12}>
+            <Col sm={6} md={12} lg={12}>
                 <div style={{ marginBottom: "0.1rem" }}>
                     <span style={{ fontWeight: "bold" }}>{`${displayEventName}:`}</span>
                     <span>{` ${dateStr}`}</span>
-                    <span>{` - Còn: ${days} ngày ${("0" + hours).slice(-2)}h${("0" + minutes).slice(-2)}'${("0" + seconds).slice(-2)}"`}</span>
+                    <span>{` - Còn: ${days} ngày`}</span>
                 </div>
-                <ProgressBar style={{ height: "0.5rem", marginBottom: "5px" }} variant={variantType.toString()} now={percent} />
+                <ProgressBar style={{ height: "0.3rem", marginBottom: "5px" }} variant={variantType.toString()} now={percent} />
             </Col>
         </Row>
     );

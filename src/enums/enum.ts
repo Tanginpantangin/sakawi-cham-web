@@ -97,100 +97,133 @@ export enum GuenTypeEnum {
 }
 
 export function displayMonthName(month: AhierMonthEnum) {
-    let result = '';
+    let _akharThrahName = '';
+    let _rumiName = '';
 
     switch (month) {
         case 0:
-            result = 'ꨝꨪꨤꩆ ꨧꨩ';
+            _akharThrahName = 'ꨝꨪꨤꩆ ꨧꨩ';
+            _rumiName = 'Bilan sa';
             break;
         case 1:
-            result = 'ꨝꨪꨤꩆ ꨕꨶꨩ';
+            _akharThrahName = 'ꨝꨪꨤꩆ ꨕꨶꨩ';
+            _rumiName = 'Bilan dua';
             break;
         case 2:
-            result = 'ꨝꨪꨤꩆ ꨆꨵꨮꨭ';
+            _akharThrahName = 'ꨝꨪꨤꩆ ꨆꨵꨮꨭ';
+            _rumiName = 'Bilan klau';
             break;
         case 3:
-            result = 'ꨝꨪꨤꩆ ꨛꨩꩀ';
+            _akharThrahName = 'ꨝꨪꨤꩆ ꨛꨩꩀ';
+            _rumiName = 'Bilan pak';
             break;
         case 4:
-            result = 'ꨝꨪꨤꩆ ꨤꨪꨟꨩ';
+            _akharThrahName = 'ꨝꨪꨤꩆ ꨤꨪꨟꨩ';
+            _rumiName = 'Bilan limâ';
             break;
         case 5:
-            result = 'ꨝꨪꨤꩆ ꨘꩌ';
+            _akharThrahName = 'ꨝꨪꨤꩆ ꨗꨮꩌ';
+            _rumiName = 'Bilan nem';
             break;
         case 6:
-            result = 'ꨝꨪꨤꩆ ꨓꨎꨭꩍ';
+            _akharThrahName = 'ꨝꨪꨤꩆ ꨓꨎꨭꩍ';
+            _rumiName = 'Bilan tajuh';
             break;
         case 7:
-            result = 'ꨝꨪꨤꩆ ꨕꨤꨪꨚꩆ';
+            _akharThrahName = 'ꨝꨪꨤꩆ ꨕꨤꨪꨚꩆ';
+            _rumiName = 'Bilan dalipan';
             break;
         case 8:
-            result = 'ꨝꨪꨤꩆ ꨧꨤꨪꨚꩆ';
+            _akharThrahName = 'ꨝꨪꨤꩆ ꨧꨤꨪꨚꩆ';
+            _rumiName = 'Bilan salipan';
             break;
         case 9:
-            result = 'ꨝꨪꨤꩆ ꨧꨚꨵꨭꩍ';
+            _akharThrahName = 'ꨝꨪꨤꩆ ꨧꨚꨵꨭꩍ';
+            _rumiName = 'Bilan sapluh';
             break;
         case 10:
-            result = 'ꨝꨪꨤꩆ ꨚꨶꨪꩋ';
+            _akharThrahName = 'ꨝꨪꨤꩆ ꨚꨶꨪꩋ';
+            _rumiName = 'Bilan puis';
             break;
         case 11:
-            result = 'ꨝꨪꨤꩆ ꨠꩀ';
+            _akharThrahName = 'ꨝꨪꨤꩆ ꨠꩀ';
+            _rumiName = 'Bilan mak';
             break;
         case 12:
-            result = 'ꨝꨪꨤꩆ ꨞꩃ';
+            _akharThrahName = 'ꨝꨪꨤꩆ ꨞꩃ';
+            _rumiName = 'Bilan bhang';
             break;
         default:
             break;
     }
 
-    return result;
+    return {
+        akharThrahName: _akharThrahName,
+        rumiName: _rumiName
+    }
 }
 
 export function displayNasakName(nasak: NasakEnum) {
-    let result = '';
+    let _akharThrahName = '';
+    let _rumiName = '';
 
     switch (nasak) {
         case 0:
-            result = 'ꨓꨆꨭꩍ';
+            _akharThrahName = 'ꨓꨆꨭꩍ';
+            _rumiName = 'Takuh';
             break;
         case 1:
-            result = 'ꨆꨝꨥ';
+            _akharThrahName = 'ꨆꨝꨥ';
+            _rumiName = 'Kabaw';
             break;
         case 2:
-            result = 'ꨣꨪꨟꨯꨱꩃ';
+            _akharThrahName = 'ꨣꨪꨟꨯꨱꩃ';
+            _rumiName = 'Rimaong';
             break;
         case 3:
-            result = 'ꨓꨛꩈ';
+            _akharThrahName = 'ꨓꨛꩈ';
+            _rumiName = 'Tapay';
             break;
         case 4:
-            result = 'ꨁꨗꨩ ꨈꨪꨣꩈ';
+            _akharThrahName = 'ꨁꨗꨩ ꨈꨪꨣꩈ';
+            _rumiName = 'Inâ Giray';
             break;
         case 5:
-            result = 'ꨂꨤꨩ ꨗꨰꩍ';
+            _akharThrahName = 'ꨂꨤꨩ ꨗꨰꩍ';
+            _rumiName = 'Ula naih';
             break;
         case 6:
-            result = 'ꨀꨧꨰꩍ';
+            _akharThrahName = 'ꨀꨧꨰꩍ';
+            _rumiName = 'Asaih';
             break;
         case 7:
-            result = 'ꨚꨝꨰꩈ';
+            _akharThrahName = 'ꨚꨝꨰꩈ';
+            _rumiName = 'Pabaiy';
             break;
         case 8:
-            result = 'ꨆꨴꨩ';
+            _akharThrahName = 'ꨆꨴꨩ';
+            _rumiName = 'Kra';
             break;
         case 9:
-            result = 'ꨟꨗꨭꩀ';
+            _akharThrahName = 'ꨟꨗꨭꩀ';
+            _rumiName = 'Mânuk';
             break;
         case 10:
-            result = 'ꨀꨧꨮꨭ';
+            _akharThrahName = 'ꨀꨧꨮꨭ';
+            _rumiName = 'Asau';
             break;
         case 11:
-            result = 'ꨚꨝꨶꨬ';
+            _akharThrahName = 'ꨚꨝꨶꨬ';
+            _rumiName = 'Pabuei';
             break;
         default:
             break;
     }
 
-    return result;
+    return {
+        akharThrahName: _akharThrahName,
+        rumiName: _rumiName
+    }
 }
 
 export function displayIkasSarakName(ikasSarak: IkasSarakEnum) {
