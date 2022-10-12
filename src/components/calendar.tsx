@@ -11,7 +11,7 @@ export declare type AreaType = 'NinhThuan' | 'BinhThuan';
 
 export const Calendar = () => {
     const [showWarning, setShowWarning] = useState(true);
-    const [areaType, setAreaType] = useState<AreaType>('BinhThuan');
+    const [areaType, setAreaType] = useState<AreaType>('NinhThuan');
     const [matrixSakawi, setMatrixSakawi] = useState<MatrixCalendarType[]>([]);
     const [fullSakawi, setFullSakawi] = useState<FullCalendarType[]>([]);
     const [nextEvents, setNextEvents] = useState<CountDownBarProps[]>([]);
@@ -19,7 +19,7 @@ export const Calendar = () => {
     React.useEffect(() => {
         function init() {
             // Build matrix Calendar
-            let matrix = Helper.buildMatrixCalendar(2046);
+            let matrix = Helper.buildMatrixCalendar(2046, areaType);
             //let matrix = Helper.buildMatrixCalendar(2023);
             setMatrixSakawi(matrix.matrixCalendar);
             //console.log('matrixCalendar', JSON.stringify(matrix.matrixCalendar));
@@ -40,7 +40,7 @@ export const Calendar = () => {
         }
 
         init();
-    }, []);
+    }, [areaType]);
 
     return (
         <Container>
@@ -62,7 +62,6 @@ export const Calendar = () => {
                         <div className="mb-3">
                             <Form.Check
                                 inline
-                                disabled
                                 type={"radio"}
                                 label={`Sakawi Ninh Thuận`}
                                 checked={areaType === "NinhThuan"}

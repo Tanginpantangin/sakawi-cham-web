@@ -20,24 +20,33 @@ interface DayDetailsProps {
 
 export const DayDetails = (props: DayDetailsProps) => {
     let opacityValue = 1;
+    let backgroundColor = '';
+
+    if (props.dateGregory.toLocaleDateString() === new Date().toLocaleDateString()) {
+        backgroundColor = '#FFEFBF';
+    }
+
     if (props.sakawiType === "sakawiAhier") {
         if (JSON.stringify(props.dateAhier.ahierMonth) !== JSON.stringify(props.currentAhierMonth)) {
+            backgroundColor = '#F2F2F2';
             opacityValue = 0.3;
         }
     } else if (props.sakawiType === "sakawiAwal") {
         if (JSON.stringify(props.dateAwal.awalMonth) !== JSON.stringify(props.currentAwalMonth)) {
+            backgroundColor = '#F2F2F2';
             opacityValue = 0.3;
         }
     } else if (props.sakawiType === "sakawiGregory") {
         if (props.dateGregory.getMonth() !== props.currentGregoryMonth
             || props.dateGregory.getFullYear() !== props.currentGregoryYear) {
+            backgroundColor = '#F2F2F2';
             opacityValue = 0.3;
         }
     }
 
     const tdStyle: React.CSSProperties = {
         opacity: opacityValue,
-        backgroundColor: (props.dateGregory.toLocaleDateString() === new Date().toLocaleDateString()) ? '#FFEFBF' : ''
+        backgroundColor: backgroundColor
     }
 
     let gregoryDateClass = 'gregory-date';
@@ -142,7 +151,7 @@ export const DayDetails = (props: DayDetailsProps) => {
             }
         }
 
-        if (props.dateAhier.ahierMonth.month === 5 && props.dateAhier.date === 29) {
+        if (props.dateAhier.ahierMonth.month === 5 && props.dateAhier.date === props.dayNumbersOfCurrentAhierMonth) {
             result.push('Katé palei Hamu Tanran');
         }
 
@@ -223,7 +232,9 @@ export const DayDetails = (props: DayDetailsProps) => {
             </Row>
             <Row>
                 <Col xs={12} sm={12} md={12} style={{ minHeight: "10px", maxHeight: "25px" }}>
-                    {getEvents().map((item, index) => { return <p key={index} className='event-name'>{item}</p> })}
+                    {getEvents().map((item, index) => {
+                        return <p key={index} className='event-name'>{item}</p>
+                    })}
                 </Col>
             </Row>
             <Row>

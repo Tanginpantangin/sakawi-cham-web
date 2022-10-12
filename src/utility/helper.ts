@@ -1,3 +1,4 @@
+import { AreaType } from '../components/calendar';
 import { CountDownBarProps } from '../components/countDownBar';
 import sakawiTakaiCiimConfig from '../data/SakawiTakaiCiim.json';
 import { AhierMonthEnum, AwalMonthEnum, GuecTypeEnum, GuenTypeEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
@@ -334,7 +335,7 @@ export default class Helper {
     }
     //#endregion
 
-    static buildMatrixCalendar(toYearAhier: number) {
+    static buildMatrixCalendar(toYearAhier: number, areaType: AreaType) {
         let matrixCalendar: MatrixCalendarType[] = [];
         let fullCalendar: FullCalendarType[] = [];
 
@@ -359,7 +360,7 @@ export default class Helper {
         for (let y = 0; y < numberOfAhierYear; y++) {
             const ahierYear = Helper.addAhierYears(startAhierYear, y);
             const matrixPerYear = Helper.renderMatrixPerYear(ahierYear, newGregoryDate);
-            const validMatrix = Helper.applyGuenGuecRules(matrixPerYear);
+            const validMatrix = Helper.applyGuenGuecRules(matrixPerYear, areaType);
             matrixCalendar.push(...validMatrix);
 
             const calendarDetails = Helper.renderCalendarDetails(validMatrix);
@@ -414,7 +415,7 @@ export default class Helper {
         return matrixPerYear;
     }
 
-    static applyGuenGuecRules(matrixPerYear: MatrixCalendarType[]) {
+    static applyGuenGuecRules(matrixPerYear: MatrixCalendarType[], areaType: AreaType) {
         let monthGuen = -1;
         let monthGuec = -1;
         let guecTypeInNextYear = GuecTypeEnum.None;
@@ -426,10 +427,12 @@ export default class Helper {
 
             // Guen
             if (monthGuen === -1 && Helper.checkIsGuenToAddDay(element.firstDayOfAhierMonth, element.firstDayOfAwalMonth)) {
-                monthGuen = index;
-                matrixPerYear[monthGuen - 1].dayNumbersOfAhierMonth += 1;
-                matrixPerYear[monthGuen - 1].hasGuen = true;
-                matrixPerYear[monthGuen - 1].typeOfGuen = GuenTypeEnum.GuenByNormalRule;
+                if (areaType === 'BinhThuan' || (areaType === 'NinhThuan' && index >= 11)) {
+                    monthGuen = index;
+                    matrixPerYear[monthGuen - 1].dayNumbersOfAhierMonth += 1;
+                    matrixPerYear[monthGuen - 1].hasGuen = true;
+                    matrixPerYear[monthGuen - 1].typeOfGuen = GuenTypeEnum.GuenByNormalRule;
+                }
             }
 
             if (monthGuen !== -1 && index >= monthGuen) {
