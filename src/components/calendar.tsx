@@ -55,7 +55,6 @@ export const Calendar = () => {
                     </Col>
                 </Row>
             }
-            {/* TODO: show radio Sakawi NT or BT */}
             <Row>
                 <Col md={4}>
                     <Form>
@@ -103,6 +102,15 @@ export const Calendar = () => {
                     />
                 </Row>
             }*/}
+            {/* {
+                matrixSakawi.length > 0 &&
+                <Row>
+                    <EventCalendar
+                        matrixSakawi={matrixSakawi}
+                        fullSakawi={fullSakawi}
+                    />
+                </Row>
+            } */}
         </Container>
     );
 }

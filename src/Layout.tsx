@@ -5,9 +5,9 @@ interface LayoutProps {
 }
 
 const footerStyle: React.CSSProperties = {
-    background: "#20232a",
+    background: "#343A40",
     color: "white",
-    padding: "15px",
+    padding: "10px",
     textAlign: "center",
     justifyContent: "center"
 }
@@ -19,43 +19,38 @@ export const Layout = (props: LayoutProps) => {
             <Row>
                 <Col style={{ paddingRight: 0, paddingLeft: 0 }}>
                     <Navbar bg="dark" variant="dark" expand="lg">
-                        <Navbar.Brand href="#home"><label className="logo">꩜</label><label className="branding-text">SAKAWI</label></Navbar.Brand>
-                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                        <Navbar.Collapse id="basic-navbar-nav">
-                            <Nav className="mr-auto my-2 my-lg-0"
-                                style={{ maxHeight: '100px' }}
-                                navbarScroll>
-                                <Nav.Link href="#">Trang chủ</Nav.Link>
-                                <Nav.Link href="#">Tiện ích</Nav.Link>
-                                <Nav.Link href="#">Tài liệu</Nav.Link>
-                                <Nav.Link href="#">Blog</Nav.Link>
-                                <Nav.Link href="#">Hướng dẫn</Nav.Link>
-                                <Nav.Link href="#">Chúng tôi</Nav.Link>
-                            </Nav>
-                        </Navbar.Collapse>
+                        <Container>
+                            <Navbar.Brand href="#home"><label className="logo">꩜</label><label className="branding-text">SAKAWI</label></Navbar.Brand>
+                            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                            <Navbar.Collapse id="basic-navbar-nav">
+                                <Nav className="mr-auto my-2 my-lg-0"
+                                    style={{ maxHeight: '100px' }}
+                                    navbarScroll>
+                                    <Nav.Link href="#">Lịch tháng</Nav.Link>
+                                    <Nav.Link href="#">Lịch sự kiện</Nav.Link>
+                                    <Nav.Link href="#">Tiện ích</Nav.Link>
+                                </Nav>
+                            </Navbar.Collapse>
+                        </Container>
                     </Navbar>
                 </Col>
             </Row>
             <br />
             {/* Body */}
             <Row>
-                {/* <Col sm={2}>
-                    <Card>
-                        <ListGroup>
-                            <ListGroup.Item>Lịch tháng</ListGroup.Item>
-                            <ListGroup.Item>Lịch năm</ListGroup.Item>
-                            <ListGroup.Item>Sự kiện trong năm</ListGroup.Item>
-                        </ListGroup>
-                    </Card>
-                </Col> */}
                 <Col sm={12} md={12} lg={12}>
                     {props.children}
                 </Col>
             </Row>
             {/* Fotter */}
             <Row>
-                <Col style={{ paddingRight: 0, paddingLeft: 0 }}>
-                    <p style={footerStyle}>{`© ${new Date().getFullYear()} Sakawi`}</p>
+                <Col style={footerStyle}>
+                    {`© ${new Date().getFullYear()} Sakawi`}
+                    <br />
+                    {'Dự án được phát triển bởi '}
+                    <a href="https://tanginpantangin.com/#!/converter" target="_blank" rel="noreferrer">Tangin Pan Tangin</a>
+                    {' và '}
+                    <a href="http://shopcham.com" target="_blank" rel="noreferrer">Shop Cham</a>
                 </Col>
             </Row>
         </Container >

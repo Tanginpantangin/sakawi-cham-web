@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Col, ProgressBar, Row } from "react-bootstrap";
 import { EventType, VariantType } from "../enums/enum";
+import { SakawiType } from "./calendar";
 
 export interface CountDownBarProps {
     eventType: EventType;
     eventDate: Date;
+    sakawiType?: SakawiType;
 }
 
 export const CountDownBar = (props: CountDownBarProps) => {

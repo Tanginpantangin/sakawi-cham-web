@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, ButtonToolbar, Col } from "react-bootstrap";
-import { displayIkasSarakName, displayNasakName, IkasSarakEnum, NasakEnum } from "../enums/enum";
+import { displayIkasSarakName, displayNasakName, IkasSarakEnum } from "../enums/enum";
 import { AhierYear } from "../model/AhierDate";
 import { AwalYear } from "../model/AwalDate";
 import Helper from "../utility/helper";
@@ -20,24 +20,24 @@ export const YearNavigation = (props: YearNavigationProps) => {
     return (
         <>
             <Col md={4}>
-                <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-start" }}>
+                {/* <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-start" }}>
                     <ButtonGroup aria-label="Type of calendar">
                         <Button variant="outline-secondary" active={props.sakawiType === 'sakawiAhier'} onClick={() => props.onSelectSakawiType('sakawiAhier')}>Lịch Chăm</Button>
                         <Button variant="outline-secondary" active={props.sakawiType === 'sakawiAwal'} onClick={() => props.onSelectSakawiType('sakawiAwal')}>Lịch Arab</Button>
                         <Button variant="outline-secondary" active={props.sakawiType === 'sakawiGregory'} onClick={() => props.onSelectSakawiType('sakawiGregory')}>Dương lịch</Button>
                     </ButtonGroup>
-                </ButtonToolbar>
+                </ButtonToolbar> */}
             </Col>
             <Col md={5} style={{ textAlign: "center" }}>
                 {props.sakawiType === 'sakawiAhier' && props.currentAhierYear &&
                     <>
                         <div>
-                            <label className='bilan-title'>{displayNasakName(props.currentAhierYear.nasak)}</label>
+                            <label className='bilan-title'>{displayNasakName(props.currentAhierYear.nasak).akharThrahName}</label>
                             {' - '}<label className='ikasSarak-title'>{displayIkasSarakName(props.currentAhierYear.ikasSarak)}</label>
                             {' - '}<label className='bilan-title'>{Helper.convertToChamDigitUnicode(props.currentAhierYear.yearNumber ?? 0)}</label>
                         </div>
                         <h5>
-                            {NasakEnum[props.currentAhierYear.nasak]} {IkasSarakEnum[props.currentAhierYear.ikasSarak]}
+                            {displayNasakName(props.currentAhierYear.nasak).rumiName} {IkasSarakEnum[props.currentAhierYear.ikasSarak]}
                             {' - '}{props.currentAhierYear.yearNumber}
                         </h5>
                     </>

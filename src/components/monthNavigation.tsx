@@ -12,9 +12,9 @@ interface MonthNavigationProps {
     currentGregoryMonth?: number;
     currentGregoryYear?: number;
     onSelectSakawiType: (type: SakawiType) => void
-    onClickToday: (type: SakawiType) => void;
-    onClickPreviousMonth: (type: SakawiType) => void;
-    onClickNextMonth: (type: SakawiType) => void;
+    onClickToday: () => void;
+    onClickPreviousMonth: () => void;
+    onClickNextMonth: () => void;
 }
 
 export const MonthNavigation = (props: MonthNavigationProps) => {
@@ -26,7 +26,7 @@ export const MonthNavigation = (props: MonthNavigationProps) => {
                 <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-start" }}>
                     <ButtonGroup aria-label="Type of calendar">
                         <Button variant="outline-secondary" active={props.sakawiType === 'sakawiAhier'} onClick={() => props.onSelectSakawiType('sakawiAhier')}>Lịch Cham</Button>
-                        <Button variant="outline-secondary" active={props.sakawiType === 'sakawiAwal'} onClick={() => props.onSelectSakawiType('sakawiAwal')}>Lịch Jawi</Button>
+                        <Button variant="outline-secondary" active={props.sakawiType === 'sakawiAwal'} onClick={() => props.onSelectSakawiType('sakawiAwal')}>Lịch Awal</Button>
                         <Button variant="outline-secondary" active={props.sakawiType === 'sakawiGregory'} onClick={() => props.onSelectSakawiType('sakawiGregory')}>Dương lịch</Button>
                     </ButtonGroup>
                 </ButtonToolbar>
@@ -61,11 +61,11 @@ export const MonthNavigation = (props: MonthNavigationProps) => {
             <Col md={3}>
                 <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-end" }}>
                     <ButtonGroup aria-label="Third group" style={{ marginRight: ".75em" }}>
-                        <Button variant="secondary" onClick={() => props.onClickToday(props.sakawiType)}>Hôm nay</Button>
+                        <Button variant="secondary" onClick={props.onClickToday}>Hôm nay</Button>
                     </ButtonGroup>
                     <ButtonGroup aria-label="Navigate months">
-                        <Button variant="secondary" className="fa fa-chevron-left" onClick={() => props.onClickPreviousMonth(props.sakawiType)} />
-                        <Button variant="secondary" className="fa fa-chevron-right" onClick={() => props.onClickNextMonth(props.sakawiType)} />
+                        <Button variant="secondary" className="fa fa-chevron-left" onClick={props.onClickPreviousMonth} />
+                        <Button variant="secondary" className="fa fa-chevron-right" onClick={props.onClickNextMonth} />
                     </ButtonGroup>
                 </ButtonToolbar>
             </Col>
