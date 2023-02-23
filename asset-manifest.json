@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/static/css/main.cdcab817.chunk.css",
-    "main.js": "/static/js/main.ceba21e5.chunk.js",
-    "main.js.map": "/static/js/main.ceba21e5.chunk.js.map",
+    "main.css": "/static/css/main.909bd23d.chunk.css",
+    "main.js": "/static/js/main.a2df1b40.chunk.js",
+    "main.js.map": "/static/js/main.a2df1b40.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.49fce541.js",
     "runtime-main.js.map": "/static/js/runtime-main.49fce541.js.map",
     "static/js/2.dec7d30d.chunk.js": "/static/js/2.dec7d30d.chunk.js",
     "static/js/2.dec7d30d.chunk.js.map": "/static/js/2.dec7d30d.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.cdcab817.chunk.css.map": "/static/css/main.cdcab817.chunk.css.map",
+    "static/css/main.909bd23d.chunk.css.map": "/static/css/main.909bd23d.chunk.css.map",
     "static/js/2.dec7d30d.chunk.js.LICENSE.txt": "/static/js/2.dec7d30d.chunk.js.LICENSE.txt",
     "static/media/App.css": "/static/media/NotoSansCham-Regular.c52aed7f.woff"
   },
   "entrypoints": [
     "static/js/runtime-main.49fce541.js",
     "static/js/2.dec7d30d.chunk.js",
-    "static/css/main.cdcab817.chunk.css",
-    "static/js/main.ceba21e5.chunk.js"
+    "static/css/main.909bd23d.chunk.css",
+    "static/js/main.a2df1b40.chunk.js"
   ]
 }
