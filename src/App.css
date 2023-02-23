@@ -1,8 +1,23 @@
 /* Large devices (desktops, larger than 1200px) */
 @media only screen and (min-width: 1200px) {
-  /* body {
-    background-color: green;
-  } */
+  .bilan-title {
+    font-family: 'NotoSansCham';
+    font-size: 1.5rem;
+  }
+
+  .bilan-latin-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  .ikasSarak-title {
+    font-family: 'AkharTakai';
+    font-size: 2rem;
+  }
+
+  .day-name {
+    text-align: center;
+  }
 
   .gregory-date {
     font-size: 0.8rem;
@@ -63,6 +78,27 @@
     background-color: yellow;
   } */
 
+  .bilan-title {
+    font-family: 'NotoSansCham';
+    font-size: 1rem;
+    margin-bottom: -10px;
+  }
+
+  .bilan-latin-title {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .ikasSarak-title {
+    font-family: 'AkharTakai';
+    font-size: 1.5rem;
+  }
+
+  .day-name {
+    font-size: 0.5rem;
+    text-align: center;
+  }
+
   .gregory-date {
     font-size: 0.5rem;
     /* padding-top: 0.1rem;
@@ -71,7 +107,7 @@
   }
 
   .gregory-date.active {
-    font-size: 1rem;
+    font-size: 0.5rem;
     font-weight: bold;
   }
 
@@ -95,11 +131,11 @@
   }
 
   .ikasSarak-month-cell {
-    font-size: 0.5rem;
+    font-size: 0.3rem;
   }
 
   .ikasSarak-month-cell.active {
-    font-size: 0.8rem;
+    font-size: 0.5rem;
   }
 }
 
@@ -133,11 +169,6 @@
   font-size: 1.5rem;
 }
 
-.bilan-title {
-  font-family: 'NotoSansCham';
-  font-size: 1.5rem;
-}
-
 .ahier-date {
   font-family: 'NotoSansCham';
   color: #F15A25;
@@ -154,11 +185,6 @@
 .gregory-date {
   color: black;
   text-align: right;
-}
-
-.ikasSarak-title {
-  font-family: 'AkharTakai';
-  font-size: 2rem;
 }
 
 .ikasSarak-month-cell {

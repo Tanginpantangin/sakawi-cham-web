@@ -67,7 +67,7 @@ export const MonthAwal = (props: MonthAwalProps) => {
             <thead>
                 <tr>
                     {dayNames.map((d, index) =>
-                        <th style={{ padding: "2px", textAlign: "center" }} key={index}>{d}</th>
+                        <th className="day-name" key={index}>{d}</th>
                     )}
                 </tr>
             </thead>

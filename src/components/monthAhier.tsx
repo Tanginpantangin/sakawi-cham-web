@@ -67,7 +67,7 @@ export const MonthAhier = (props: MonthAhierProps) => {
             <thead>
                 <tr>
                     {dayNames.map((d, index) =>
-                        <th className="ahier-day-name" style={{ padding: "2px", textAlign: "center" }} key={index}>{d}</th>
+                        <th className="day-name" key={index}>{d}</th>
                     )}
                 </tr>
             </thead>
