@@ -56,6 +56,16 @@
   .ikasSarak-month-cell.active {
     font-size: 1.2rem;
   }
+
+  .event-name {
+    display: block;
+    font-size: 0.7rem;
+    color: white;
+    background-color: #3788d8;
+    padding-left: 0.3rem;
+    text-align: left;
+    margin-top: 0.1rem;
+  }
 }
 
 /* Medium devices (tablets, less than 992px) */
@@ -107,7 +117,7 @@
   }
 
   .gregory-date.active {
-    font-size: 0.5rem;
+    font-size: 0.6rem;
     font-weight: bold;
   }
 
@@ -131,11 +141,21 @@
   }
 
   .ikasSarak-month-cell {
-    font-size: 0.3rem;
+    font-size: 0.5rem;
   }
 
   .ikasSarak-month-cell.active {
-    font-size: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .event-name {
+    display: block;
+    font-size: 0.4rem;
+    color: white;
+    background-color: #3788d8;
+    padding-left: 0.3rem;
+    text-align: left;
+    margin-top: 0.1rem;
   }
 }
 
@@ -189,17 +209,6 @@
 
 .ikasSarak-month-cell {
   font-family: 'AkharTakai';
-  font-size: 1.2rem;
-}
-
-.event-name {
-  display: block;
-  font-size: 0.7rem;
-  color: white;
-  background-color: #3788d8;
-  padding-left: 0.3rem;
-  text-align: left;
-  margin-top: 0.1rem;
 }
 
 @font-face {
