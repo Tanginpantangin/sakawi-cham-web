@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert, Col, Container, Form, Row } from "react-bootstrap";
+import { Accordion, Alert, Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from "../utility/helper";
@@ -79,9 +79,22 @@ export const Calendar = () => {
             </Row>
             <Row>
                 <Col sm={12} md={12} lg={12}>
-                    {nextEvents.map((item, index) =>
-                        <CountDownBar key={index} eventType={item.eventType} eventDate={item.eventDate} />
-                    )}
+                    <Accordion defaultActiveKey="0">
+                        <Card>
+                            <Card.Header>
+                                <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                                    [Các sự kiện sắp diễn ra]
+                                </Accordion.Toggle>
+                            </Card.Header>
+                            <Accordion.Collapse eventKey="0">
+                                <Card.Body>
+                                    {nextEvents.map((item, index) =>
+                                        <CountDownBar key={index} eventType={item.eventType} eventDate={item.eventDate} />
+                                    )}
+                                </Card.Body>
+                            </Accordion.Collapse>
+                        </Card>
+                    </Accordion>
                 </Col>
             </Row>
             <br />
