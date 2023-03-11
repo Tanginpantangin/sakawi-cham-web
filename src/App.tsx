@@ -1,14 +1,14 @@
-import React from 'react';
 //import logo from './logo.svg';
 import './App.css';
-import { Calendar } from './components/calendar';
 import { Layout } from './Layout';
+import { EventCalendarPage } from './pages/eventCalendarPage';
 
 function App() {
   return (
     <div className="App">
       <Layout>
-        <Calendar/>
+        {/* <MonthCalendarPage /> */}
+        <EventCalendarPage />
       </Layout>
     </div>
   );

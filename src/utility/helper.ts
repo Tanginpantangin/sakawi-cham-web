@@ -1,4 +1,4 @@
-import { AreaType } from '../components/calendar';
+import { AreaType } from '../pages/monthCalendarPage';
 import { CountDownBarProps } from '../components/countDownBar';
 import sakawiTakaiCiimConfig from '../data/SakawiTakaiCiim.json';
 import { AhierMonthEnum, AwalMonthEnum, GuecTypeEnum, GuenTypeEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
@@ -695,69 +695,81 @@ export default class Helper {
         return result;
     }
 
-    static getEventsInAhierYear(maxtrixCalendar: MatrixCalendarType[], item: FullCalendarType) {
+    static getEventsInAhierYear(maxtrixCalendar: MatrixCalendarType[], fullCalendar: FullCalendarType[]) {
         let result: CountDownBarProps[] = [];
-        let eventGregoryDate = item.dateGregory;
 
-        if (item.dateAhier.ahierMonth.month === 0 && item.dateAhier.date === 1) {
-            result.push({ eventType: 'Akaok thun', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
-        }
+        fullCalendar.forEach(function (item, index) {
+            let eventGregoryDate = item.dateGregory;
 
-        if (item.dateAhier.ahierMonth.month === 0 && eventGregoryDate.getDay() === 4) {
-            if (item.dateAwal.awalMonth.month !== AwalMonthEnum.Ramadan) {
-                if (item.dateAhier.date < 7 || (item.dateAhier.date > 14 && item.dateAhier.date < 20)) {
-                    result.push({ eventType: 'Rija Nagar', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+            if (item.dateAhier.ahierMonth.month === 0 && item.dateAhier.date === 1) {
+                result.push({ eventType: 'Akaok thun', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+            }
+
+            if (item.dateAhier.ahierMonth.month === 0 && eventGregoryDate.getDay() === 4) {
+                if (item.dateAwal.awalMonth.month !== AwalMonthEnum.Ramadan) {
+                    if (item.dateAhier.date < 7 || (item.dateAhier.date > 14 && item.dateAhier.date < 20)) {
+                        result.push({ eventType: 'Rija Nagar', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+                    }
                 }
             }
-        }
 
-        if (item.dateAhier.ahierMonth.month === 5 && item.dateAhier.date === 29) {
-            result.push({ eventType: 'Katé palei Hamu Tanran', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
-        }
-
-        if (item.dateAhier.ahierMonth.month === 6 && item.dateAhier.date === 1) {
-            result.push({ eventType: 'Katé angaok bimong', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
-        }
-
-        const dayNumbersOfCurrentAhierMonth = Helper.getActualDayNumbersOfAhierMonth(maxtrixCalendar, item.dateAhier.ahierMonth);
-        if (dayNumbersOfCurrentAhierMonth === 30) {
-            if (item.dateAhier.ahierMonth.month === 8 && item.dateAhier.date === 16) {
-                result.push({ eventType: 'Ca-mbur', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+            if (item.dateAhier.ahierMonth.month === 5 && item.dateAhier.date === 29) {
+                result.push({ eventType: 'Katé palei Hamu Tanran', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
             }
-        } else {
-            if (item.dateAhier.ahierMonth.month === 8 && item.dateAhier.date === 15) {
-                result.push({ eventType: 'Ca-mbur', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+
+            if (item.dateAhier.ahierMonth.month === 6 && item.dateAhier.date === 1) {
+                result.push({ eventType: 'Katé angaok bimong', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
             }
-        }
 
-        if (item.dateAwal.awalMonth.month === 8 && item.dateAwal.date === 1) {
-            result.push({ eventType: 'Tamâ ricaow Ramâwan', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
-        }
+            const dayNumbersOfCurrentAhierMonth = Helper.getActualDayNumbersOfAhierMonth(maxtrixCalendar, item.dateAhier.ahierMonth);
+            if (dayNumbersOfCurrentAhierMonth === 30) {
+                if (item.dateAhier.ahierMonth.month === 8 && item.dateAhier.date === 16) {
+                    result.push({ eventType: 'Ca-mbur', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+                }
+            } else {
+                if (item.dateAhier.ahierMonth.month === 8 && item.dateAhier.date === 15) {
+                    result.push({ eventType: 'Ca-mbur', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+                }
+            }
 
-        if (item.dateAwal.awalMonth.month === 8 && item.dateAwal.date === 16) {
-            result.push({ eventType: 'Muk trun', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
-        }
+            if (item.dateAwal.awalMonth.month === 8 && item.dateAwal.date === 1) {
+                result.push({ eventType: 'Tamâ ricaow Ramâwan', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
+            }
 
-        if (item.dateAwal.awalMonth.month === 8 && item.dateAwal.date === 21) {
-            result.push({ eventType: 'Ong trun', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
-        }
+            if (item.dateAwal.awalMonth.month === 8 && item.dateAwal.date === 16) {
+                result.push({ eventType: 'Muk trun', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
+            }
 
-        if (item.dateAwal.awalMonth.month === 9 && item.dateAwal.date === 2) {
-            result.push({ eventType: 'Talaih aek Ramâwan', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
-        }
+            if (item.dateAwal.awalMonth.month === 8 && item.dateAwal.date === 21) {
+                result.push({ eventType: 'Ong trun', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
+            }
 
-        if (item.dateAwal.awalMonth.month === 11 && item.dateAwal.date === 1) {
-            result.push({ eventType: 'Ikak Waha', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
-        }
+            if (item.dateAwal.awalMonth.month === 9 && item.dateAwal.date === 2) {
+                result.push({ eventType: 'Talaih aek Ramâwan', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
+            }
 
-        if (item.dateAwal.awalMonth.month === 11 && item.dateAwal.date === 11) {
-            result.push({ eventType: 'Talaih Waha', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
-        }
+            if (item.dateAwal.awalMonth.month === 11 && item.dateAwal.date === 1) {
+                result.push({ eventType: 'Ikak Waha', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
+            }
 
-        if (item.dateAhier.ahierMonth.month === 3 && eventGregoryDate.getDay() === 0 && item.dateAhier.date < 7) {
-            result.push({ eventType: 'Yuer Yang', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
-        }
+            if (item.dateAwal.awalMonth.month === 11 && item.dateAwal.date === 11) {
+                result.push({ eventType: 'Talaih Waha', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
+            }
+
+            if (item.dateAhier.ahierMonth.month === 3 && eventGregoryDate.getDay() === 0 && item.dateAhier.date < 7) {
+                result.push({ eventType: 'Yuer Yang', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+            }
+        });
 
         return result;
+    }
+
+    static displayDateString(date: Date) {
+        let dd = date.getDate();
+        let mm = date.getMonth() + 1;
+        const yyyy = date.getFullYear();
+        const ddStr = dd < 10 ? '0' + dd : dd;
+        const mmStr = mm < 10 ? '0' + mm : mm;
+        return ddStr + '/' + mmStr + '/' + yyyy;
     }
 }

@@ -5,7 +5,7 @@ import { AhierYear } from "../model/AhierDate";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from "../utility/helper";
-import { SakawiType } from "./calendar";
+import { SakawiType } from "../pages/monthCalendarPage";
 import { YearNavigation } from "./yearNavigation";
 
 interface EventCalendarProps {
@@ -26,10 +26,15 @@ export const EventCalendar = (props: EventCalendarProps) => {
             if (currentAhierMonthMatrix) {
                 setCurrentAhierYear(currentAhierMonthMatrix.ahierMonth.year);
             }
+
+            // TODO
+            // const datesOfAhierYear = props.fullSakawi.filter(x => JSON.stringify(x.dateAhier.ahierMonth.year) === JSON.stringify(currentAhierMonthMatrix.ahierMonth.year));
+            // const nextEvents = Helper.getEventsInAhierYear(props.matrixSakawi, datesOfAhierYear);
+            // setEvents(nextEvents);
         }
 
         init();
-    }, [props.matrixSakawi]);
+    }, [props.fullSakawi, props.matrixSakawi]);
 
     function handleOnClickToCurrentYear() {
         if (sakawiType === "sakawiAhier") {
@@ -55,26 +60,25 @@ export const EventCalendar = (props: EventCalendarProps) => {
         }
     }
 
-    let rows: JSX.Element[] = [];
-    rows.push(
-        <tr key={`sakawiAhier-row-`}>
-            <td>{'BBB'}</td>
-            <td>{'CCC'}</td>
-        </tr>);
+    function renderRows(currentAhierYear: AhierYear) {
+        const datesOfAhierYear = props.fullSakawi.filter(x => JSON.stringify(x.dateAhier.ahierMonth.year) === JSON.stringify(currentAhierYear));
+        const nextEvents = Helper.getEventsInAhierYear(props.matrixSakawi, datesOfAhierYear);
+
+        let rows: JSX.Element[] = [];
+        nextEvents.forEach((item, index) => {
+            rows.push(
+                <tr key={`event-row-${index}`}>
+                    <td>{Helper.displayDateString(item.eventDate)}</td>
+                    <td>{item.eventType.toString()}</td>
+                </tr>);
+        });
+
+        return rows;
+    }
 
     return (
         <Container>
             <Row>
-                {/* <MonthNavigation
-                    sakawiType={sakawiType}
-                    displayMonth={true}
-                    displaySelectSakawiType={true}
-                    currentAhierYear={currentAhierYear}
-                    onClickCurrentBtn={handleOnClickToCurrentYear}
-                    onClickPreviousBtn={handleOnClickPreviousYear}
-                    onClickNextBtn={handleOnClickNextYear}
-                    onSelectSakawiType={type => setSakawiType(type)}
-                /> */}
                 <YearNavigation
                     sakawiType={sakawiType}
                     currentAhierYear={currentAhierYear}
@@ -85,20 +89,21 @@ export const EventCalendar = (props: EventCalendarProps) => {
                 />
             </Row>
             <Row>
-                <Col md={12}>
-                    EventCalendar
-                    <Table bordered hover>
+                <Col md={2}></Col>
+                <Col md={8}>
+                    <Table striped bordered hover>
                         <thead>
                             <tr>
-                                <th className="ahier-day-name" style={{ padding: "2px", textAlign: "center" }}>Col 1</th>
-                                <th className="ahier-day-name" style={{ padding: "2px", textAlign: "center" }}>Col 2</th>
+                                <th>Ngày Dương lịch</th>
+                                <th>Sự kiện / Lễ hội</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {rows}
+                            {renderRows(currentAhierYear)}
                         </tbody>
                     </Table>
                 </Col>
+                <Col md={2}></Col>
             </Row>
         </Container>
     );

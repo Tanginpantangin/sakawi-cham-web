@@ -42,10 +42,10 @@ export const Layout = (props: LayoutProps) => {
                     {props.children}
                 </Col>
             </Row>
-            {/* Fotter */}
+            {/* Footer */}
             <Row>
                 <Col style={footerStyle}>
-                    {`© ${new Date().getFullYear()} Sakawi`}
+                    {`© ${new Date().getFullYear()} Sakawi - Lịch Cham`}
                     <br />
                     {'Dự án được phát triển bởi '}
                     <a href="https://tanginpantangin.com/#!/converter" target="_blank" rel="noreferrer">Tangin Pan Tangin</a>

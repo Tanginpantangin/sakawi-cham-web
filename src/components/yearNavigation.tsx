@@ -3,7 +3,7 @@ import { displayIkasSarakName, displayNasakName, IkasSarakEnum } from "../enums/
 import { AhierYear } from "../model/AhierDate";
 import { AwalYear } from "../model/AwalDate";
 import Helper from "../utility/helper";
-import { SakawiType } from "./calendar";
+import { SakawiType } from "../pages/monthCalendarPage";
 
 interface YearNavigationProps {
     sakawiType: SakawiType;

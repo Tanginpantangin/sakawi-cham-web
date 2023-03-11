@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Col, ProgressBar, Row } from "react-bootstrap";
 import { EventType, VariantType } from "../enums/enum";
-import { SakawiType } from "./calendar";
+import Helper from "../utility/helper";
+import { SakawiType } from "../pages/monthCalendarPage";
 
 export interface CountDownBarProps {
     eventType: EventType;
@@ -36,12 +37,7 @@ export const CountDownBar = (props: CountDownBarProps) => {
         setDays(days);
     }
 
-    let dd = props.eventDate.getDate();
-    let mm = props.eventDate.getMonth() + 1;
-    const yyyy = props.eventDate.getFullYear();
-    const ddStr = dd < 10 ? '0' + dd : dd;
-    const mmStr = mm < 10 ? '0' + mm : mm;
-    const dateStr = ddStr + '/' + mmStr + '/' + yyyy;
+    const dateStr = Helper.displayDateString(props.eventDate);
 
     let variantType: VariantType;
     let displayEventName = '';

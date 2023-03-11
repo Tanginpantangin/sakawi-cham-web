@@ -3,7 +3,7 @@ import { AwalMonthEnum, displayIkasSarakName } from "../enums/enum";
 import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate, AwalMonth } from "../model/AwalDate";
 import Helper from "../utility/helper";
-import { SakawiType } from "./calendar";
+import { SakawiType } from "../pages/monthCalendarPage";
 
 interface DayDetailsProps {
     sakawiType: SakawiType;

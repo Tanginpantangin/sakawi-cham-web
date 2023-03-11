@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Accordion, Alert, Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { CountDownBar, CountDownBarProps } from "../components/countDownBar";
+import { MonthCalendar } from "../components/monthCalendar";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from "../utility/helper";
-import { CountDownBar, CountDownBarProps } from "./countDownBar";
-import { MonthCalendar } from "./monthCalendar";
 
 export declare type SakawiType = 'sakawiAwal' | 'sakawiAhier' | 'sakawiGregory';
 export declare type AreaType = 'NinhThuan' | 'BinhThuan';
 
-export const Calendar = () => {
+export const MonthCalendarPage = () => {
     const [showWarning, setShowWarning] = useState(true);
     const [areaType, setAreaType] = useState<AreaType>('NinhThuan');
     const [matrixSakawi, setMatrixSakawi] = useState<MatrixCalendarType[]>([]);
@@ -49,7 +49,7 @@ export const Calendar = () => {
                     <Col sm={12} md={12} lg={12}>
                         <Alert variant='info' onClose={() => setShowWarning(false)} dismissible>
                             <Alert.Heading>Lưu ý!</Alert.Heading>
-                            - Ứng dụng đang trong quá trình phát triển nên không tránh khỏi những thiếu sót, rất mong nhận được nhiều góp ý để sản phẩm được hoàn thiện hơn.
+                            - Ứng dụng đang trong quá trình phát triển nên còn những thiếu sót, rất mong nhận được nhiều góp ý để sản phẩm được hoàn thiện hơn.
                             <br />- Ứng dụng này chỉ mang tính chất tham khảo, Sakawi chính thức được Hội đồng Chức sắc phát hành từng năm.
                         </Alert>
                     </Col>
@@ -115,15 +115,6 @@ export const Calendar = () => {
                     />
                 </Row>
             }*/}
-            {/* {
-                matrixSakawi.length > 0 &&
-                <Row>
-                    <EventCalendar
-                        matrixSakawi={matrixSakawi}
-                        fullSakawi={fullSakawi}
-                    />
-                </Row>
-            } */}
         </Container>
     );
 }
