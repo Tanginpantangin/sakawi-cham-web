@@ -1,4 +1,3 @@
-import { AreaType } from '../pages/monthCalendarPage';
 import { CountDownBarProps } from '../components/countDownBar';
 import sakawiTakaiCiimConfig from '../data/SakawiTakaiCiim.json';
 import { AhierMonthEnum, AwalMonthEnum, GuecTypeEnum, GuenTypeEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
@@ -6,6 +5,7 @@ import { AhierDate, AhierMonth, AhierYear } from "../model/AhierDate";
 import { AwalDate, AwalMonth, AwalYear } from '../model/AwalDate';
 import { FullCalendarType } from '../model/FullCalendarType';
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
+import { AreaType } from '../pages/monthCalendarPage';
 import { awalMonthArray, awalYearArray, firstDateOfSakawiAhier_InaGirai_Lieh_1988, firstDateOfSakawiAwal_Lieh_1407, totalDaysOf8AwalYearCycle, yearNumberOfSakawiAwal_Lieh_1407 } from './constant';
 
 export default class Helper {
@@ -622,9 +622,13 @@ export default class Helper {
                 addedAkaokThun = true;
             }
 
+            // TODO
             if (!addedRijaNagar && item.dateAhier.ahierMonth.month === 0 && eventGregoryDate.getDay() === 4) {
                 if (item.dateAwal.awalMonth.month !== AwalMonthEnum.Ramadan) {
-                    if (item.dateAhier.date < 7 || (item.dateAhier.date > 14 && item.dateAhier.date < 20)) {
+                    result.push({ eventType: 'Rija Nagar', eventDate: eventGregoryDate });
+                    addedRijaNagar = true;
+                } else {
+                    if (item.dateAwal.date > 16) {
                         result.push({ eventType: 'Rija Nagar', eventDate: eventGregoryDate });
                         addedRijaNagar = true;
                     }
@@ -697,6 +701,7 @@ export default class Helper {
 
     static getEventsInAhierYear(maxtrixCalendar: MatrixCalendarType[], fullCalendar: FullCalendarType[]) {
         let result: CountDownBarProps[] = [];
+        let addedRijaNagar = false;
 
         fullCalendar.forEach(function (item, index) {
             let eventGregoryDate = item.dateGregory;
@@ -705,10 +710,15 @@ export default class Helper {
                 result.push({ eventType: 'Akaok thun', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
             }
 
-            if (item.dateAhier.ahierMonth.month === 0 && eventGregoryDate.getDay() === 4) {
+            //TODO
+            if (!addedRijaNagar && item.dateAhier.ahierMonth.month === 0 && eventGregoryDate.getDay() === 4) {
                 if (item.dateAwal.awalMonth.month !== AwalMonthEnum.Ramadan) {
-                    if (item.dateAhier.date < 7 || (item.dateAhier.date > 14 && item.dateAhier.date < 20)) {
-                        result.push({ eventType: 'Rija Nagar', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+                    result.push({ eventType: 'Rija Nagar', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+                    addedRijaNagar = true;
+                } else {
+                    if (item.dateAwal.date > 16) {
+                        result.push({ eventType: 'Rija Nagar', eventDate: eventGregoryDate });
+                        addedRijaNagar = true;
                     }
                 }
             }

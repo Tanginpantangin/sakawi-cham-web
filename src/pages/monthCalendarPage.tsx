@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Accordion, Alert, Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { CountDownBar, CountDownBarProps } from "../components/countDownBar";
 import { MonthCalendar } from "../components/monthCalendar";
+import { Layout } from "../Layout";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from "../utility/helper";
@@ -43,71 +44,72 @@ export const MonthCalendarPage = () => {
     }, [areaType]);
 
     return (
-        <Container>
-            {showWarning &&
+        <Layout>
+            <Container>
+                {showWarning &&
+                    <Row>
+                        <Col sm={12} md={12} lg={12}>
+                            <Alert variant='info' onClose={() => setShowWarning(false)} dismissible>
+                                <Alert.Heading>Lưu ý!</Alert.Heading>
+                                - Ứng dụng đang trong quá trình phát triển nên còn những thiếu sót, rất mong nhận được nhiều góp ý để sản phẩm được hoàn thiện hơn.
+                                <br />- Ứng dụng này chỉ mang tính chất tham khảo, Sakawi chính thức được Hội đồng Chức sắc phát hành từng năm.
+                            </Alert>
+                        </Col>
+                    </Row>
+                }
                 <Row>
-                    <Col sm={12} md={12} lg={12}>
-                        <Alert variant='info' onClose={() => setShowWarning(false)} dismissible>
-                            <Alert.Heading>Lưu ý!</Alert.Heading>
-                            - Ứng dụng đang trong quá trình phát triển nên còn những thiếu sót, rất mong nhận được nhiều góp ý để sản phẩm được hoàn thiện hơn.
-                            <br />- Ứng dụng này chỉ mang tính chất tham khảo, Sakawi chính thức được Hội đồng Chức sắc phát hành từng năm.
-                        </Alert>
+                    <Col md={4}>
+                        <Form>
+                            <div className="mb-3">
+                                <Form.Check
+                                    inline
+                                    type={"radio"}
+                                    label={`Sakawi Ninh Thuận`}
+                                    checked={areaType === "NinhThuan"}
+                                    onChange={() => { setAreaType('NinhThuan') }}
+                                />
+                                <Form.Check
+                                    inline
+                                    type={"radio"}
+                                    label={`Sakawi Bình Thuận`}
+                                    checked={areaType === "BinhThuan"}
+                                    onChange={() => { setAreaType('BinhThuan') }}
+                                />
+                            </div>
+                        </Form>
                     </Col>
                 </Row>
-            }
-            <Row>
-                <Col md={4}>
-                    <Form>
-                        <div className="mb-3">
-                            <Form.Check
-                                inline
-                                type={"radio"}
-                                label={`Sakawi Ninh Thuận`}
-                                checked={areaType === "NinhThuan"}
-                                onChange={() => { setAreaType('NinhThuan') }}
-                            />
-                            <Form.Check
-                                inline
-                                type={"radio"}
-                                label={`Sakawi Bình Thuận`}
-                                checked={areaType === "BinhThuan"}
-                                onChange={() => { setAreaType('BinhThuan') }}
-                            />
-                        </div>
-                    </Form>
-                </Col>
-            </Row>
-            <Row>
-                <Col sm={12} md={12} lg={12}>
-                    <Accordion defaultActiveKey="0">
-                        <Card>
-                            <Card.Header>
-                                <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                                    [Các sự kiện sắp diễn ra]
-                                </Accordion.Toggle>
-                            </Card.Header>
-                            <Accordion.Collapse eventKey="0">
-                                <Card.Body>
-                                    {nextEvents.map((item, index) =>
-                                        <CountDownBar key={index} eventType={item.eventType} eventDate={item.eventDate} />
-                                    )}
-                                </Card.Body>
-                            </Accordion.Collapse>
-                        </Card>
-                    </Accordion>
-                </Col>
-            </Row>
-            <br />
-            {
-                matrixSakawi.length > 0 &&
                 <Row>
-                    <MonthCalendar
-                        matrixSakawi={matrixSakawi}
-                        fullSakawi={fullSakawi}
-                    />
+                    <Col sm={12} md={12} lg={12}>
+                        <Accordion defaultActiveKey="0">
+                            <Card>
+                                <Card.Header>
+                                    <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                                        [Các sự kiện sắp diễn ra]
+                                    </Accordion.Toggle>
+                                </Card.Header>
+                                <Accordion.Collapse eventKey="0">
+                                    <Card.Body>
+                                        {nextEvents.map((item, index) =>
+                                            <CountDownBar key={index} eventType={item.eventType} eventDate={item.eventDate} />
+                                        )}
+                                    </Card.Body>
+                                </Accordion.Collapse>
+                            </Card>
+                        </Accordion>
+                    </Col>
                 </Row>
-            }
-            {/*{
+                <br />
+                {
+                    matrixSakawi.length > 0 &&
+                    <Row>
+                        <MonthCalendar
+                            matrixSakawi={matrixSakawi}
+                            fullSakawi={fullSakawi}
+                        />
+                    </Row>
+                }
+                {/*{
                 <Row>
                     <YearCalendar
                         matrixSakawi={matrixSakawi}
@@ -115,6 +117,7 @@ export const MonthCalendarPage = () => {
                     />
                 </Row>
             }*/}
-        </Container>
+            </Container>
+        </Layout>
     );
 }

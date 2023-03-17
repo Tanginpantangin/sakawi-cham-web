@@ -2,8 +2,8 @@ import { Col, Row } from "react-bootstrap";
 import { AwalMonthEnum, displayIkasSarakName } from "../enums/enum";
 import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate, AwalMonth } from "../model/AwalDate";
-import Helper from "../utility/helper";
 import { SakawiType } from "../pages/monthCalendarPage";
+import Helper from "../utility/helper";
 
 interface DayDetailsProps {
     sakawiType: SakawiType;
@@ -143,9 +143,12 @@ export const DayDetails = (props: DayDetailsProps) => {
             result.push('Akaok thun');
         }
 
+        //TODO
         if (props.dateAhier.ahierMonth.month === 0 && props.dateGregory.getDay() === 4) {
             if (props.dateAwal.awalMonth.month !== AwalMonthEnum.Ramadan) {
-                if (props.dateAhier.date < 7 || (props.dateAhier.date > 14 && props.dateAhier.date < 20)) {
+                result.push('Rija Nagar');
+            } else {
+                if (props.dateAwal.date > 16) {
                     result.push('Rija Nagar');
                 }
             }

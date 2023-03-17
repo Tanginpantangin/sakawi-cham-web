@@ -20,15 +20,15 @@ export const Layout = (props: LayoutProps) => {
                 <Col style={{ paddingRight: 0, paddingLeft: 0 }}>
                     <Navbar bg="dark" variant="dark" expand="lg">
                         <Container>
-                            <Navbar.Brand href="#home"><label className="logo">꩜</label><label className="branding-text">SAKAWI</label></Navbar.Brand>
+                            <Navbar.Brand href="/"><label className="logo">꩜</label><label className="branding-text">SAKAWI</label></Navbar.Brand>
                             <Navbar.Toggle aria-controls="basic-navbar-nav" />
                             <Navbar.Collapse id="basic-navbar-nav">
                                 <Nav className="mr-auto my-2 my-lg-0"
                                     style={{ maxHeight: '100px' }}
                                     navbarScroll>
-                                    <Nav.Link href="#">Lịch tháng</Nav.Link>
-                                    <Nav.Link href="#">Lịch sự kiện</Nav.Link>
-                                    <Nav.Link href="#">Tiện ích</Nav.Link>
+                                    <Nav.Link href="/months">Lịch tháng</Nav.Link>
+                                    <Nav.Link href="/events">Lịch sự kiện</Nav.Link>
+                                    <Nav.Link href="/docs">Tiện ích</Nav.Link>
                                 </Nav>
                             </Navbar.Collapse>
                         </Container>
@@ -53,6 +53,6 @@ export const Layout = (props: LayoutProps) => {
                     <a href="http://shopcham.com" target="_blank" rel="noreferrer">Shop Cham</a>
                 </Col>
             </Row>
-        </Container >
+        </Container>
     );
 }
