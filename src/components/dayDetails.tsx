@@ -145,10 +145,13 @@ export const DayDetails = (props: DayDetailsProps) => {
 
         //TODO
         if (props.dateAhier.ahierMonth.month === 0 && props.dateGregory.getDay() === 4) {
-            if (props.dateAwal.awalMonth.month !== AwalMonthEnum.Ramadan) {
-                result.push('Rija Nagar');
+            if (props.dateAwal.awalMonth.month === AwalMonthEnum.Ramadan) {
+                // closet Thurday and after Muk Trun day
+                if (props.dateAwal.date > 16 && props.dateAhier.date < 21) {
+                    result.push('Rija Nagar');
+                }
             } else {
-                if (props.dateAwal.date > 16) {
+                if (props.dateAhier.date >= 1 && props.dateAhier.date < 7) {
                     result.push('Rija Nagar');
                 }
             }

@@ -624,11 +624,15 @@ export default class Helper {
 
             // TODO
             if (!addedRijaNagar && item.dateAhier.ahierMonth.month === 0 && eventGregoryDate.getDay() === 4) {
-                if (item.dateAwal.awalMonth.month !== AwalMonthEnum.Ramadan) {
-                    result.push({ eventType: 'Rija Nagar', eventDate: eventGregoryDate });
-                    addedRijaNagar = true;
+                if (item.dateAwal.awalMonth.month === AwalMonthEnum.Ramadan) {
+                    // closet Thurday and after Muk Trun day
+                    if (item.dateAwal.date > 16 && item.dateAhier.date < 21) {
+                        result.push({ eventType: 'Rija Nagar', eventDate: eventGregoryDate });
+                        addedRijaNagar = true;
+                    }
+
                 } else {
-                    if (item.dateAwal.date > 16) {
+                    if (item.dateAhier.date >= 1 && item.dateAhier.date < 7) {
                         result.push({ eventType: 'Rija Nagar', eventDate: eventGregoryDate });
                         addedRijaNagar = true;
                     }
@@ -701,7 +705,7 @@ export default class Helper {
 
     static getEventsInAhierYear(maxtrixCalendar: MatrixCalendarType[], fullCalendar: FullCalendarType[]) {
         let result: CountDownBarProps[] = [];
-        let addedRijaNagar = false;
+        //let addedRijaNagar = false;
 
         fullCalendar.forEach(function (item, index) {
             let eventGregoryDate = item.dateGregory;
@@ -711,14 +715,15 @@ export default class Helper {
             }
 
             //TODO
-            if (!addedRijaNagar && item.dateAhier.ahierMonth.month === 0 && eventGregoryDate.getDay() === 4) {
-                if (item.dateAwal.awalMonth.month !== AwalMonthEnum.Ramadan) {
-                    result.push({ eventType: 'Rija Nagar', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
-                    addedRijaNagar = true;
-                } else {
-                    if (item.dateAwal.date > 16) {
+            if (item.dateAhier.ahierMonth.month === 0 && eventGregoryDate.getDay() === 4) {
+                if (item.dateAwal.awalMonth.month === AwalMonthEnum.Ramadan) {
+                    // closet Thurday and after Muk Trun day
+                    if (item.dateAwal.date > 16 && item.dateAhier.date < 21) {
                         result.push({ eventType: 'Rija Nagar', eventDate: eventGregoryDate });
-                        addedRijaNagar = true;
+                    }
+                } else {
+                    if (item.dateAhier.date >= 1 && item.dateAhier.date < 7) {
+                        result.push({ eventType: 'Rija Nagar', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
                     }
                 }
             }
