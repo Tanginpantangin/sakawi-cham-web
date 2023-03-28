@@ -1,11 +1,11 @@
 //import logo from './logo.svg';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import './App.css';
 import { EventCalendarPage } from './pages/eventCalendarPage';
 import { MonthCalendarPage } from './pages/monthCalendarPage';
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="App">
         <Routes>
           <Route path="/" element={<MonthCalendarPage />} />
@@ -13,7 +13,7 @@ function App() {
           <Route path="/events" element={<EventCalendarPage />} />
         </Routes>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

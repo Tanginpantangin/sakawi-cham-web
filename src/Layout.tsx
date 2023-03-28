@@ -26,9 +26,9 @@ export const Layout = (props: LayoutProps) => {
                                 <Nav className="mr-auto my-2 my-lg-0"
                                     style={{ maxHeight: '100px' }}
                                     navbarScroll>
-                                    <Nav.Link href="/months">Lịch tháng</Nav.Link>
-                                    <Nav.Link href="/events">Lịch sự kiện</Nav.Link>
-                                    <Nav.Link href="/docs">Tiện ích</Nav.Link>
+                                    <Nav.Link href="#/months">Lịch tháng</Nav.Link>
+                                    <Nav.Link href="#/events">Lịch sự kiện</Nav.Link>
+                                    <Nav.Link href="#/docs">Tiện ích</Nav.Link>
                                 </Nav>
                             </Navbar.Collapse>
                         </Container>
