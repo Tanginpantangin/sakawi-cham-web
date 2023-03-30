@@ -2,8 +2,8 @@ import { Button, ButtonGroup, ButtonToolbar, Col } from "react-bootstrap";
 import { displayIkasSarakName, displayNasakName, IkasSarakEnum } from "../enums/enum";
 import { AhierYear } from "../model/AhierDate";
 import { AwalYear } from "../model/AwalDate";
-import Helper from "../utility/helper";
 import { SakawiType } from "../pages/monthCalendarPage";
+import Helper from "../utility/helper";
 
 interface YearNavigationProps {
     sakawiType: SakawiType;
@@ -31,25 +31,27 @@ export const YearNavigation = (props: YearNavigationProps) => {
             <Col md={5} style={{ textAlign: "center" }}>
                 {props.sakawiType === 'sakawiAhier' && props.currentAhierYear &&
                     <>
-                        <div>
-                            <label className='bilan-title'>{displayNasakName(props.currentAhierYear.nasak).akharThrahName}</label>
+                        <div className='bilan-title'>
+                            {displayNasakName(props.currentAhierYear.nasak).akharThrahName}
                             {' - '}<label className='ikasSarak-title'>{displayIkasSarakName(props.currentAhierYear.ikasSarak)}</label>
-                            {' - '}<label className='bilan-title'>{Helper.convertToChamDigitUnicode(props.currentAhierYear.yearNumber ?? 0)}</label>
+                            {' - '}{Helper.convertToChamDigitUnicode(props.currentAhierYear.yearNumber ?? 0)}
                         </div>
-                        <h5>
+                        <div className='bilan-latin-title'>
                             {displayNasakName(props.currentAhierYear.nasak).rumiName} {IkasSarakEnum[props.currentAhierYear.ikasSarak]}
                             {' - '}{props.currentAhierYear.yearNumber}
-                        </h5>
+                        </div>
                     </>
                 }
                 {props.sakawiType === 'sakawiAwal' && props.currentAwalYear &&
-                    <h2>
+                    <div className='bilan-latin-title'>
                         {IkasSarakEnum[props.currentAwalYear.ikasSarak]}
                         {' - '}{props.currentAwalYear.yearNumber}
-                    </h2>
+                    </div>
                 }
                 {props.sakawiType === 'sakawiGregory' &&
-                    <h2>{`Năm ${props.currentGregoryYear}`}</h2>
+                    <div className='bilan-latin-title'>
+                        {`Năm ${props.currentGregoryYear}`}
+                    </div>
                 }
             </Col>
             <Col md={3}>

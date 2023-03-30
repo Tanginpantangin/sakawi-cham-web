@@ -37,7 +37,7 @@ export const Layout = (props: LayoutProps) => {
             </Row>
             <br />
             {/* Body */}
-            <Row>
+            <Row style={{ minHeight: 600 }}>
                 <Col sm={12} md={12} lg={12}>
                     {props.children}
                 </Col>
@@ -49,7 +49,7 @@ export const Layout = (props: LayoutProps) => {
                     <br />
                     {'Dự án được phát triển bởi '}
                     <a href="https://tanginpantangin.com/#!/converter" target="_blank" rel="noreferrer">Tangin Pan Tangin</a>
-                    {' và '}
+                    {' & '}
                     <a href="http://shopcham.com" target="_blank" rel="noreferrer">Shop Cham</a>
                 </Col>
             </Row>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Accordion, Alert, Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Accordion, Alert, Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { CountDownBar, CountDownBarProps } from "../components/countDownBar";
 import { MonthCalendar } from "../components/monthCalendar";
 import { Layout } from "../Layout";
@@ -16,8 +16,11 @@ export const MonthCalendarPage = () => {
     const [matrixSakawi, setMatrixSakawi] = useState<MatrixCalendarType[]>([]);
     const [fullSakawi, setFullSakawi] = useState<FullCalendarType[]>([]);
     const [nextEvents, setNextEvents] = useState<CountDownBarProps[]>([]);
+    const [loading, setLoading] = useState(false);
 
     React.useEffect(() => {
+        setLoading(true);
+
         function init() {
             // Build matrix Calendar
             let matrix = Helper.buildMatrixCalendar(2046, areaType);
@@ -41,7 +44,18 @@ export const MonthCalendarPage = () => {
         }
 
         init();
+        setLoading(false);
     }, [areaType]);
+
+    React.useEffect(() => {
+        setTimeout(() => {
+            setShowWarning(false);
+        }, 30000);
+    });
+
+    if (loading) {
+        return <Spinner animation="border" />
+    }
 
     return (
         <Layout>

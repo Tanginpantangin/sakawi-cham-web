@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Col, Container, Form, Row } from "react-bootstrap";
+import { Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { EventCalendar } from "../components/eventCanlendar";
 import { Layout } from "../Layout";
 import { FullCalendarType } from "../model/FullCalendarType";
@@ -13,8 +13,10 @@ export const EventCalendarPage = () => {
     const [areaType, setAreaType] = useState<AreaType>('NinhThuan');
     const [matrixSakawi, setMatrixSakawi] = useState<MatrixCalendarType[]>([]);
     const [fullSakawi, setFullSakawi] = useState<FullCalendarType[]>([]);
+    const [loading, setLoading] = useState(false);
 
     React.useEffect(() => {
+        setLoading(true);
         function init() {
             // Build matrix Calendar
             let matrix = Helper.buildMatrixCalendar(2046, areaType);
@@ -23,7 +25,12 @@ export const EventCalendarPage = () => {
         }
 
         init();
+        setLoading(false);
     }, [areaType]);
+
+    if (loading) {
+        return <Spinner animation="border" />
+    }
 
     return (
         <Layout>
