@@ -632,7 +632,7 @@ export default class Helper {
                     }
 
                 } else {
-                    if (item.dateAhier.date >= 1 && item.dateAhier.date < 7) {
+                    if (item.dateAhier.date >= 1 && item.dateAhier.date <= 7) {
                         result.push({ eventType: 'Rija Nagar', eventDate: eventGregoryDate });
                         addedRijaNagar = true;
                     }
@@ -722,7 +722,7 @@ export default class Helper {
                         result.push({ eventType: 'Rija Nagar', eventDate: eventGregoryDate });
                     }
                 } else {
-                    if (item.dateAhier.date >= 1 && item.dateAhier.date < 7) {
+                    if (item.dateAhier.date >= 1 && item.dateAhier.date <= 7) {
                         result.push({ eventType: 'Rija Nagar', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
                     }
                 }

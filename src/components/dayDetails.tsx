@@ -151,7 +151,7 @@ export const DayDetails = (props: DayDetailsProps) => {
                     result.push('Rija Nagar');
                 }
             } else {
-                if (props.dateAhier.date >= 1 && props.dateAhier.date < 7) {
+                if (props.dateAhier.date >= 1 && props.dateAhier.date <= 7) {
                     result.push('Rija Nagar');
                 }
             }
