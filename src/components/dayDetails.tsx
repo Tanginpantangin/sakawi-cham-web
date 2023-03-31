@@ -1,5 +1,5 @@
 import { Col, Row } from "react-bootstrap";
-import { AwalMonthEnum, displayIkasSarakName } from "../enums/enum";
+import { AwalMonthEnum, displayIkasSarakName, IkasSarakEnum } from "../enums/enum";
 import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate, AwalMonth } from "../model/AwalDate";
 import { SakawiType } from "../pages/monthCalendarPage";
@@ -16,6 +16,7 @@ interface DayDetailsProps {
     currentGregoryYear?: number;
     dayNumbersOfCurrentAhierMonth: number;
     dayNumbersOfCurrentAwalMonth: number;
+    showLatinNumberDate: boolean;
 }
 
 export const DayDetails = (props: DayDetailsProps) => {
@@ -50,9 +51,9 @@ export const DayDetails = (props: DayDetailsProps) => {
     }
 
     let gregoryDateClass = 'gregory-date';
-    let ahierDateClass = 'ahier-date';
-    let awalDateClass = 'awal-date';
-    let ikasSarakMonthCellClass = 'ikasSarak-month-cell';
+    let ahierDateClass = 'ahier-date';//props.showLatinNumberDate ? 'ahier-date-latin-number' :
+    let awalDateClass = 'awal-date';//props.showLatinNumberDate ? 'awal-date-latin-number' : 
+    let ikasSarakMonthCellClass = props.showLatinNumberDate ? '' : 'ikasSarak-month-cell';
 
     switch (props.sakawiType) {
         case "sakawiGregory":
@@ -75,9 +76,7 @@ export const DayDetails = (props: DayDetailsProps) => {
     function displayGregoryDate(sakawiType: SakawiType, dateAhier: AhierDate, dateAwal: AwalDate, dateGregory: Date) {
         const monthGregogy = dateGregory.getMonth() + 1;
 
-        if (dateGregory.getDate() === 1 ||
-            (sakawiType === "sakawiAwal" && dateAwal.date === 1) ||
-            (sakawiType === "sakawiAhier" && dateAhier.date === 1)) {
+        if ((sakawiType === "sakawiAwal" && dateAwal.date === 1) || (sakawiType === "sakawiAhier" && dateAhier.date === 1)) {
             return dateGregory.getDate() + "." + monthGregogy;
         } else {
             return dateGregory.getDate();
@@ -85,52 +84,61 @@ export const DayDetails = (props: DayDetailsProps) => {
     }
 
     function displayAhierDate(dateAhier: AhierDate) {
-        const bingun = 'ꩃ';
-        const klem = 'ꩌ';
+        const monthAhier = dateAhier.ahierMonth.month + 1;
+        const bingun = props.showLatinNumberDate ? '' : 'ꩃ';
+        const klem = props.showLatinNumberDate ? '\'' : 'ꩌ';
 
-        if (props.dayNumbersOfCurrentAhierMonth === 30) {
-            if (dateAhier.date <= 15) {
-                return Helper.convertToChamDigitUnicode(dateAhier.date) + bingun;
-            } else {
-                return Helper.convertToChamDigitUnicode(dateAhier.date - 15) + klem;
-            }
+        if (dateAhier.date === 1 && props.sakawiType !== 'sakawiAhier') {
+            return (
+                <label style={{ margin: 0 }} >{Helper.convertToChamDigitUnicode(dateAhier.date, props.showLatinNumberDate) + bingun + "." + Helper.convertToChamDigitUnicode(monthAhier, props.showLatinNumberDate)}</label>
+            )
         } else {
-            if (dateAhier.date <= 14) {
-                if (dateAhier.date <= 5) {
-                    return Helper.convertToChamDigitUnicode(dateAhier.date) + bingun;
+            if (props.dayNumbersOfCurrentAhierMonth === 30) {
+                if (dateAhier.date <= 15) {
+                    return Helper.convertToChamDigitUnicode(dateAhier.date, props.showLatinNumberDate) + bingun;
                 } else {
-                    return Helper.convertToChamDigitUnicode(dateAhier.date + 1) + bingun;
+                    return Helper.convertToChamDigitUnicode(dateAhier.date - 15, props.showLatinNumberDate) + klem;
                 }
             } else {
-                return Helper.convertToChamDigitUnicode(dateAhier.date - 14) + klem;
+                if (dateAhier.date <= 14) {
+                    if (dateAhier.date <= 5) {
+                        return Helper.convertToChamDigitUnicode(dateAhier.date, props.showLatinNumberDate) + bingun;
+                    } else {
+                        return Helper.convertToChamDigitUnicode(dateAhier.date + 1, props.showLatinNumberDate) + bingun;
+                    }
+                } else {
+                    return Helper.convertToChamDigitUnicode(dateAhier.date - 14, props.showLatinNumberDate) + klem;
+                }
             }
         }
     };
 
     function displayAwalDate(dateAwal: AwalDate) {
         const monthAwal = dateAwal.awalMonth.month + 1;
-        const bingun = 'ꩃ';
-        const klem = 'ꩌ';
+        const bingun = props.showLatinNumberDate ? '' : 'ꩃ';
+        const klem = props.showLatinNumberDate ? '\'' : 'ꩌ';
 
-        if (dateAwal.date === 1) {
+        if (dateAwal.date === 1 && props.sakawiType !== 'sakawiAwal') {
             return (
                 <>
-                    <label style={{ margin: 0 }} >{Helper.convertToChamDigitUnicode(dateAwal.date) + bingun + "." + Helper.convertToChamDigitUnicode(monthAwal) + "."}</label>
-                    <label style={{ margin: 0 }} className={ikasSarakMonthCellClass}>{displayIkasSarakName(dateAwal.awalMonth.year.ikasSarak)}</label>
+                    <label style={{ margin: 0 }} >{Helper.convertToChamDigitUnicode(dateAwal.date, props.showLatinNumberDate) + bingun + "." + Helper.convertToChamDigitUnicode(monthAwal, props.showLatinNumberDate) + "."}</label>
+                    <label style={{ margin: 0 }} className={ikasSarakMonthCellClass}>
+                        {props.showLatinNumberDate ? IkasSarakEnum[dateAwal.awalMonth.year.ikasSarak] : displayIkasSarakName(dateAwal.awalMonth.year.ikasSarak)}
+                    </label>
                 </>
             )
         } else {
             if (props.dayNumbersOfCurrentAwalMonth === 30) {
                 if (dateAwal.date <= 15) {
-                    return Helper.convertToChamDigitUnicode(dateAwal.date) + bingun;
+                    return Helper.convertToChamDigitUnicode(dateAwal.date, props.showLatinNumberDate) + bingun;
                 } else {
-                    return Helper.convertToChamDigitUnicode(dateAwal.date - 15) + klem;
+                    return Helper.convertToChamDigitUnicode(dateAwal.date - 15, props.showLatinNumberDate) + klem;
                 }
             } else {
                 if (dateAwal.date <= 14) {
-                    return Helper.convertToChamDigitUnicode(dateAwal.date) + bingun;
+                    return Helper.convertToChamDigitUnicode(dateAwal.date, props.showLatinNumberDate) + bingun;
                 } else {
-                    return Helper.convertToChamDigitUnicode(dateAwal.date - 14) + klem;
+                    return Helper.convertToChamDigitUnicode(dateAwal.date - 14, props.showLatinNumberDate) + klem;
                 }
             }
         }

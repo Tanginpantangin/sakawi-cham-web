@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Form, Row } from "react-bootstrap";
 import { AhierMonthEnum, GuecTypeEnum, GuenTypeEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { AhierMonth } from "../model/AhierDate";
 import { AwalMonth } from "../model/AwalDate";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
-import Helper from "../utility/helper";
 import { SakawiType } from "../pages/monthCalendarPage";
+import Helper from "../utility/helper";
 import { MonthAhier } from "./monthAhier";
 import { MonthAwal } from "./monthAwal";
 import { MonthGregory } from "./monthGregory";
@@ -41,6 +41,7 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
     const [currentAwalMonthMatrix, setCurrentAwalMonthMatrix] = useState<MatrixCalendarType>(initialMatrixCalendarType);
     const [currentGregoryMonth, setCurrentGregoryMonth] = useState(new Date().getMonth());
     const [currentGregoryYear, setCurrentGregoryYear] = useState(new Date().getFullYear());
+    const [showLatinNumberDate, setShowLatinNumberDate] = useState(false);
 
     React.useEffect(() => {
         function init() {
@@ -119,6 +120,21 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
     return (
         <Container>
             <Row>
+                <Col md={4}>
+                    <Form>
+                        <div className="mb-3">
+                            <Form.Check
+                                inline
+                                type={"checkbox"}
+                                label={`Hiển thị ngày bằng số latin`}
+                                checked={showLatinNumberDate}
+                                onChange={() => setShowLatinNumberDate(!showLatinNumberDate)}
+                            />
+                        </div>
+                    </Form>
+                </Col>
+            </Row>
+            <Row>
                 <MonthNavigation
                     sakawiType={sakawiType}
                     currentAhierMonth={currentAhierMonthMatrix.ahierMonth}
@@ -138,6 +154,7 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
                             matrixSakawi={props.matrixSakawi}
                             fullSakawi={props.fullSakawi}
                             currentAhierMonthMatrix={currentAhierMonthMatrix}
+                            showLatinNumberDate={showLatinNumberDate}
                         />
                     }
                     {sakawiType === 'sakawiAwal' &&
@@ -145,6 +162,7 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
                             matrixSakawi={props.matrixSakawi}
                             fullSakawi={props.fullSakawi}
                             currentAwalMonthMatrix={currentAwalMonthMatrix}
+                            showLatinNumberDate={showLatinNumberDate}
                         />
                     }
                     {sakawiType === 'sakawiGregory' &&
@@ -153,6 +171,7 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
                             fullSakawi={props.fullSakawi}
                             currentGregoryMonth={currentGregoryMonth ?? 0}
                             currentGregoryYear={currentGregoryYear ?? new Date().getFullYear()}
+                            showLatinNumberDate={showLatinNumberDate}
                         />
                     }
                 </Col>

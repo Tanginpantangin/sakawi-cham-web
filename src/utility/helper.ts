@@ -586,7 +586,11 @@ export default class Helper {
         return daysGap;
     }
 
-    static convertToChamDigitUnicode(latinNumber: number) {
+    static convertToChamDigitUnicode(latinNumber: number, showLatinNumer: boolean = false) {
+        if (showLatinNumer) {
+            return latinNumber;
+        }
+
         const ChamDigitArr = ['꩐', '꩑', '꩒', '꩓', '꩔', '꩕', '꩖', '꩗', '꩘', '꩙'];
         const EnglishDigits = '0123456789';
         const reg = new RegExp('[' + EnglishDigits + ']', 'g');

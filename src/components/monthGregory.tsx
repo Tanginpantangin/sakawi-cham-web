@@ -6,10 +6,11 @@ import Helper from '../utility/helper';
 import { DayDetails } from "./dayDetails";
 
 interface MonthGregoryProps {
-    matrixSakawi: MatrixCalendarType[],
-    fullSakawi: FullCalendarType[],
-    currentGregoryMonth: number,
-    currentGregoryYear: number
+    matrixSakawi: MatrixCalendarType[];
+    fullSakawi: FullCalendarType[];
+    currentGregoryMonth: number;
+    currentGregoryYear: number;
+    showLatinNumberDate: boolean;
 }
 
 export const MonthGregory = (props: MonthGregoryProps) => {
@@ -53,6 +54,7 @@ export const MonthGregory = (props: MonthGregoryProps) => {
                 currentGregoryYear={props.currentGregoryYear}
                 dayNumbersOfCurrentAhierMonth={dayNumbersOfCurrentAhierMonth}
                 dayNumbersOfCurrentAwalMonth={dayNumbersOfCurrentAwalMonth}
+                showLatinNumberDate={props.showLatinNumberDate}
             />
         );
 

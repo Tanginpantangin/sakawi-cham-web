@@ -6,9 +6,10 @@ import Helper from '../utility/helper';
 import { DayDetails } from "./dayDetails";
 
 interface MonthAwalProps {
-    matrixSakawi: MatrixCalendarType[],
-    fullSakawi: FullCalendarType[],
-    currentAwalMonthMatrix: MatrixCalendarType
+    matrixSakawi: MatrixCalendarType[];
+    fullSakawi: FullCalendarType[];
+    currentAwalMonthMatrix: MatrixCalendarType;
+    showLatinNumberDate: boolean;
 }
 
 export const MonthAwal = (props: MonthAwalProps) => {
@@ -47,6 +48,7 @@ export const MonthAwal = (props: MonthAwalProps) => {
                 currentAwalMonth={props.currentAwalMonthMatrix.awalMonth}
                 dayNumbersOfCurrentAhierMonth={dayNumbersOfCurrentAhierMonth}
                 dayNumbersOfCurrentAwalMonth={dayNumbersOfCurrentAwalMonth}
+                showLatinNumberDate={props.showLatinNumberDate}
             />
         );
 
