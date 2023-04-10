@@ -60,16 +60,16 @@
         "sakawiType": "sakawiAwal",
         "latinName": "Muk trun",
         "akharThrahName": "ꨟꨭꩀ ꨓꨴꨭꩆ",
-        "vnName": "Bà giáng trần",
-        "description": "Bà giáng trần"
+        "vnName": "Lễ Bà giáng trần",
+        "description": "Lễ Bà giáng trần"
     },
     {
         "eventType": "OngTrun",
         "sakawiType": "sakawiAwal",
         "latinName": "Ong trun",
         "akharThrahName": "ꨅꩃ ꨓꨴꨭꩆ",
-        "vnName": "Ông giáng trần",
-        "description": "Ông giáng trần"
+        "vnName": "Lễ Ông giáng trần",
+        "description": "Lễ Ông giáng trần"
     },
     {
         "eventType": "IkakWaha",

@@ -176,6 +176,18 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
                     }
                 </Col>
             </Row>
-        </Container>
+            <Row>
+                <Col md={12}>
+                    <div style={{ fontWeight: "bold" }}>Chú thích:</div>
+                    <div>
+                        <li><span className="ahier-date">꩑ꩃ / ꩑ꩌ</span> [bingun/klem]: ngày trước/sau trăng rằm của lịch Cham</li>
+                        <li><span className="awal-date">꩑ꩃ / ꩑ꩌ</span> [bingun/klem]: ngày trước/sau trăng rằm của lịch Awal</li>
+                        <li>1: ngày Dương lịch</li>
+                        <li>Các tháng thiếu (29 ngày) của lịch Cham, không có ngày <span className="ahier-date">꩖ꩃ</span> [6 bingun], mà từ <span className="ahier-date">꩕ꩃ</span> [5 bingun] tới <span className="ahier-date">꩗ꩃ</span> [7 bingun]</li>
+                    </div>
+                    <br />
+                </Col>
+            </Row>
+        </Container >
     );
 }

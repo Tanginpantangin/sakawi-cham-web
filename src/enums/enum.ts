@@ -96,7 +96,7 @@ export enum GuenTypeEnum {
     GuenByNormalRule
 }
 
-export function displayMonthName(month: AhierMonthEnum) {
+export function displayAhierMonthName(month: AhierMonthEnum) {
     let _akharThrahName = '';
     let _rumiName = '';
 
@@ -152,6 +152,69 @@ export function displayMonthName(month: AhierMonthEnum) {
         case 12:
             _akharThrahName = 'ꨝꨪꨤꩆ ꨞꩃ';
             _rumiName = 'Bilan bhang';
+            break;
+        default:
+            break;
+    }
+
+    return {
+        akharThrahName: _akharThrahName,
+        rumiName: _rumiName
+    }
+}
+
+export function displayAwalMonthName(month: AwalMonthEnum) {
+    let _akharThrahName = '';
+    let _rumiName = '';
+
+    switch (month) {
+        case 0:
+            _akharThrahName = 'ꨝꨪꨤꨩꩆ ꨀꨩꨟꨣꨮꩌ';
+            _rumiName = 'Bilan sa';
+            break;
+        case 1:
+            _akharThrahName = 'ꨝꨪꨤꩆ ꨦꩀ ꨜꨯꩉ';
+            _rumiName = 'Bilan dua';
+            break;
+        case 2:
+            _akharThrahName = 'ꨝꨪꨤꨩꩆ ꨣꨩꨝꨪꨂꩊ ꨀꨥꩊ';
+            _rumiName = 'Bilan klau';
+            break;
+        case 3:
+            _akharThrahName = 'ꨝꨪꨤꨩꩆ ꨣꨝꨪꨂꩊ ꨀꨨꨳꨯꨮꩉ';
+            _rumiName = 'Bilan pak';
+            break;
+        case 4:
+            _akharThrahName = 'ꨝꨪꨤꨩꩆ ꨎꨩꨟꨕꨪꩆ ꨀꨥꨤꨩ';
+            _rumiName = 'Bilan limâ';
+            break;
+        case 5:
+            _akharThrahName = 'ꨝꨪꨤꨩꩆ ꨎꨩꨟꨕꨪꩆ ꨀꨨꨳꨯꨮꩉ';
+            _rumiName = 'Bilan nem';
+            break;
+        case 6:
+            _akharThrahName = 'ꨝꨪꨤꨩꩆ ꨣꨎꨮꩇ';
+            _rumiName = 'Bilan tajuh';
+            break;
+        case 7:
+            _akharThrahName = 'ꨝꨪꨤꨩꩆ ꨦꩀ ꨝꩆ';
+            _rumiName = 'Bilan dalipan';
+            break;
+        case 8:
+            _akharThrahName = 'ꨝꨪꨤꨩꩆ ꨣꨟꨥꨩꩆ';
+            _rumiName = 'Bilan salipan';
+            break;
+        case 9:
+            _akharThrahName = 'ꨝꨪꨤꨩꩆ ꨦꨩꨥꩊ';
+            _rumiName = 'Bilan sapluh';
+            break;
+        case 10:
+            _akharThrahName = 'ꨝꨪꨤꨩꩆ ꨕꨭꩊ ꨆꨎꨪꩍ';
+            _rumiName = 'Bilan puis';
+            break;
+        case 11:
+            _akharThrahName = 'ꨝꨪꨤꨩꩆ ꨕꨭꩊ ꨆꨁꨎꨫ';
+            _rumiName = 'Bilan mak';
             break;
         default:
             break;

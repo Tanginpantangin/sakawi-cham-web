@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, ButtonToolbar, Col } from "react-bootstrap";
-import { AwalMonthEnum, displayIkasSarakName, displayMonthName, displayNasakName, IkasSarakEnum } from "../enums/enum";
+import { AwalMonthEnum, displayAhierMonthName, displayAwalMonthName, displayIkasSarakName, displayNasakName, IkasSarakEnum } from "../enums/enum";
 import { AhierMonth } from "../model/AhierDate";
 import { AwalMonth } from "../model/AwalDate";
 import { SakawiType } from "../pages/monthCalendarPage";
@@ -35,13 +35,13 @@ export const MonthNavigation = (props: MonthNavigationProps) => {
                 {props.sakawiType === 'sakawiAhier' && props.currentAhierMonth &&
                     <>
                         <div className='bilan-title'>
-                            {displayMonthName(props.currentAhierMonth.month).akharThrahName}
+                            {displayAhierMonthName(props.currentAhierMonth.month).akharThrahName}
                             {' - '}{displayNasakName(props.currentAhierMonth.year.nasak).akharThrahName}
                             {'   '}<label className='ikasSarak-title'>{displayIkasSarakName(props.currentAhierMonth.year.ikasSarak)}</label>
                             {' - '}{Helper.convertToChamDigitUnicode(props.currentAhierMonth.year.yearNumber ?? 0)}
                         </div>
                         <div className='bilan-latin-title'>
-                            {displayMonthName(props.currentAhierMonth.month).rumiName} {`(${(props.currentAhierMonth.month + 1)})`}
+                            {displayAhierMonthName(props.currentAhierMonth.month).rumiName} {`(${(props.currentAhierMonth.month + 1)})`}
                             {' - '}{displayNasakName(props.currentAhierMonth.year.nasak).rumiName} {IkasSarakEnum[props.currentAhierMonth.year.ikasSarak]}
                             {' - '}{props.currentAhierMonth.year.yearNumber}
                         </div>
@@ -49,6 +49,11 @@ export const MonthNavigation = (props: MonthNavigationProps) => {
                 }
                 {props.sakawiType === 'sakawiAwal' && props.currentAwalMonth &&
                     <>
+                        <div className='bilan-title'>
+                            {displayAwalMonthName(props.currentAwalMonth.month).akharThrahName}
+                            {' - '}<label className='ikasSarak-title'>{displayIkasSarakName(props.currentAwalMonth.year.ikasSarak)}</label>
+                            {' - '}{Helper.convertToChamDigitUnicode(props.currentAwalMonth.year.yearNumber ?? 0)}
+                        </div>
                         <div className='bilan-latin-title'>
                             {AwalMonthEnum[props.currentAwalMonth.month]} {`(${(props.currentAwalMonth.month + 1)})`}
                             {' - '}{IkasSarakEnum[props.currentAwalMonth.year.ikasSarak]}
