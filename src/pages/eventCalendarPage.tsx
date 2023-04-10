@@ -36,7 +36,8 @@ export const EventCalendarPage = () => {
         <Layout>
             <Container>
                 <Row>
-                    <Col md={4}>
+                    <Col lg={1}></Col>
+                    <Col lg={10}>
                         <Form>
                             <div className="mb-3">
                                 <Form.Check
@@ -56,14 +57,19 @@ export const EventCalendarPage = () => {
                             </div>
                         </Form>
                     </Col>
+                    <Col lg={1}></Col>
                 </Row>
                 {
                     matrixSakawi.length > 0 &&
                     <Row>
-                        <EventCalendar
-                            matrixSakawi={matrixSakawi}
-                            fullSakawi={fullSakawi}
-                        />
+                        <Col lg={1}></Col>
+                        <Col lg={10}>
+                            <EventCalendar
+                                matrixSakawi={matrixSakawi}
+                                fullSakawi={fullSakawi}
+                            />
+                        </Col>
+                        <Col lg={1}></Col>
                     </Row>
                 }
             </Container>

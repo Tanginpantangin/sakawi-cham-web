@@ -28,7 +28,7 @@ export const Layout = (props: LayoutProps) => {
                                     navbarScroll>
                                     <Nav.Link href="#/months">Lịch tháng</Nav.Link>
                                     <Nav.Link href="#/events">Lịch sự kiện</Nav.Link>
-                                    <Nav.Link href="#/docs">Tiện ích</Nav.Link>
+                                    <Nav.Link href="#/docs">Tài liệu</Nav.Link>
                                 </Nav>
                             </Navbar.Collapse>
                         </Container>

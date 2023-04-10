@@ -1,6 +1,7 @@
 import { CountDownBarProps } from '../components/countDownBar';
+import chamEventDaysConfig from '../data/ChamEventDays.json';
 import sakawiTakaiCiimConfig from '../data/SakawiTakaiCiim.json';
-import { AhierMonthEnum, AwalMonthEnum, GuecTypeEnum, GuenTypeEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
+import { AhierMonthEnum, AwalMonthEnum, EventType, GuecTypeEnum, GuenTypeEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { AhierDate, AhierMonth, AhierYear } from "../model/AhierDate";
 import { AwalDate, AwalMonth, AwalYear } from '../model/AwalDate';
 import { FullCalendarType } from '../model/FullCalendarType';
@@ -622,7 +623,7 @@ export default class Helper {
             let eventGregoryDate = item.dateGregory;
 
             if (!addedAkaokThun && item.dateAhier.ahierMonth.month === 0 && item.dateAhier.date === 1) {
-                result.push({ eventType: 'Akaok thun', eventDate: eventGregoryDate });
+                result.push({ eventType: 'AkaokThun', eventDate: eventGregoryDate });
                 addedAkaokThun = true;
             }
 
@@ -631,13 +632,13 @@ export default class Helper {
                 if (item.dateAwal.awalMonth.month === AwalMonthEnum.Ramadan) {
                     // closet Thurday and after Muk Trun day
                     if (item.dateAwal.date >= 16 && item.dateAhier.date <= 22) {
-                        result.push({ eventType: 'Rija Nagar', eventDate: eventGregoryDate });
+                        result.push({ eventType: 'RijaNagar', eventDate: eventGregoryDate });
                         addedRijaNagar = true;
                     }
 
                 } else {
                     if (item.dateAhier.date >= 1 && item.dateAhier.date <= 7) {
-                        result.push({ eventType: 'Rija Nagar', eventDate: eventGregoryDate });
+                        result.push({ eventType: 'RijaNagar', eventDate: eventGregoryDate });
                         addedRijaNagar = true;
                     }
                 }
@@ -649,7 +650,7 @@ export default class Helper {
             }*/
 
             if (!addedKate && item.dateAhier.ahierMonth.month === 6 && item.dateAhier.date === 1) {
-                result.push({ eventType: 'Katé angaok bimong', eventDate: eventGregoryDate });
+                result.push({ eventType: 'KateAngaokBimong', eventDate: eventGregoryDate });
                 addedKate = true;
             }
 
@@ -664,7 +665,7 @@ export default class Helper {
             }*/
 
             if (!addedRamawan && item.dateAwal.awalMonth.month === 8 && item.dateAwal.date === 1) {
-                result.push({ eventType: 'Tamâ ricaow Ramâwan', eventDate: eventGregoryDate });
+                result.push({ eventType: 'TamaRicaowRamawan', eventDate: eventGregoryDate });
                 addedRamawan = true;
             }
 
@@ -715,7 +716,7 @@ export default class Helper {
             let eventGregoryDate = item.dateGregory;
 
             if (item.dateAhier.ahierMonth.month === 0 && item.dateAhier.date === 1) {
-                result.push({ eventType: 'Akaok thun', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+                result.push({ eventType: 'AkaokThun', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
             }
 
             //TODO
@@ -723,60 +724,60 @@ export default class Helper {
                 if (item.dateAwal.awalMonth.month === AwalMonthEnum.Ramadan) {
                     // closet Thurday and after Muk Trun day
                     if (item.dateAwal.date >= 16 && item.dateAhier.date <= 22) {
-                        result.push({ eventType: 'Rija Nagar', eventDate: eventGregoryDate });
+                        result.push({ eventType: 'RijaNagar', eventDate: eventGregoryDate });
                     }
                 } else {
                     if (item.dateAhier.date >= 1 && item.dateAhier.date <= 7) {
-                        result.push({ eventType: 'Rija Nagar', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+                        result.push({ eventType: 'RijaNagar', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
                     }
                 }
             }
 
             if (item.dateAhier.ahierMonth.month === 5 && item.dateAhier.date === 29) {
-                result.push({ eventType: 'Katé palei Hamu Tanran', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+                result.push({ eventType: 'KatePaleiHamuTanran', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
             }
 
             if (item.dateAhier.ahierMonth.month === 6 && item.dateAhier.date === 1) {
-                result.push({ eventType: 'Katé angaok bimong', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+                result.push({ eventType: 'KateAngaokBimong', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
             }
 
             const dayNumbersOfCurrentAhierMonth = Helper.getActualDayNumbersOfAhierMonth(maxtrixCalendar, item.dateAhier.ahierMonth);
             if (dayNumbersOfCurrentAhierMonth === 30) {
                 if (item.dateAhier.ahierMonth.month === 8 && item.dateAhier.date === 16) {
-                    result.push({ eventType: 'Ca-mbur', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+                    result.push({ eventType: 'CaMbur', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
                 }
             } else {
                 if (item.dateAhier.ahierMonth.month === 8 && item.dateAhier.date === 15) {
-                    result.push({ eventType: 'Ca-mbur', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+                    result.push({ eventType: 'CaMbur', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
                 }
             }
 
             if (item.dateAwal.awalMonth.month === 8 && item.dateAwal.date === 1) {
-                result.push({ eventType: 'Tamâ ricaow Ramâwan', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
+                result.push({ eventType: 'TamaRicaowRamawan', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
             }
 
             if (item.dateAwal.awalMonth.month === 8 && item.dateAwal.date === 16) {
-                result.push({ eventType: 'Muk trun', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
+                result.push({ eventType: 'MukTrun', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
             }
 
             if (item.dateAwal.awalMonth.month === 8 && item.dateAwal.date === 21) {
-                result.push({ eventType: 'Ong trun', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
+                result.push({ eventType: 'OngTrun', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
             }
 
             if (item.dateAwal.awalMonth.month === 9 && item.dateAwal.date === 2) {
-                result.push({ eventType: 'Talaih aek Ramâwan', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
+                result.push({ eventType: 'TalaihAekRamawan', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
             }
 
             if (item.dateAwal.awalMonth.month === 11 && item.dateAwal.date === 1) {
-                result.push({ eventType: 'Ikak Waha', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
+                result.push({ eventType: 'IkakWaha', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
             }
 
             if (item.dateAwal.awalMonth.month === 11 && item.dateAwal.date === 11) {
-                result.push({ eventType: 'Talaih Waha', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
+                result.push({ eventType: 'TalaihWaha', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
             }
 
             if (item.dateAhier.ahierMonth.month === 3 && eventGregoryDate.getDay() === 0 && item.dateAhier.date < 7) {
-                result.push({ eventType: 'Yuer Yang', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+                result.push({ eventType: 'YuerYang', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
             }
         });
 
@@ -790,5 +791,9 @@ export default class Helper {
         const ddStr = dd < 10 ? '0' + dd : dd;
         const mmStr = mm < 10 ? '0' + mm : mm;
         return ddStr + '/' + mmStr + '/' + yyyy;
+    }
+
+    static displayEventDay(eventType: EventType) {
+        return chamEventDaysConfig.filter(x => x.eventType === eventType)[0];
     }
 }

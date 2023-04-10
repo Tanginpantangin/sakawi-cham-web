@@ -51,9 +51,14 @@ export const DayDetails = (props: DayDetailsProps) => {
     }
 
     let gregoryDateClass = 'gregory-date';
-    let ahierDateClass = 'ahier-date';//props.showLatinNumberDate ? 'ahier-date-latin-number' :
-    let awalDateClass = 'awal-date';//props.showLatinNumberDate ? 'awal-date-latin-number' : 
+    let ahierDateClass = 'ahier-date';
+    let awalDateClass = 'awal-date';
     let ikasSarakMonthCellClass = props.showLatinNumberDate ? '' : 'ikasSarak-month-cell';
+
+    if (props.showLatinNumberDate) {
+        ahierDateClass += ' display-latin-number';
+        awalDateClass += ' display-latin-number';
+    }
 
     switch (props.sakawiType) {
         case "sakawiGregory":
@@ -245,9 +250,9 @@ export const DayDetails = (props: DayDetailsProps) => {
                 </Col>
             </Row>
             <Row>
-                <Col xs={12} sm={12} md={12} style={{ minHeight: "10px", maxHeight: "25px" }}>
+                <Col xs={12} sm={12} md={12} style={{ minHeight: "30px" }}>
                     {getEvents().map((item, index) => {
-                        return <p key={index} className='event-name'>{item}</p>
+                        return <span key={index} className='event-name'>{item}</span>
                     })}
                 </Col>
             </Row>

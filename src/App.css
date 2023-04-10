@@ -203,6 +203,11 @@
   align-self: end;
 }
 
+.ahier-date.display-latin-number,
+.awal-date.display-latin-number {
+  font-family: var(--bs-body-font-family);
+}
+
 .gregory-date {
   color: black;
   text-align: right;
@@ -210,6 +215,13 @@
 
 .ikasSarak-month-cell {
   font-family: 'AkharTakai';
+}
+
+.circle-event-type {
+  display: inline-block;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
 }
 
 @font-face {

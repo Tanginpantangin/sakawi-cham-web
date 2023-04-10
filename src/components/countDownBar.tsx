@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Col, ProgressBar, Row } from "react-bootstrap";
 import { EventType, VariantType } from "../enums/enum";
-import Helper from "../utility/helper";
 import { SakawiType } from "../pages/monthCalendarPage";
+import Helper from "../utility/helper";
 
 export interface CountDownBarProps {
     eventType: EventType;
@@ -42,19 +42,19 @@ export const CountDownBar = (props: CountDownBarProps) => {
     let variantType: VariantType;
     let displayEventName = '';
     switch (props.eventType) {
-        case "Akaok thun":
+        case "AkaokThun":
             variantType = 'primary';
             displayEventName = 'Năm mới';
             break;
-        case "Rija Nagar":
+        case "RijaNagar":
             variantType = 'danger';
             displayEventName = props.eventType;
             break;
-        case "Katé angaok bimong":
+        case "KateAngaokBimong":
             variantType = 'warning';
             displayEventName = 'Katé';
             break;
-        case "Tamâ ricaow Ramâwan":
+        case "TamaRicaowRamawan":
             variantType = 'success';
             displayEventName = 'Ramâwan';
             break;

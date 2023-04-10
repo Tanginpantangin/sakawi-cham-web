@@ -1,5 +1,5 @@
 export declare type VariantType = 'primary' | 'info' | 'secondary' | 'success' | 'warning' | 'danger' | 'light' | 'link';
-export declare type EventType = 'Akaok thun' | 'Rija Nagar' | 'Katé palei Hamu Tanran' | 'Katé angaok bimong' | 'Ca-mbur' | 'Tamâ ricaow Ramâwan' | 'Talaih aek Ramâwan' | 'Muk trun' | 'Ong trun' | 'Ikak Waha' | 'Talaih Waha' | 'Yuer Yang';
+export declare type EventType = 'AkaokThun' | 'RijaNagar' | 'KatePaleiHamuTanran' | 'KateAngaokBimong' | 'CaMbur' | 'TamaRicaowRamawan' | 'TalaihAekRamawan' | 'MukTrun' | 'OngTrun' | 'IkakWaha' | 'TalaihWaha' | 'YuerYang';
 
 export enum MonthEnum {
     January = 0,

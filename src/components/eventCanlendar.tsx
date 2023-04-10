@@ -4,8 +4,8 @@ import { IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { AhierYear } from "../model/AhierDate";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
-import Helper from "../utility/helper";
 import { SakawiType } from "../pages/monthCalendarPage";
+import Helper from "../utility/helper";
 import { YearNavigation } from "./yearNavigation";
 
 interface EventCalendarProps {
@@ -69,7 +69,15 @@ export const EventCalendar = (props: EventCalendarProps) => {
             rows.push(
                 <tr key={`event-row-${index}`}>
                     <td>{Helper.displayDateString(item.eventDate)}</td>
-                    <td>{item.eventType.toString()}</td>
+                    <td>
+                        <span style={{ backgroundColor: Helper.displayEventDay(item.eventType)?.sakawiType === 'sakawiAhier' ? '#F15A25' : '#007A3D' }} className='circle-event-type'></span>
+                    </td>
+                    <td>
+                        {Helper.displayEventDay(item.eventType)?.akharThrahName}
+                        <br />
+                        <span style={{ fontSize: '0.8rem' }}>{Helper.displayEventDay(item.eventType)?.latinName}</span>
+                    </td>
+                    <td>{Helper.displayEventDay(item.eventType)?.vnName}</td>
                 </tr>);
         });
 
@@ -89,13 +97,13 @@ export const EventCalendar = (props: EventCalendarProps) => {
                 />
             </Row>
             <Row>
-                <Col md={2}></Col>
-                <Col md={8}>
-                    <Table striped bordered hover>
+                <Col>
+                    <Table hover>
                         <thead>
                             <tr>
                                 <th>Ngày Dương lịch</th>
-                                <th>Sự kiện / Lễ hội</th>
+                                <th></th>
+                                <th colSpan={2}>Sự kiện / Lễ hội</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -103,7 +111,6 @@ export const EventCalendar = (props: EventCalendarProps) => {
                         </tbody>
                     </Table>
                 </Col>
-                <Col md={2}></Col>
             </Row>
         </Container>
     );

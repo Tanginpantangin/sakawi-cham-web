@@ -1,0 +1,98 @@
+[
+    {
+        "eventType": "AkaokThun",
+        "sakawiType": "sakawiAhier",
+        "latinName": "Akaok thun",
+        "akharThrahName": "ꨀꨆꨯꨱꩀ ꨔꨭꩆ",
+        "vnName": "Ngày đầu năm Cham lịch",
+        "description": "Ngày đầu tiên của năm Cham lịch"
+    },
+    {
+        "eventType": "RijaNagar",
+        "sakawiType": "sakawiAhier",
+        "latinName": "Rija Nâgar",
+        "akharThrahName": "ꨣꨪꨎꨩ ꨗꨈꩉ",
+        "vnName": "Lễ hội xứ sở",
+        "description": "Lễ hội xứ sở (thứ Năm đầu tiên của năm)"
+    },
+    {
+        "eventType": "KatePaleiHamuTanran",
+        "sakawiType": "sakawiAhier",
+        "latinName": "Katé palei Hamu Tanran",
+        "akharThrahName": "ꨆꨓꨯꨮꨩ ꨚꨤꨬ ꨨꨟꨭꨩ ꨓꨗꨴꩆ",
+        "vnName": "Katé làng Hữu Đức",
+        "description": "Lễ hội Katé làng Hữu Đức"
+    },
+    {
+        "eventType": "KateAngaokBimong",
+        "sakawiType": "sakawiAhier",
+        "latinName": "Katé angaok bimong",
+        "akharThrahName": "ꨆꨓꨯꨮꨩ ꨀꨊꨯꨱꩀ ꨝꨪꨟꨯꩂ",
+        "vnName": "Katé trên Tháp",
+        "description": "Lễ hội Katé trên Tháp"
+    },
+    {
+        "eventType": "CaMbur",
+        "sakawiType": "sakawiAhier",
+        "latinName": "Ca-mbur",
+        "akharThrahName": "ꨌꨡꨭꩉ",
+        "vnName": "Lễ hội Ca-mbur",
+        "description": "Lễ hội Ca-mbur"
+    },
+    {
+        "eventType": "TamaRicaowRamawan",
+        "sakawiType": "sakawiAwal",
+        "latinName": "Tamâ ricaow Ramâwan",
+        "akharThrahName": "ꨓꨟꨩ ꨣꨪꨌꨯꨱꨥ ꨣꨟꨥꩆ",
+        "vnName": "Bắt đầu Ramâwan",
+        "description": "Bắt đầu tháng chay tịnh Ramâwan"
+    },
+    {
+        "eventType": "TalaihAekRamawan",
+        "sakawiType": "sakawiAwal",
+        "latinName": "Talaih aek Ramâwan",
+        "akharThrahName": "ꨓꨤꨰꩍ ꨀꨮꨩꩀ ꨣꨟꨥꩆ",
+        "vnName": "Kết thúc Ramâwan",
+        "description": "Kết thúc tháng chay tịnh Ramâwan"
+    },
+    {
+        "eventType": "MukTrun",
+        "sakawiType": "sakawiAwal",
+        "latinName": "Muk trun",
+        "akharThrahName": "ꨟꨭꩀ ꨓꨴꨭꩆ",
+        "vnName": "Bà giáng trần",
+        "description": "Bà giáng trần"
+    },
+    {
+        "eventType": "OngTrun",
+        "sakawiType": "sakawiAwal",
+        "latinName": "Ong trun",
+        "akharThrahName": "ꨅꩃ ꨓꨴꨭꩆ",
+        "vnName": "Ông giáng trần",
+        "description": "Ông giáng trần"
+    },
+    {
+        "eventType": "IkakWaha",
+        "sakawiType": "sakawiAwal",
+        "latinName": "Ikak Waha",
+        "akharThrahName": "ꨁꨆꩀ ꨥꨨꨩ ",
+        "vnName": "Bắt đầu Waha",
+        "description": "Bắt đầu Waha"
+    },
+    {
+        "eventType": "TalaihWaha",
+        "sakawiType": "sakawiAwal",
+        "latinName": "Talaih Waha",
+        "akharThrahName": "ꨓꨤꨰꩍ ꨥꨨꨩ",
+        "vnName": "Kết thúc Waha",
+        "description": "Kết thúc Waha"
+    },
+    {
+        "eventType": "YuerYang",
+        "sakawiType": "sakawiAhier",
+        "latinName": "Yuer Yang",
+        "akharThrahName": "ꨢꨶꨮꩉ ꨢꩃ",
+        "vnName": "Lễ Yuer Yang",
+        "description": "Lễ Yuer Yang"
+    }
+]
