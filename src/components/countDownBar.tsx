@@ -48,7 +48,7 @@ export const CountDownBar = (props: CountDownBarProps) => {
             break;
         case "RijaNagar":
             variantType = 'danger';
-            displayEventName = props.eventType;
+            displayEventName = 'Rija Nagar';
             break;
         case "KateAngaokBimong":
             variantType = 'warning';

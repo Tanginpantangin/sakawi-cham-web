@@ -73,7 +73,9 @@ export const EventCalendar = (props: EventCalendarProps) => {
                         <span style={{ backgroundColor: Helper.displayEventDay(item.eventType)?.sakawiType === 'sakawiAhier' ? '#F15A25' : '#007A3D' }} className='circle-event-type'></span>
                     </td>
                     <td>
-                        {Helper.displayEventDay(item.eventType)?.akharThrahName}
+                        <div className='event-cham-name'>
+                            {Helper.displayEventDay(item.eventType)?.akharThrahName}
+                        </div>
                         <br />
                         <span style={{ fontSize: '0.8rem' }}>{Helper.displayEventDay(item.eventType)?.latinName}</span>
                     </td>

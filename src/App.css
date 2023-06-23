@@ -50,6 +50,11 @@
     font-weight: bold;
   }
 
+  .notice .ahier-date,
+  .notice .awal-date {
+    font-size: 1.2rem;
+  }
+
   .ikasSarak-month-cell {
     font-size: 1rem;
   }
@@ -66,6 +71,11 @@
     padding-left: 0.3rem;
     text-align: left;
     margin-top: 0.1rem;
+  }
+
+  .event-cham-name {
+    font-family: 'NotoSansCham';
+    font-size: 1.0rem;
   }
 }
 
@@ -141,6 +151,11 @@
     font-weight: bold;
   }
 
+  .notice .ahier-date,
+  .notice .awal-date {
+    font-size: 1rem;
+  }
+
   .ikasSarak-month-cell {
     font-size: 0.5rem;
   }
@@ -157,6 +172,11 @@
     padding-left: 0.3rem;
     text-align: left;
     margin-top: 0.1rem;
+  }
+
+  .event-cham-name {
+    font-family: 'NotoSansCham';
+    font-size: 0.8rem;
   }
 }
 

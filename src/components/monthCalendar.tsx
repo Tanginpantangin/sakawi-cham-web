@@ -65,13 +65,13 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
     function handleOnClickToCurrentMonth() {
         if (sakawiType === "sakawiAhier") {
             const currentAhierMonth = props.matrixSakawi.filter(m =>
-                Helper.addGregoryDays(m.dateOfGregoryCalendar, m.dayNumbersOfAhierMonth) > new Date())[0];
+                Helper.addGregoryDays(m.dateOfGregoryCalendar, m.dayNumbersOfAhierMonth) >= new Date())[0];
             if (currentAhierMonth) {
                 setCurrentAhierMonthMatrix(currentAhierMonth);
             }
         } else if (sakawiType === "sakawiAwal") {
             const currentAwalMonth = props.matrixSakawi.filter(m =>
-                Helper.addGregoryDays(m.dateOfGregoryCalendar, m.dayNumbersOfAwalMonth) > new Date())[0];
+                Helper.addGregoryDays(m.dateOfGregoryCalendar, m.dayNumbersOfAwalMonth) >= new Date())[0];
             if (currentAwalMonth) {
                 setCurrentAwalMonthMatrix(currentAwalMonth);
             }
@@ -179,7 +179,7 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
             <Row>
                 <Col md={12}>
                     <div style={{ fontWeight: "bold" }}>Chú thích:</div>
-                    <div>
+                    <div className="notice">
                         <li><span className="ahier-date">꩑ꩃ / ꩑ꩌ</span> [bingun/klem]: ngày trước/sau trăng rằm của lịch Cham</li>
                         <li><span className="awal-date">꩑ꩃ / ꩑ꩌ</span> [bingun/klem]: ngày trước/sau trăng rằm của lịch Awal</li>
                         <li>1: ngày Dương lịch</li>

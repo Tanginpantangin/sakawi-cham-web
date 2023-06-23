@@ -59,7 +59,6 @@ export const MonthNavigation = (props: MonthNavigationProps) => {
                             {' - '}{IkasSarakEnum[props.currentAwalMonth.year.ikasSarak]}
                             {' - '}{props.currentAwalMonth.year.yearNumber}
                         </div>
-                        <br />
                     </>
                 }
                 {props.sakawiType === 'sakawiGregory' &&
