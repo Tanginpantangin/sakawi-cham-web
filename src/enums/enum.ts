@@ -1,5 +1,7 @@
 export declare type VariantType = 'primary' | 'info' | 'secondary' | 'success' | 'warning' | 'danger' | 'light' | 'link';
 export declare type EventType = 'AkaokThun' | 'RijaNagar' | 'KatePaleiHamuTanran' | 'KateAngaokBimong' | 'CaMbur' | 'TamaRicaowRamawan' | 'TalaihAekRamawan' | 'MukTrun' | 'OngTrun' | 'IkakWaha' | 'TalaihWaha' | 'YuerYang';
+export declare type SakawiType = 'sakawiAwal' | 'sakawiAhier' | 'sakawiGregory';
+export declare type AreaType = 'NinhThuan' | 'BinhThuan';
 
 export enum MonthEnum {
     January = 0,

@@ -1,12 +1,11 @@
 import { CountDownBarProps } from '../components/countDownBar';
 import chamEventDaysConfig from '../data/ChamEventDays.json';
 import sakawiTakaiCiimConfig from '../data/SakawiTakaiCiim.json';
-import { AhierMonthEnum, AwalMonthEnum, EventType, GuecTypeEnum, GuenTypeEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
+import { AhierMonthEnum, AreaType, AwalMonthEnum, EventType, GuecTypeEnum, GuenTypeEnum, IkasSarakEnum, NasakEnum } from "../enums/enum";
 import { AhierDate, AhierMonth, AhierYear } from "../model/AhierDate";
 import { AwalDate, AwalMonth, AwalYear } from '../model/AwalDate';
 import { FullCalendarType } from '../model/FullCalendarType';
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
-import { AreaType } from '../pages/monthCalendarPage';
 import { awalMonthArray, awalYearArray, firstDateOfSakawiAhier_InaGirai_Lieh_1988, firstDateOfSakawiAwal_Lieh_1407, totalDaysOf8AwalYearCycle, yearNumberOfSakawiAwal_Lieh_1407 } from './constant';
 
 export default class Helper {
@@ -202,7 +201,7 @@ export default class Helper {
             date: 1,
             ahierMonth: {
                 month: AhierMonthEnum.BilanSa,
-                year: { nasak: NasakEnum.Takuh, ikasSarak: IkasSarakEnum.Liéh }
+                year: { nasak: NasakEnum.Takuh, ikasSarak: IkasSarakEnum.Liéh, yearNumber: 0 }
             }
         };
 
@@ -291,13 +290,18 @@ export default class Helper {
             // Tháng chẳn - "bilan u" : (29 ngày), gồm: 2,4,6,8,10. 
             numberOfDay = 29;
         } else if (month === AhierMonthEnum.BilanMak) {
-            // Tháng 12:  
-            if (year.ikasSarak === IkasSarakEnum.Hak || year.ikasSarak === IkasSarakEnum.Dal || year.ikasSarak === IkasSarakEnum.JimLuic) {
-                // năm nhuận (thun "Nâh": Hak, Dal, Jim luic): 30 ngày
-                numberOfDay = 30;
-            } else {
-                // năm thường (thun "Wak"): 29 ngày
+            const isEndOfLongLeapPeriod144Years = Helper.checkIsEndOfLongLeapPeriod144Years(year);
+            if (isEndOfLongLeapPeriod144Years) {
                 numberOfDay = 29;
+            } else {
+                // Tháng 12:  
+                if (year.ikasSarak === IkasSarakEnum.Hak || year.ikasSarak === IkasSarakEnum.Dal || year.ikasSarak === IkasSarakEnum.JimLuic) {
+                    // năm nhuận (thun "Nâh": Hak, Dal, Jim luic): 30 ngày
+                    numberOfDay = 30;
+                } else {
+                    // năm thường (thun "Wak"): 29 ngày
+                    numberOfDay = 29;
+                }
             }
         } else if (month === AhierMonthEnum.BilanBhang) {
             if (year.ikasSarak === IkasSarakEnum.Hak || year.ikasSarak === IkasSarakEnum.Dal || year.ikasSarak === IkasSarakEnum.JimLuic) {
@@ -319,7 +323,10 @@ export default class Helper {
     }
 
     static getMonthNumbersOfAhierYear(year: AhierYear) {
-        if (year.ikasSarak === IkasSarakEnum.Hak
+        const isEndOfLongLeapPeriod144Years = Helper.checkIsEndOfLongLeapPeriod144Years(year);
+        if (isEndOfLongLeapPeriod144Years) {
+            return 12;
+        } else if (year.ikasSarak === IkasSarakEnum.Hak
             || year.ikasSarak === IkasSarakEnum.Dal
             || year.ikasSarak === IkasSarakEnum.JimLuic) {
             return 13;
@@ -470,9 +477,11 @@ export default class Helper {
             matrixPerYear[11].typeOfGuec = guecTypeInNextYear;
 
             // Bilan Bhang (13)
-            const newDate = Helper.addGregoryDays(matrixPerYear[12].dateOfGregoryCalendar, -1);
-            matrixPerYear[12].dateOfGregoryCalendar = newDate;
-            matrixPerYear[12].firstDayOfAhierMonth = newDate.getDay();
+            if (matrixPerYear.length > 12) {
+                const newDate = Helper.addGregoryDays(matrixPerYear[12].dateOfGregoryCalendar, -1);
+                matrixPerYear[12].dateOfGregoryCalendar = newDate;
+                matrixPerYear[12].firstDayOfAhierMonth = newDate.getDay();
+            }
         } else if (hasGuenRuleInNextYear) {
             // Bilan (12) or (13)
             if (Helper.getAhierAwalDaysGap(lastMonthOfCurrentYear.firstDayOfAhierMonth, lastMonthOfCurrentYear.firstDayOfAwalMonth) === 2) {
@@ -568,6 +577,10 @@ export default class Helper {
         const matrixNextYear = Helper.renderMatrixPerYear(nextAhierYear, firstGregoryDateNextYear);
 
         return matrixNextYear.some(item => Helper.checkIsGuenToAddDay(item.firstDayOfAhierMonth, item.firstDayOfAwalMonth));
+    }
+
+    static checkIsEndOfLongLeapPeriod144Years(currentYear: AhierYear) {
+        return currentYear.yearNumber !== 1995 && ((currentYear.yearNumber + 1) - 1996) % 144 === 0;
     }
 
     static getMod(n: number, m: number) {

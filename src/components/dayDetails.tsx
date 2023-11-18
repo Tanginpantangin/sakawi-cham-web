@@ -1,8 +1,7 @@
 import { Col, Row } from "react-bootstrap";
-import { AwalMonthEnum, displayIkasSarakName, IkasSarakEnum } from "../enums/enum";
+import { AwalMonthEnum, displayIkasSarakName, IkasSarakEnum, SakawiType } from "../enums/enum";
 import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate, AwalMonth } from "../model/AwalDate";
-import { SakawiType } from "../pages/monthCalendarPage";
 import Helper from "../utility/helper";
 
 interface DayDetailsProps {

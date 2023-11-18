@@ -4,12 +4,17 @@ import { EventCalendar } from "../components/eventCanlendar";
 import { Layout } from "../Layout";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
-import Helper from "../utility/helper";
 
-export declare type SakawiType = 'sakawiAwal' | 'sakawiAhier' | 'sakawiGregory';
 export declare type AreaType = 'NinhThuan' | 'BinhThuan';
 
-export const EventCalendarPage = () => {
+export interface EventCalendarPageProps {
+    matrixSakawiNT: MatrixCalendarType[];
+    matrixSakawiBT: MatrixCalendarType[];
+    fullSakawiNT: FullCalendarType[];
+    fullSakawiBT: FullCalendarType[];
+}
+
+export const EventCalendarPage = (props: EventCalendarPageProps) => {
     const [areaType, setAreaType] = useState<AreaType>('NinhThuan');
     const [matrixSakawi, setMatrixSakawi] = useState<MatrixCalendarType[]>([]);
     const [fullSakawi, setFullSakawi] = useState<FullCalendarType[]>([]);
@@ -18,15 +23,13 @@ export const EventCalendarPage = () => {
     React.useEffect(() => {
         setLoading(true);
         function init() {
-            // Build matrix Calendar
-            let matrix = Helper.buildMatrixCalendar(2046, areaType);
-            setMatrixSakawi(matrix.matrixCalendar);
-            setFullSakawi(matrix.fullCalendar);
+            setMatrixSakawi(areaType === "NinhThuan" ? props.matrixSakawiNT : props.matrixSakawiBT);
+            setFullSakawi(areaType === "NinhThuan" ? props.fullSakawiNT : props.fullSakawiBT);
         }
 
         init();
         setLoading(false);
-    }, [areaType]);
+    }, [areaType, props.fullSakawiBT, props.fullSakawiNT, props.matrixSakawiBT, props.matrixSakawiNT]);
 
     if (loading) {
         return <Spinner animation="border" />

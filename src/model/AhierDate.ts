@@ -13,5 +13,5 @@ export interface AhierMonth {
 export interface AhierYear {
     nasak: NasakEnum;
     ikasSarak: IkasSarakEnum;
-    yearNumber?: number;
+    yearNumber: number;
 }

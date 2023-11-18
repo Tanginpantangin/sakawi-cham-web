@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Col, ProgressBar, Row } from "react-bootstrap";
-import { EventType, VariantType } from "../enums/enum";
-import { SakawiType } from "../pages/monthCalendarPage";
+import { EventType, SakawiType, VariantType } from "../enums/enum";
 import Helper from "../utility/helper";
 
 export interface CountDownBarProps {

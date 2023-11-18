@@ -1,8 +1,7 @@
 import { Button, ButtonGroup, ButtonToolbar, Col } from "react-bootstrap";
-import { AwalMonthEnum, displayAhierMonthName, displayAwalMonthName, displayIkasSarakName, displayNasakName, IkasSarakEnum } from "../enums/enum";
+import { AwalMonthEnum, displayAhierMonthName, displayAwalMonthName, displayIkasSarakName, displayNasakName, IkasSarakEnum, SakawiType } from "../enums/enum";
 import { AhierMonth } from "../model/AhierDate";
 import { AwalMonth } from "../model/AwalDate";
-import { SakawiType } from "../pages/monthCalendarPage";
 import Helper from "../utility/helper";
 
 interface MonthNavigationProps {

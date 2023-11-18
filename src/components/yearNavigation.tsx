@@ -1,8 +1,7 @@
 import { Button, ButtonGroup, ButtonToolbar, Col } from "react-bootstrap";
-import { displayIkasSarakName, displayNasakName, IkasSarakEnum } from "../enums/enum";
+import { displayIkasSarakName, displayNasakName, IkasSarakEnum, SakawiType } from "../enums/enum";
 import { AhierYear } from "../model/AhierDate";
 import { AwalYear } from "../model/AwalDate";
-import { SakawiType } from "../pages/monthCalendarPage";
 import Helper from "../utility/helper";
 
 interface YearNavigationProps {

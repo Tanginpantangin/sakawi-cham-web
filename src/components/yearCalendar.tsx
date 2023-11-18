@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { IkasSarakEnum, NasakEnum } from "../enums/enum";
+import { IkasSarakEnum, NasakEnum, SakawiType } from "../enums/enum";
 import { AhierYear } from "../model/AhierDate";
 import { AwalYear } from "../model/AwalDate";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from "../utility/helper";
-import { SakawiType } from "../pages/monthCalendarPage";
 import { YearAhier } from "./yearAhier";
 import { YearAwal } from "./yearAwal";
 import { YearGregory } from "./yearGregory";

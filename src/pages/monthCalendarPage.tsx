@@ -2,15 +2,20 @@ import React, { useState } from "react";
 import { Accordion, Alert, Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { CountDownBar, CountDownBarProps } from "../components/countDownBar";
 import { MonthCalendar } from "../components/monthCalendar";
+import { AreaType } from "../enums/enum";
 import { Layout } from "../Layout";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from "../utility/helper";
 
-export declare type SakawiType = 'sakawiAwal' | 'sakawiAhier' | 'sakawiGregory';
-export declare type AreaType = 'NinhThuan' | 'BinhThuan';
+export interface MonthCalendarPageProps {
+    matrixSakawiNT: MatrixCalendarType[];
+    matrixSakawiBT: MatrixCalendarType[];
+    fullSakawiNT: FullCalendarType[];
+    fullSakawiBT: FullCalendarType[];
+}
 
-export const MonthCalendarPage = () => {
+export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
     const [showWarning, setShowWarning] = useState(true);
     const [areaType, setAreaType] = useState<AreaType>('NinhThuan');
     const [matrixSakawi, setMatrixSakawi] = useState<MatrixCalendarType[]>([]);
@@ -22,30 +27,16 @@ export const MonthCalendarPage = () => {
         setLoading(true);
 
         function init() {
-            // Build matrix Calendar
-            let matrix = Helper.buildMatrixCalendar(2046, areaType);
-            //let matrix = Helper.buildMatrixCalendar(2023);
-            setMatrixSakawi(matrix.matrixCalendar);
-            //console.log('matrixCalendar', JSON.stringify(matrix.matrixCalendar));
-            setFullSakawi(matrix.fullCalendar);
-            //console.log('fullCalendar', JSON.stringify(matrix.fullCalendar));
+            setMatrixSakawi(areaType === "NinhThuan" ? props.matrixSakawiNT : props.matrixSakawiBT);
+            setFullSakawi(areaType === "NinhThuan" ? props.fullSakawiNT : props.fullSakawiBT);
 
-            //TO-TEST
-            /*const addedAwalMonth = Helper.addAwalMonths({ month: AwalMonthEnum.Julhiijaah, year: { ikasSarak: IkasSarakEnum.Dal, yearNumber: 1443 } }, 1);
-            console.log('addedAwalMonth', JSON.stringify(addedAwalMonth));*/
-
-            /*const firstDateOfAwalMonth: AwalDate = { date: 1, awalMonth: { month: AwalMonthEnum.Julhiijaah, year: { ikasSarak: IkasSarakEnum.Dal, yearNumber: 1443 } } };
-            const addedAwalDate = Helper.addAwalDays(firstDateOfAwalMonth, 27);
-            console.log('fullCalfirstDateOfAwalMonthendar', JSON.stringify(firstDateOfAwalMonth));
-            console.log('addedAwalDate', JSON.stringify(addedAwalDate));*/
-
-            const nextEvents = Helper.getNextEvents(matrix.fullCalendar);
+            const nextEvents = Helper.getNextEvents(areaType === "NinhThuan" ? props.fullSakawiNT : props.fullSakawiBT);
             setNextEvents(nextEvents);
         }
 
         init();
         setLoading(false);
-    }, [areaType]);
+    }, [areaType, props.fullSakawiBT, props.fullSakawiNT, props.matrixSakawiBT, props.matrixSakawiNT]);
 
     React.useEffect(() => {
         setTimeout(() => {
