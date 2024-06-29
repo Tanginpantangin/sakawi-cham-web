@@ -24,11 +24,18 @@ function App() {
       setMatrixSakawiNT(matrixNT.matrixCalendar);
       setFullSakawiNT(matrixNT.fullCalendar);
 
+
       let matrixBT = Helper.buildMatrixCalendar(toYear, 'BinhThuan');
       setMatrixSakawiBT(matrixBT.matrixCalendar);
       setFullSakawiBT(matrixBT.fullCalendar);
 
-      console.log('matrixBT', matrixBT.matrixCalendar);
+      // set localStorage
+      // localStorage.setItem('matrixSakawiNT', JSON.stringify(matrixSakawiNT));
+      // localStorage.setItem('matrixSakawiBT', JSON.stringify(matrixSakawiBT));
+      // localStorage.setItem('fullSakawiNT', JSON.stringify(fullSakawiNT));
+      // localStorage.setItem('fullSakawiBT', JSON.stringify(fullSakawiBT));
+
+      //console.log('matrixBT', matrixBT.matrixCalendar);
     }
 
     init();

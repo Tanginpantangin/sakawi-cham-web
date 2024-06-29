@@ -36,13 +36,23 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
 
         init();
         setLoading(false);
+        
+        // Cleanup function for asynchronous operations
+        return () => {
+            setLoading(false);
+        };
     }, [areaType, props.fullSakawiBT, props.fullSakawiNT, props.matrixSakawiBT, props.matrixSakawiNT]);
 
     React.useEffect(() => {
-        setTimeout(() => {
+        const timerId = setTimeout(() => {
             setShowWarning(false);
         }, 30000);
-    });
+
+        // Cleanup function for the timeout
+        return () => {
+            clearTimeout(timerId);
+        };
+    }, []);
 
     if (loading) {
         return <Spinner animation="border" />

@@ -14,9 +14,14 @@ export const CountDownBar = (props: CountDownBarProps) => {
     const [days, setDays] = useState(0);
 
     useEffect(() => {
-        setTimeout(() => {
+        const timerId = setTimeout(() => {
             init();
         }, 1000);
+
+        // Cleanup function for the timeout
+        return () => {
+            clearTimeout(timerId);
+        };
     });
 
     function init() {
