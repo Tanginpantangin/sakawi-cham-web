@@ -60,7 +60,7 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
 
     return (
         <Layout>
-            <Container>
+            <Container className="page-container calendar-page">
                 {showWarning &&
                     <Row>
                         <Col sm={12} md={12} lg={12}>
@@ -73,9 +73,9 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
                     </Row>
                 }
                 <Row>
-                    <Col md={4}>
+                    <Col xs={12}>
                         <Form>
-                            <div className="mb-3">
+                            <div className="area-selector mb-3">
                                 <Form.Check
                                     inline
                                     type={"radio"}
@@ -97,7 +97,7 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
                 <Row>
                     <Col sm={12} md={12} lg={12}>
                         <Accordion defaultActiveKey="0">
-                            <Card>
+                            <Card className="upcoming-events">
                                 <Card.Header>
                                     <Accordion.Toggle as={Button} variant="link" eventKey="0">
                                         [Các sự kiện sắp diễn ra]
@@ -114,14 +114,15 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
                         </Accordion>
                     </Col>
                 </Row>
-                <br />
                 {
                     matrixSakawi.length > 0 &&
                     <Row>
-                        <MonthCalendar
-                            matrixSakawi={matrixSakawi}
-                            fullSakawi={fullSakawi}
-                        />
+                        <Col xs={12}>
+                            <MonthCalendar
+                                matrixSakawi={matrixSakawi}
+                                fullSakawi={fullSakawi}
+                            />
+                        </Col>
                     </Row>
                 }
                 {/*{

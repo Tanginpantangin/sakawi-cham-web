@@ -18,7 +18,7 @@ interface YearNavigationProps {
 export const YearNavigation = (props: YearNavigationProps) => {
     return (
         <>
-            <Col md={4}>
+            <Col xs={12} lg={4} className="calendar-nav-section calendar-nav-section-left">
                 {/* <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-start" }}>
                     <ButtonGroup aria-label="Type of calendar">
                         <Button variant="outline-secondary" active={props.sakawiType === 'sakawiAhier'} onClick={() => props.onSelectSakawiType('sakawiAhier')}>Lịch Chăm</Button>
@@ -27,7 +27,7 @@ export const YearNavigation = (props: YearNavigationProps) => {
                     </ButtonGroup>
                 </ButtonToolbar> */}
             </Col>
-            <Col md={5} style={{ textAlign: "center" }}>
+            <Col xs={12} lg={5} className="calendar-nav-title">
                 {props.sakawiType === 'sakawiAhier' && props.currentAhierYear &&
                     <>
                         <div className='bilan-title'>
@@ -53,9 +53,9 @@ export const YearNavigation = (props: YearNavigationProps) => {
                     </div>
                 }
             </Col>
-            <Col md={3}>
-                <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-end" }}>
-                    <ButtonGroup aria-label="Third group" style={{ marginRight: ".75em" }}>
+            <Col xs={12} lg={3} className="calendar-nav-section calendar-nav-section-right">
+                <ButtonToolbar aria-label="Toolbar with button groups" className="calendar-nav-toolbar">
+                    <ButtonGroup aria-label="Third group" className="calendar-today-group">
                         <Button variant="secondary" onClick={() => props.onClickToday(props.sakawiType)}>Năm nay</Button>
                     </ButtonGroup>
                     <ButtonGroup aria-label="Navigate months">

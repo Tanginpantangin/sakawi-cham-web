@@ -59,6 +59,18 @@ export const EventCalendar = (props: EventCalendarProps) => {
         }
     }
 
+    function getEventTypeColor(sakawiType?: SakawiType) {
+        if (sakawiType === 'sakawiAhier') {
+            return '#F15A25';
+        }
+
+        if (sakawiType === 'sakawiAwal') {
+            return '#007A3D';
+        }
+
+        return '#2f80ed';
+    }
+
     function renderRows(currentAhierYear: AhierYear) {
         const datesOfAhierYear = props.fullSakawi.filter(x => JSON.stringify(x.dateAhier.ahierMonth.year) === JSON.stringify(currentAhierYear));
         const nextEvents = Helper.getEventsInAhierYear(props.matrixSakawi, datesOfAhierYear);
@@ -67,18 +79,17 @@ export const EventCalendar = (props: EventCalendarProps) => {
         nextEvents.forEach((item, index) => {
             rows.push(
                 <tr key={`event-row-${index}`}>
-                    <td>{Helper.displayDateString(item.eventDate)}</td>
-                    <td>
-                        <span style={{ backgroundColor: Helper.displayEventDay(item.eventType)?.sakawiType === 'sakawiAhier' ? '#F15A25' : '#007A3D' }} className='circle-event-type'></span>
+                    <td className="event-date-cell" data-label="Ngày Dương lịch">{Helper.displayDateString(item.eventDate)}</td>
+                    <td className="event-type-cell" data-label="">
+                        <span style={{ backgroundColor: getEventTypeColor(Helper.displayEventDay(item.eventType)?.sakawiType as SakawiType | undefined) }} className='circle-event-type'></span>
                     </td>
-                    <td>
+                    <td className="event-name-cell" data-label="Sự kiện / Lễ hội">
                         <div className='event-cham-name'>
                             {Helper.displayEventDay(item.eventType)?.akharThrahName}
                         </div>
-                        <br />
-                        <span style={{ fontSize: '0.8rem' }}>{Helper.displayEventDay(item.eventType)?.latinName}</span>
+                        <span className="event-latin-name">{Helper.displayEventDay(item.eventType)?.latinName}</span>
                     </td>
-                    <td>{Helper.displayEventDay(item.eventType)?.vnName}</td>
+                    <td className="event-vn-name-cell" data-label="Tên tiếng Việt">{Helper.displayEventDay(item.eventType)?.vnName}</td>
                 </tr>);
         });
 
@@ -86,8 +97,8 @@ export const EventCalendar = (props: EventCalendarProps) => {
     }
 
     return (
-        <Container>
-            <Row>
+        <Container className="event-calendar">
+            <Row className="calendar-nav">
                 <YearNavigation
                     sakawiType={sakawiType}
                     currentAhierYear={currentAhierYear}
@@ -99,18 +110,20 @@ export const EventCalendar = (props: EventCalendarProps) => {
             </Row>
             <Row>
                 <Col>
-                    <Table hover>
-                        <thead>
-                            <tr>
-                                <th>Ngày Dương lịch</th>
-                                <th></th>
-                                <th colSpan={2}>Sự kiện / Lễ hội</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {renderRows(currentAhierYear)}
-                        </tbody>
-                    </Table>
+                    <div className="event-table-wrap">
+                        <Table hover className="event-table">
+                            <thead>
+                                <tr>
+                                    <th>Ngày Dương lịch</th>
+                                    <th></th>
+                                    <th colSpan={2}>Sự kiện / Lễ hội</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {renderRows(currentAhierYear)}
+                            </tbody>
+                        </Table>
+                    </div>
                 </Col>
             </Row>
         </Container>

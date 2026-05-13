@@ -117,11 +117,11 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
     }
 
     return (
-        <Container>
-            <Row>
-                <Col md={4}>
-                    <Form>
-                        <div className="mb-3">
+        <Container className="month-calendar">
+            <Row className="calendar-control-row">
+                <Col xs={12}>
+                    <Form className="calendar-control-panel">
+                        <div className="calendar-option">
                             <Form.Check
                                 inline
                                 type={"checkbox"}
@@ -133,7 +133,7 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
                     </Form>
                 </Col>
             </Row>
-            <Row>
+            <Row className="calendar-nav">
                 <MonthNavigation
                     sakawiType={sakawiType}
                     currentAhierMonth={currentAhierMonthMatrix.ahierMonth}
@@ -177,13 +177,19 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
             </Row>
             <Row>
                 <Col md={12}>
-                    <div style={{ fontWeight: "bold" }}>Chú thích:</div>
-                    <div className="notice">
+                    <div className="calendar-legend-strip">
+                        <span className="legend-chip"><span className="legend-dot legend-dot-ahier"></span>Lịch Cham</span>
+                        <span className="legend-chip"><span className="legend-dot legend-dot-awal"></span>Lịch Awal</span>
+                        <span className="legend-chip"><span className="legend-dot legend-dot-event"></span>Sự kiện</span>
+                        <span className="legend-chip"><span className="legend-dot legend-dot-today"></span>Hôm nay</span>
+                    </div>
+                    <div className="legend-title">Chú thích:</div>
+                    <ul className="notice">
                         <li><span className="ahier-date">꩑ꩃ / ꩑ꩌ</span> [bingun/klem]: ngày trước/sau trăng rằm của lịch Cham</li>
                         <li><span className="awal-date">꩑ꩃ / ꩑ꩌ</span> [bingun/klem]: ngày trước/sau trăng rằm của lịch Awal</li>
                         <li>1: ngày Dương lịch</li>
                         <li>Các tháng thiếu (29 ngày) của lịch Cham, không có ngày <span className="ahier-date">꩖ꩃ</span> [6 bingun], mà từ <span className="ahier-date">꩕ꩃ</span> [5 bingun] tới <span className="ahier-date">꩗ꩃ</span> [7 bingun]</li>
-                    </div>
+                    </ul>
                     <br />
                 </Col>
             </Row>

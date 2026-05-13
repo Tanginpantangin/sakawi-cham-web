@@ -4,28 +4,18 @@ interface LayoutProps {
     children: JSX.Element;
 }
 
-const footerStyle: React.CSSProperties = {
-    background: "#343A40",
-    color: "white",
-    padding: "10px",
-    textAlign: "center",
-    justifyContent: "center"
-}
-
 export const Layout = (props: LayoutProps) => {
     return (
-        <Container fluid>
+        <Container fluid className="app-shell">
             {/* Header */}
             <Row>
                 <Col style={{ paddingRight: 0, paddingLeft: 0 }}>
-                    <Navbar bg="dark" variant="dark" expand="lg">
+                    <Navbar bg="dark" variant="dark" expand="lg" className="app-navbar">
                         <Container>
                             <Navbar.Brand href="/"><label className="logo">꩜</label><label className="branding-text">SAKAWI</label></Navbar.Brand>
                             <Navbar.Toggle aria-controls="basic-navbar-nav" />
                             <Navbar.Collapse id="basic-navbar-nav">
-                                <Nav className="mr-auto my-2 my-lg-0"
-                                    style={{ maxHeight: '100px' }}
-                                    navbarScroll>
+                                <Nav className="mr-auto my-2 my-lg-0" navbarScroll>
                                     <Nav.Link href="#/months">Lịch tháng</Nav.Link>
                                     <Nav.Link href="#/events">Lịch sự kiện</Nav.Link>
                                     <Nav.Link href="#/docs">Tài liệu</Nav.Link>
@@ -35,16 +25,15 @@ export const Layout = (props: LayoutProps) => {
                     </Navbar>
                 </Col>
             </Row>
-            <br />
             {/* Body */}
-            <Row style={{ minHeight: 600 }}>
+            <Row className="app-main">
                 <Col sm={12} md={12} lg={12}>
                     {props.children}
                 </Col>
             </Row>
             {/* Footer */}
             <Row>
-                <Col style={footerStyle}>
+                <Col className="app-footer">
                     {`© ${new Date().getFullYear()} Sakawi - Lịch Cham`}
                     <br />
                     {'Dự án được phát triển bởi '}

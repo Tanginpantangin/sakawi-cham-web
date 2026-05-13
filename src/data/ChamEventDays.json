@@ -94,5 +94,13 @@
         "akharThrahName": "ꨢꨶꨮꩉ ꨢꩃ",
         "vnName": "Lễ Yuer Yang",
         "description": "Lễ Yuer Yang"
+    },
+    {
+        "eventType": "VietnameseLunarNewYear",
+        "sakawiType": "sakawiGregory",
+        "latinName": "Tết Nguyên Đán",
+        "akharThrahName": "",
+        "vnName": "Tết Nguyên Đán",
+        "description": "Ngày mùng 1 Tết theo âm lịch Việt Nam"
     }
 ]

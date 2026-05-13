@@ -9,6 +9,149 @@ import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import { awalMonthArray, awalYearArray, firstDateOfSakawiAhier_InaGirai_Lieh_1988, firstDateOfSakawiAwal_Lieh_1407, totalDaysOf8AwalYearCycle, yearNumberOfSakawiAwal_Lieh_1407 } from './constant';
 
 export default class Helper {
+    static isVietnameseLunarNewYear(date: Date) {
+        const lunarDate = Helper.convertSolarToVietnameseLunarDate(date);
+        return lunarDate.day === 1 && lunarDate.month === 1;
+    }
+
+    private static convertSolarToVietnameseLunarDate(date: Date) {
+        const timeZone = 7;
+        const dayNumber = Helper.getJulianDayNumber(date.getDate(), date.getMonth() + 1, date.getFullYear());
+        const k = Math.floor((dayNumber - 2415021.076998695) / 29.530588853);
+        let monthStart = Helper.getNewMoonDay(k + 1, timeZone);
+
+        if (monthStart > dayNumber) {
+            monthStart = Helper.getNewMoonDay(k, timeZone);
+        }
+
+        let lunarYear: number;
+        let lunarMonth: number;
+        const lunarDay = dayNumber - monthStart + 1;
+        let lunarMonth11 = Helper.getLunarMonth11(date.getFullYear(), timeZone);
+        let previousLunarMonth11 = lunarMonth11;
+
+        if (lunarMonth11 >= monthStart) {
+            lunarYear = date.getFullYear();
+            lunarMonth11 = Helper.getLunarMonth11(date.getFullYear() - 1, timeZone);
+        } else {
+            lunarYear = date.getFullYear() + 1;
+            previousLunarMonth11 = Helper.getLunarMonth11(date.getFullYear() + 1, timeZone);
+        }
+
+        const diff = Math.floor((monthStart - lunarMonth11) / 29);
+        lunarMonth = diff + 11;
+
+        if (previousLunarMonth11 - lunarMonth11 > 365) {
+            const leapMonthDiff = Helper.getLeapMonthOffset(lunarMonth11, timeZone);
+
+            if (diff >= leapMonthDiff) {
+                lunarMonth = diff + 10;
+            }
+        }
+
+        if (lunarMonth > 12) {
+            lunarMonth -= 12;
+        }
+
+        if (lunarMonth >= 11 && diff < 4) {
+            lunarYear -= 1;
+        }
+
+        return {
+            day: lunarDay,
+            month: lunarMonth,
+            year: lunarYear
+        };
+    }
+
+    private static getJulianDayNumber(day: number, month: number, year: number) {
+        const a = Math.floor((14 - month) / 12);
+        const y = year + 4800 - a;
+        const m = month + 12 * a - 3;
+
+        return day + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
+    }
+
+    private static getNewMoonDay(k: number, timeZone: number) {
+        const timeInJulianCenturies = k / 1236.85;
+        const timeSquared = timeInJulianCenturies * timeInJulianCenturies;
+        const timeCubed = timeSquared * timeInJulianCenturies;
+        const dr = Math.PI / 180;
+        let julianDay = 2415020.75933 + 29.53058868 * k + 0.0001178 * timeSquared - 0.000000155 * timeCubed;
+        julianDay += 0.00033 * Math.sin((166.56 + 132.87 * timeInJulianCenturies - 0.009173 * timeSquared) * dr);
+
+        const meanNewMoon = 359.2242 + 29.10535608 * k - 0.0000333 * timeSquared - 0.00000347 * timeCubed;
+        const sunMeanAnomaly = 306.0253 + 385.81691806 * k + 0.0107306 * timeSquared + 0.00001236 * timeCubed;
+        const moonArgumentOfLatitude = 21.2964 + 390.67050646 * k - 0.0016528 * timeSquared - 0.00000239 * timeCubed;
+
+        let correction = (0.1734 - 0.000393 * timeInJulianCenturies) * Math.sin(meanNewMoon * dr);
+        correction += 0.0021 * Math.sin(2 * meanNewMoon * dr);
+        correction -= 0.4068 * Math.sin(sunMeanAnomaly * dr);
+        correction += 0.0161 * Math.sin(2 * sunMeanAnomaly * dr);
+        correction -= 0.0004 * Math.sin(3 * sunMeanAnomaly * dr);
+        correction += 0.0104 * Math.sin(2 * moonArgumentOfLatitude * dr);
+        correction -= 0.0051 * Math.sin((meanNewMoon + sunMeanAnomaly) * dr);
+        correction -= 0.0074 * Math.sin((meanNewMoon - sunMeanAnomaly) * dr);
+        correction += 0.0004 * Math.sin((2 * moonArgumentOfLatitude + meanNewMoon) * dr);
+        correction -= 0.0004 * Math.sin((2 * moonArgumentOfLatitude - meanNewMoon) * dr);
+        correction -= 0.0006 * Math.sin((2 * moonArgumentOfLatitude + sunMeanAnomaly) * dr);
+        correction += 0.0010 * Math.sin((2 * moonArgumentOfLatitude - sunMeanAnomaly) * dr);
+        correction += 0.0005 * Math.sin((2 * sunMeanAnomaly + meanNewMoon) * dr);
+
+        let deltaT: number;
+        if (timeInJulianCenturies < -11) {
+            deltaT = 0.001 + 0.000839 * timeInJulianCenturies + 0.0002261 * timeSquared - 0.00000845 * timeCubed - 0.000000081 * timeInJulianCenturies * timeCubed;
+        } else {
+            deltaT = -0.000278 + 0.000265 * timeInJulianCenturies + 0.000262 * timeSquared;
+        }
+
+        return Math.floor(julianDay + correction - deltaT + 0.5 + timeZone / 24);
+    }
+
+    private static getSunLongitude(julianDayNumber: number, timeZone: number) {
+        const timeInJulianCenturies = (julianDayNumber - 2451545.5 - timeZone / 24) / 36525;
+        const timeSquared = timeInJulianCenturies * timeInJulianCenturies;
+        const dr = Math.PI / 180;
+        const meanAnomaly = 357.52910 + 35999.05030 * timeInJulianCenturies - 0.0001559 * timeSquared - 0.00000048 * timeSquared * timeInJulianCenturies;
+        const meanLongitude = 280.46645 + 36000.76983 * timeInJulianCenturies + 0.0003032 * timeSquared;
+        let longitude = meanLongitude;
+        longitude += (1.914600 - 0.004817 * timeInJulianCenturies - 0.000014 * timeSquared) * Math.sin(dr * meanAnomaly);
+        longitude += (0.019993 - 0.000101 * timeInJulianCenturies) * Math.sin(2 * dr * meanAnomaly);
+        longitude += 0.000290 * Math.sin(3 * dr * meanAnomaly);
+        longitude = longitude * dr;
+        longitude = longitude - Math.PI * 2 * Math.floor(longitude / (Math.PI * 2));
+
+        return Math.floor(longitude / Math.PI * 6);
+    }
+
+    private static getLunarMonth11(year: number, timeZone: number) {
+        const off = Helper.getJulianDayNumber(31, 12, year) - 2415021;
+        const k = Math.floor(off / 29.530588853);
+        let newMoon = Helper.getNewMoonDay(k, timeZone);
+        const sunLongitude = Helper.getSunLongitude(newMoon, timeZone);
+
+        if (sunLongitude >= 9) {
+            newMoon = Helper.getNewMoonDay(k - 1, timeZone);
+        }
+
+        return newMoon;
+    }
+
+    private static getLeapMonthOffset(lunarMonth11: number, timeZone: number) {
+        const k = Math.floor((lunarMonth11 - 2415021.076998695) / 29.530588853 + 0.5);
+        let lastSunLongitude = 0;
+        let i = 1;
+        let sunLongitude = Helper.getSunLongitude(Helper.getNewMoonDay(k + i, timeZone), timeZone);
+
+        do {
+            lastSunLongitude = sunLongitude;
+            i++;
+            sunLongitude = Helper.getSunLongitude(Helper.getNewMoonDay(k + i, timeZone), timeZone);
+        } while (sunLongitude !== lastSunLongitude && i < 14);
+
+        return i - 1;
+    }
+
     //#region Awal
     static addAwalDays(currentDate: AwalDate, addedDays: number) {
         let numberOfDays = Helper.getDayNumbersOfAwalMonth(currentDate.awalMonth.year, currentDate.awalMonth.month);
@@ -618,6 +761,7 @@ export default class Helper {
         let result: CountDownBarProps[] = [];
         let addedAkaokThun = false;
         let addedRijaNagar = false;
+        let addedVietnameseLunarNewYear = false;
         //let addedKateHamuTanran = false;
         let addedKate = false;
         let addedRamawan = false;
@@ -634,6 +778,11 @@ export default class Helper {
             }
 
             let eventGregoryDate = item.dateGregory;
+
+            if (!addedVietnameseLunarNewYear && Helper.isVietnameseLunarNewYear(eventGregoryDate)) {
+                result.push({ eventType: 'VietnameseLunarNewYear', eventDate: eventGregoryDate });
+                addedVietnameseLunarNewYear = true;
+            }
 
             if (!addedAkaokThun && item.dateAhier.ahierMonth.month === 0 && item.dateAhier.date === 1) {
                 result.push({ eventType: 'AkaokThun', eventDate: eventGregoryDate });
@@ -727,6 +876,10 @@ export default class Helper {
 
         fullCalendar.forEach(function (item, index) {
             let eventGregoryDate = item.dateGregory;
+
+            if (Helper.isVietnameseLunarNewYear(eventGregoryDate)) {
+                result.push({ eventType: 'VietnameseLunarNewYear', sakawiType: 'sakawiGregory', eventDate: eventGregoryDate });
+            }
 
             if (item.dateAhier.ahierMonth.month === 0 && item.dateAhier.date === 1) {
                 result.push({ eventType: 'AkaokThun', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });

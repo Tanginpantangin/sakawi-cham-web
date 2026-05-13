@@ -59,23 +59,20 @@ export const MonthAhier = (props: MonthAhierProps) => {
     })
 
     const dayNames = ["Adit", "Thom", "Angar", "But", "Jip", "Suk", "Sanacar"]
-    const tableStyle: React.CSSProperties = {
-        height: "400px",
-        tableLayout: "fixed"
-    }
-
     return (
-        <Table bordered hover style={tableStyle}>
-            <thead>
-                <tr>
-                    {dayNames.map((d, index) =>
-                        <th className="day-name" key={index}>{d}</th>
-                    )}
-                </tr>
-            </thead>
-            <tbody>
-                {rows}
-            </tbody>
-        </Table>
+        <div className="calendar-table-wrap">
+            <Table bordered hover className="calendar-table">
+                <thead>
+                    <tr>
+                        {dayNames.map((d, index) =>
+                            <th className="day-name" key={index}>{d}</th>
+                        )}
+                    </tr>
+                </thead>
+                <tbody>
+                    {rows}
+                </tbody>
+            </Table>
+        </div>
     );
 }

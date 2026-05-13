@@ -1,5 +1,5 @@
-import { Col, Row } from "react-bootstrap";
-import { AwalMonthEnum, displayIkasSarakName, IkasSarakEnum, SakawiType } from "../enums/enum";
+import { OverlayTrigger, Popover } from "react-bootstrap";
+import { AwalMonthEnum, displayIkasSarakName, EventType, IkasSarakEnum, SakawiType } from "../enums/enum";
 import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate, AwalMonth } from "../model/AwalDate";
 import Helper from "../utility/helper";
@@ -17,6 +17,31 @@ interface DayDetailsProps {
     dayNumbersOfCurrentAwalMonth: number;
     showLatinNumberDate: boolean;
 }
+
+interface CalendarDayEvent {
+    eventType?: EventType;
+    sakawiType?: SakawiType;
+    latinName: string;
+    akharThrahName?: string;
+    vnName?: string;
+    description?: string;
+}
+
+const EVENT_TYPES: EventType[] = [
+    'AkaokThun',
+    'RijaNagar',
+    'KatePaleiHamuTanran',
+    'KateAngaokBimong',
+    'CaMbur',
+    'TamaRicaowRamawan',
+    'TalaihAekRamawan',
+    'MukTrun',
+    'OngTrun',
+    'IkakWaha',
+    'TalaihWaha',
+    'YuerYang',
+    'VietnameseLunarNewYear'
+];
 
 export const DayDetails = (props: DayDetailsProps) => {
     let opacityValue = 1;
@@ -151,6 +176,10 @@ export const DayDetails = (props: DayDetailsProps) => {
     function getEvents() {
         let result: string[] = [];
 
+        if (Helper.isVietnameseLunarNewYear(props.dateGregory)) {
+            result.push('Tết Nguyên Đán');
+        }
+
         if (props.dateAhier.ahierMonth.month === 0 && props.dateAhier.date === 1) {
             result.push('Akaok thun');
         }
@@ -240,29 +269,149 @@ export const DayDetails = (props: DayDetailsProps) => {
         return result;
     }
 
+    function mapEventName(eventName: string): CalendarDayEvent {
+        let eventType = EVENT_TYPES.find(type => {
+            const eventInfo = Helper.displayEventDay(type);
+            return eventInfo?.latinName === eventName || eventInfo?.vnName === eventName;
+        });
+
+        if (!eventType) {
+            if (eventName === 'Rija Nagar') {
+                eventType = 'RijaNagar';
+            } else if (eventName.indexOf('Hamu Tanran') >= 0) {
+                eventType = 'KatePaleiHamuTanran';
+            } else if (eventName.indexOf('angaok bimong') >= 0) {
+                eventType = 'KateAngaokBimong';
+            } else if (eventName.indexOf('Ram') >= 0 && eventName.indexOf('Talaih') < 0) {
+                eventType = 'TamaRicaowRamawan';
+            } else if (eventName.indexOf('Talaih') >= 0 && eventName.indexOf('Ram') >= 0) {
+                eventType = 'TalaihAekRamawan';
+            }
+        }
+
+        if (eventType) {
+            const eventInfo = Helper.displayEventDay(eventType);
+
+            return {
+                eventType,
+                sakawiType: eventInfo?.sakawiType as SakawiType | undefined,
+                latinName: eventInfo?.latinName ?? eventName,
+                akharThrahName: eventInfo?.akharThrahName,
+                vnName: eventInfo?.vnName,
+                description: eventInfo?.description
+            };
+        }
+
+        return {
+            latinName: eventName.replace('â™¥ï¸ ', ''),
+            description: eventName.indexOf('Lakhah') >= 0 ? 'Ngày Lakhah theo lịch Cham' : undefined
+        };
+    }
+
+    function renderEventPopover(event: CalendarDayEvent, index: number) {
+        const eventTypeLabel = event.sakawiType === 'sakawiAwal' ? 'Lịch Awal' : event.sakawiType === 'sakawiAhier' ? 'Lịch Cham' : 'Sự kiện';
+        const eventTypeBadgeClass = event.sakawiType === 'sakawiAwal'
+            ? 'event-type-badge-awal'
+            : event.sakawiType === 'sakawiAhier'
+                ? 'event-type-badge-ahier'
+                : 'event-type-badge-gregory';
+
+        return (
+            <Popover id={`calendar-event-popover-${props.dateGregory.getTime()}-${index}`} className="calendar-event-popover">
+                <Popover.Title as="div">
+                    {event.akharThrahName &&
+                        <div className="event-popover-cham-name">{event.akharThrahName}</div>
+                    }
+                    <div>{event.latinName}</div>
+                </Popover.Title>
+                <Popover.Content>
+                    {event.vnName &&
+                        <div className="event-popover-vn-name">{event.vnName}</div>
+                    }
+                    <div className="event-popover-meta">
+                        <span className={`event-type-badge ${eventTypeBadgeClass}`}>
+                            {eventTypeLabel}
+                        </span>
+                        <span>{Helper.displayDateString(props.dateGregory)}</span>
+                    </div>
+                    {event.description &&
+                        <div className="event-popover-description">{event.description}</div>
+                    }
+                </Popover.Content>
+            </Popover>
+        );
+    }
+
+    function renderMoreEventsPopover(events: CalendarDayEvent[]) {
+        return (
+            <Popover id={`calendar-event-more-popover-${props.dateGregory.getTime()}`} className="calendar-event-popover calendar-event-more-popover">
+                <Popover.Title as="div">
+                    {`${events.length} sự kiện - ${Helper.displayDateString(props.dateGregory)}`}
+                </Popover.Title>
+                <Popover.Content>
+                    {events.map((event, index) =>
+                        <div key={`more-event-${index}`} className="event-more-item">
+                            {event.akharThrahName &&
+                                <div className="event-popover-cham-name">{event.akharThrahName}</div>
+                            }
+                            <div className="event-more-title">{event.latinName}</div>
+                            {event.vnName &&
+                                <div className="event-more-description">{event.vnName}</div>
+                            }
+                        </div>
+                    )}
+                </Popover.Content>
+            </Popover>
+        );
+    }
+
+    const events = getEvents().map(mapEventName);
+    const visibleEvents = events.slice(0, 2);
+    const hiddenEventCount = events.length - visibleEvents.length;
+
     return (
-        <td style={tdStyle}>
-            <Row>
-                <Col xs={6} sm={6} md={6}></Col>
-                <Col className={gregoryDateClass} xs={6} sm={6} md={6}>
+        <td className="calendar-day" style={tdStyle}>
+            <div className="calendar-day-grid">
+                <div className={gregoryDateClass}>
                     {displayGregoryDate(props.sakawiType, props.dateAhier, props.dateAwal, props.dateGregory)}
-                </Col>
-            </Row>
-            <Row>
-                <Col xs={12} sm={12} md={12} style={{ minHeight: "30px" }}>
-                    {getEvents().map((item, index) => {
-                        return <span key={index} className='event-name'>{item}</span>
+                </div>
+                <div className="calendar-day-events">
+                    {visibleEvents.map((item, index) => {
+                        return (
+                            <OverlayTrigger
+                                key={index}
+                                trigger="click"
+                                rootClose
+                                placement="auto"
+                                overlay={renderEventPopover(item, index)}
+                            >
+                                <button
+                                    type="button"
+                                    className="event-name event-name-button"
+                                >
+                                    {item.latinName}
+                                </button>
+                            </OverlayTrigger>
+                        )
                     })}
-                </Col>
-            </Row>
-            <Row>
-                <Col className={awalDateClass} xs={6} sm={6} md={6}>
+                    {hiddenEventCount > 0 &&
+                        <OverlayTrigger
+                            trigger="click"
+                            rootClose
+                            placement="auto"
+                            overlay={renderMoreEventsPopover(events)}
+                        >
+                            <button type="button" className="event-name event-name-button event-name-more">{`+${hiddenEventCount} more`}</button>
+                        </OverlayTrigger>
+                    }
+                </div>
+                <div className={awalDateClass}>
                     {displayAwalDate(props.dateAwal)}
-                </Col>
-                <Col className={ahierDateClass} xs={6} sm={6} md={6}>
+                </div>
+                <div className={ahierDateClass}>
                     {displayAhierDate(props.dateAhier)}
-                </Col>
-            </Row>
+                </div>
+            </div>
         </td>
     );
 }

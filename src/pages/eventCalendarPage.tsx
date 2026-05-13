@@ -36,12 +36,11 @@ export const EventCalendarPage = (props: EventCalendarPageProps) => {
 
     return (
         <Layout>
-            <Container>
+            <Container className="page-container event-page">
                 <Row>
-                    <Col sm={12} md={12} lg={1}></Col>
-                    <Col sm={12} md={12} lg={10}>
+                    <Col xs={12}>
                         <Form>
-                            <div className="mb-3">
+                            <div className="area-selector mb-3">
                                 <Form.Check
                                     inline
                                     type={"radio"}
@@ -59,19 +58,16 @@ export const EventCalendarPage = (props: EventCalendarPageProps) => {
                             </div>
                         </Form>
                     </Col>
-                    <Col sm={12} md={12} lg={1}></Col>
                 </Row>
                 {
                     matrixSakawi.length > 0 &&
                     <Row>
-                        <Col sm={12} md={12} lg={1}></Col>
-                        <Col sm={12} md={12} lg={10}>
+                        <Col xs={12}>
                             <EventCalendar
                                 matrixSakawi={matrixSakawi}
                                 fullSakawi={fullSakawi}
                             />
                         </Col>
-                        <Col sm={12} md={12} lg={1}></Col>
                     </Row>
                 }
             </Container>

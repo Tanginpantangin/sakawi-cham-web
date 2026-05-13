@@ -65,23 +65,20 @@ export const MonthGregory = (props: MonthGregoryProps) => {
     })
 
     const dayNames = ["CN", "Hai", "Ba", "Tư", "Năm", "Sáu", "Bảy"];
-    const tableStyle: React.CSSProperties = {
-        height: "400px",
-        tableLayout: "fixed"
-    }
-
     return (
-        <Table bordered hover style={tableStyle}>
-            <thead>
-                <tr>
-                    {dayNames.map((d, index) =>
-                        <th className="day-name" key={index}>{d}</th>
-                    )}
-                </tr>
-            </thead>
-            <tbody>
-                {rows}
-            </tbody>
-        </Table>
+        <div className="calendar-table-wrap">
+            <Table bordered hover className="calendar-table">
+                <thead>
+                    <tr>
+                        {dayNames.map((d, index) =>
+                            <th className="day-name" key={index}>{d}</th>
+                        )}
+                    </tr>
+                </thead>
+                <tbody>
+                    {rows}
+                </tbody>
+            </Table>
+        </div>
     );
 }

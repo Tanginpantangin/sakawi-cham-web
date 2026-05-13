@@ -21,16 +21,16 @@ export const MonthNavigation = (props: MonthNavigationProps) => {
 
     return (
         <>
-            <Col md={4}>
-                <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-start" }}>
-                    <ButtonGroup aria-label="Type of calendar">
+            <Col xs={12} lg={4} className="calendar-nav-section calendar-nav-section-left">
+                <ButtonToolbar aria-label="Toolbar with button groups" className="calendar-nav-toolbar">
+                    <ButtonGroup aria-label="Type of calendar" className="calendar-type-group">
                         <Button variant="outline-secondary" active={props.sakawiType === 'sakawiAhier'} onClick={() => props.onSelectSakawiType('sakawiAhier')}>Lịch Cham</Button>
                         <Button variant="outline-secondary" active={props.sakawiType === 'sakawiAwal'} onClick={() => props.onSelectSakawiType('sakawiAwal')}>Lịch Awal</Button>
                         <Button variant="outline-secondary" active={props.sakawiType === 'sakawiGregory'} onClick={() => props.onSelectSakawiType('sakawiGregory')}>Dương lịch</Button>
                     </ButtonGroup>
                 </ButtonToolbar>
             </Col>
-            <Col md={5} style={{ textAlign: "center" }}>
+            <Col xs={12} lg={5} className="calendar-nav-title">
                 {props.sakawiType === 'sakawiAhier' && props.currentAhierMonth &&
                     <>
                         <div className='bilan-title'>
@@ -69,9 +69,9 @@ export const MonthNavigation = (props: MonthNavigationProps) => {
                     </>
                 }
             </Col>
-            <Col md={3}>
-                <ButtonToolbar aria-label="Toolbar with button groups" style={{ justifyContent: "flex-end" }}>
-                    <ButtonGroup aria-label="Third group" style={{ marginRight: ".75em" }}>
+            <Col xs={12} lg={3} className="calendar-nav-section calendar-nav-section-right">
+                <ButtonToolbar aria-label="Toolbar with button groups" className="calendar-nav-toolbar">
+                    <ButtonGroup aria-label="Third group" className="calendar-today-group">
                         <Button variant="secondary" onClick={props.onClickToday}>Hôm nay</Button>
                     </ButtonGroup>
                     <ButtonGroup aria-label="Navigate months">

@@ -48,7 +48,7 @@ export const CountDownBar = (props: CountDownBarProps) => {
     switch (props.eventType) {
         case "AkaokThun":
             variantType = 'primary';
-            displayEventName = 'Năm mới';
+            displayEventName = 'Năm mới Chăm lịch';
             break;
         case "RijaNagar":
             variantType = 'danger';
@@ -62,6 +62,10 @@ export const CountDownBar = (props: CountDownBarProps) => {
             variantType = 'success';
             displayEventName = 'Ramâwan';
             break;
+        case "VietnameseLunarNewYear":
+            variantType = 'secondary';
+            displayEventName = 'Tết Nguyên Đán';
+            break;
         default:
             variantType = 'warning';
             displayEventName = props.eventType;
@@ -69,14 +73,14 @@ export const CountDownBar = (props: CountDownBarProps) => {
     }
 
     return (
-        <Row>
+        <Row className="countdown-bar">
             <Col sm={6} md={12} lg={12}>
-                <div style={{ marginBottom: "0.1rem" }}>
-                    <span style={{ fontWeight: "bold" }}>{`${displayEventName}:`}</span>
+                <div className="countdown-bar-text">
+                    <span className="countdown-event-name">{`${displayEventName}:`}</span>
                     <span>{` ${dateStr}`}</span>
                     <span>{` - Còn: ${days} ngày`}</span>
                 </div>
-                <ProgressBar style={{ height: "0.3rem", marginBottom: "5px" }} variant={variantType.toString()} now={percent} />
+                <ProgressBar className="countdown-progress" variant={variantType.toString()} now={percent} />
             </Col>
         </Row>
     );
