@@ -36,10 +36,11 @@ export const Layout = (props: LayoutProps) => {
                 <Col className="app-footer">
                     {`© ${new Date().getFullYear()} Sakawi - Lịch Cham`}
                     <br />
-                    {'Dự án được phát triển bởi '}
-                    <a href="https://tanginpantangin.com/#!/converter" target="_blank" rel="noreferrer">Tangin Pan Tangin</a>
-                    {' & '}
-                    <a href="http://shopcham.com" target="_blank" rel="noreferrer">Shop Cham</a>
+                    <a href="/privacy">Chính sách quyền riêng tư</a>
+                    {' | '}
+                    <a href="/support">Hỗ trợ</a>
+                    {' | '}
+                    <a href="https://play.google.com/store/apps/details?id=com.sakawi.cham" target="_blank" rel="noreferrer">Google Play</a>
                 </Col>
             </Row>
         </Container>
