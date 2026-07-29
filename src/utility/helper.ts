@@ -6,6 +6,7 @@ import { AhierDate, AhierMonth, AhierYear } from "../model/AhierDate";
 import { AwalDate, AwalMonth, AwalYear } from '../model/AwalDate';
 import { FullCalendarType } from '../model/FullCalendarType';
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
+import { getToday } from '../utils/today';
 import { awalMonthArray, awalYearArray, firstDateOfSakawiAhier_InaGirai_Lieh_1988, firstDateOfSakawiAwal_Lieh_1407, totalDaysOf8AwalYearCycle, yearNumberOfSakawiAwal_Lieh_1407 } from './constant';
 
 export default class Helper {
@@ -773,7 +774,7 @@ export default class Helper {
         // let addedTalaihWaha = false;
         // let addedYuerYang = false;
 
-        const today = new Date();
+        const today = getToday();
         const cutoffDate = Helper.addGregoryDays(today, 390);
 
         for (const item of fullCalendar) {
@@ -874,7 +875,7 @@ export default class Helper {
             }*/
 
             // Break loop: just look up in a year later (30 days x 13 months)
-            if (eventGregoryDate > Helper.addGregoryDays(new Date(), 390)) {
+            if (eventGregoryDate > Helper.addGregoryDays(getToday(), 390)) {
                 break;
             }
         }

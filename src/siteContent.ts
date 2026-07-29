@@ -174,9 +174,31 @@ interface SiteTranslation {
     daysRemaining: string;
     openCalendar: string;
     noEvents: string;
+    noUpcomingEvents: string;
+    noYearUpcomingEvents: string;
+    noPastEvents: string;
     regionLabel: string;
+    regionNote: string;
     ninhThuan: string;
     binhThuan: string;
+    nextImportant: string;
+    nextImportantDescription: string;
+    upcomingDescription: string;
+    yearTitle: string;
+    yearUpcoming: string;
+    yearUpcomingDescription: string;
+    past: string;
+    pastDescription: string;
+    previous: string;
+    currentYear: string;
+    next: string;
+    previousYear: string;
+    nextYear: string;
+    yearNavigationLabel: string;
+    countdownToday: string;
+    countdownTomorrow: string;
+    countdownFuture: string;
+    countdownPast: string;
     names: Partial<Record<EventType, string>>;
     descriptions: Partial<Record<EventType, string>>;
   };
@@ -379,9 +401,31 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       daysRemaining: "Còn lại",
       openCalendar: "Mở trong Lịch tháng",
       noEvents: "Không có sự kiện",
+      noUpcomingEvents: "Không có sự kiện quan trọng sắp diễn ra.",
+      noYearUpcomingEvents: "Không có sự kiện sắp diễn ra trong năm này.",
+      noPastEvents: "Chưa có sự kiện đã qua trong năm này.",
       regionLabel: "Khu vực lịch",
+      regionNote: "Sự kiện được tính theo cùng khu vực đang dùng trong Lịch tháng.",
       ninhThuan: "Sakawi Ninh Thuận",
       binhThuan: "Sakawi Bình Thuận",
+      nextImportant: "Sự kiện quan trọng gần nhất",
+      nextImportantDescription: "Sự kiện sắp tới gần nhất cho khu vực {region}.",
+      upcomingDescription: "Danh sách các sự kiện chính sắp tới theo thứ tự ngày trong ứng dụng Sakawi.",
+      yearTitle: "Sự kiện năm {year}",
+      yearUpcoming: "Sự kiện sắp diễn ra trong năm",
+      yearUpcomingDescription: "Các sự kiện từ hôm nay đến hết năm Sakawi đang chọn.",
+      past: "Sự kiện đã qua",
+      pastDescription: "Các sự kiện đã qua trong cùng năm Sakawi, vẫn giữ thứ tự ngày theo ứng dụng.",
+      previous: "Trước",
+      currentYear: "Năm nay",
+      next: "Sau",
+      previousYear: "Năm trước",
+      nextYear: "Năm sau",
+      yearNavigationLabel: "Điều hướng năm sự kiện",
+      countdownToday: "Diễn ra hôm nay",
+      countdownTomorrow: "Diễn ra ngày mai",
+      countdownFuture: "Còn {count} ngày",
+      countdownPast: "Đã qua {count} ngày",
       names: {
         AkaokThun: "Năm mới Chăm lịch",
         RijaNagar: "Rija Nagar",
@@ -700,9 +744,31 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       daysRemaining: "Days remaining",
       openCalendar: "Open in Monthly Calendar",
       noEvents: "No events",
+      noUpcomingEvents: "No upcoming important events found.",
+      noYearUpcomingEvents: "No upcoming events found for this year.",
+      noPastEvents: "No past events found for this year.",
       regionLabel: "Calendar region",
+      regionNote: "Events use the same persisted calendar region as the Monthly Calendar.",
       ninhThuan: "Sakawi Ninh Thuận",
       binhThuan: "Sakawi Bình Thuận",
+      nextImportant: "Next important event",
+      nextImportantDescription: "The nearest upcoming important event for {region}.",
+      upcomingDescription: "Main upcoming events in the same date order used by the Sakawi app.",
+      yearTitle: "Events in {year}",
+      yearUpcoming: "Upcoming events this year",
+      yearUpcomingDescription: "Events from today through the end of the selected Sakawi year.",
+      past: "Past events",
+      pastDescription: "Past events in the same Sakawi year, kept in the app's chronological order.",
+      previous: "Previous",
+      currentYear: "Current year",
+      next: "Next",
+      previousYear: "Previous year",
+      nextYear: "Next year",
+      yearNavigationLabel: "Event year navigation",
+      countdownToday: "Happening today",
+      countdownTomorrow: "Happening tomorrow",
+      countdownFuture: "{count} day(s) remaining",
+      countdownPast: "{count} day(s) ago",
       names: {
         AkaokThun: "Cham New Year",
         RijaNagar: "Rija Nagar",

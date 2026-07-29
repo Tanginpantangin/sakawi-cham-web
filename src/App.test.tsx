@@ -162,15 +162,28 @@ test('calendar route supports month navigation, today, selection, events, langua
 });
 
 test('events route can show all events and link back to the monthly calendar', async () => {
+  window.localStorage.setItem(languageStorageKey, 'en');
   window.location.hash = '#/events';
 
   render(<App />);
 
-  expect(await screen.findByRole('heading', { name: /^Sự kiện$/i })).toBeInTheDocument();
-  fireEvent.click(await screen.findByRole('button', { name: /Tất cả/i }));
+  expect(await screen.findByRole('heading', { name: /^Events$/i })).toBeInTheDocument();
+  expect(await screen.findByRole('heading', { name: /Next important event/i })).toBeInTheDocument();
 
-  const calendarLinks = await screen.findAllByRole('link', { name: /Mở trong Lịch tháng/i });
+  fireEvent.click(screen.getByRole('radio', { name: /Sakawi Bình Thuận/i }));
+  expect(window.localStorage.getItem('sakawi.calendar.region')).toBe('BinhThuan');
+
+  fireEvent.click(screen.getAllByRole('button', { name: /Tiếng Việt/i })[0]);
+  expect(await screen.findByRole('heading', { name: /^Sự kiện$/i })).toBeInTheDocument();
+  fireEvent.click(screen.getAllByRole('button', { name: /English/i })[0]);
+  expect(await screen.findByRole('heading', { name: /^Events$/i })).toBeInTheDocument();
+
+  const calendarLinks = await screen.findAllByRole('link', { name: /Open in Monthly Calendar/i });
   expect(calendarLinks[0]).toHaveAttribute('href', expect.stringMatching(/^#\/calendar\?date=\d{4}-\d{2}-\d{2}$/));
+  fireEvent.click(calendarLinks[0]);
+
+  await waitFor(() => expect(window.location.hash).toMatch(/^#\/calendar\?date=\d{4}-\d{2}-\d{2}$/));
+  expect(await screen.findByRole('heading', { name: /Monthly Calendar/i })).toBeInTheDocument();
 });
 
 test('unsupported browser languages fall back safely to Vietnamese', () => {

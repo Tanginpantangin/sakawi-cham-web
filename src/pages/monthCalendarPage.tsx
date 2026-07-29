@@ -10,6 +10,7 @@ import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import { getSiteCopy } from "../siteContent";
 import Helper from "../utility/helper";
+import { persistCalendarRegion, resolveSavedCalendarRegion } from "../utils/calendarRegion";
 import { parseDateParam } from "../utils/dateFormat";
 
 export interface MonthCalendarPageProps {
@@ -17,18 +18,6 @@ export interface MonthCalendarPageProps {
     matrixSakawiBT: MatrixCalendarType[];
     fullSakawiNT: FullCalendarType[];
     fullSakawiBT: FullCalendarType[];
-}
-
-const calendarRegionStorageKey = "sakawi.calendar.region";
-
-function resolveSavedRegion(): AreaType {
-    if (typeof window === "undefined") {
-        return "NinhThuan";
-    }
-
-    return window.localStorage.getItem(calendarRegionStorageKey) === "BinhThuan"
-        ? "BinhThuan"
-        : "NinhThuan";
 }
 
 export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
@@ -40,7 +29,7 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
         [location.search]
     );
     const [showWarning, setShowWarning] = useState(true);
-    const [areaType, setAreaType] = useState<AreaType>(resolveSavedRegion);
+    const [areaType, setAreaType] = useState<AreaType>(resolveSavedCalendarRegion);
     const [matrixSakawi, setMatrixSakawi] = useState<MatrixCalendarType[]>([]);
     const [fullSakawi, setFullSakawi] = useState<FullCalendarType[]>([]);
     const [nextEvents, setNextEvents] = useState<CountDownBarProps[]>([]);
@@ -58,7 +47,7 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
         }
 
         init();
-        window.localStorage.setItem(calendarRegionStorageKey, areaType);
+        persistCalendarRegion(areaType);
         setLoading(false);
         
         // Cleanup function for asynchronous operations
