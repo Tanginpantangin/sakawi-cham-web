@@ -3,7 +3,16 @@ import { Container } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { Layout } from "../Layout";
 import { useLanguage } from "../i18n";
+import { FullCalendarType } from "../model/FullCalendarType";
+import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import { appIconUrl, getDocumentById, getSiteCopy, playStoreUrl, qrCodeUrl } from "../siteContent";
+import Helper from "../utility/helper";
+import {
+  displayAhierDateSummary,
+  displayAwalDateSummary,
+  formatDateParam,
+  sameDate
+} from "../utils/dateFormat";
 
 const setMetaContent = (selector: string, content: string) => {
   document.querySelector(selector)?.setAttribute("content", content);
@@ -33,9 +42,56 @@ const Breadcrumb = ({ current }: { current: string }) => {
   );
 };
 
-export const HomePage = () => {
+interface HomePageProps {
+  matrixSakawi: MatrixCalendarType[];
+  fullSakawi: FullCalendarType[];
+}
+
+const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+const daysUntil = (date: Date) => {
+  const today = startOfDay(new Date());
+  return Math.max(0, Math.ceil((startOfDay(date).getTime() - today.getTime()) / 86400000));
+};
+
+const formatLongDate = (date: Date, language: string) =>
+  date.toLocaleDateString(language === "vi" ? "vi-VN" : "en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  });
+
+const buildCalendarPreviewDays = (year: number, month: number) => {
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  return [
+    ...Array.from({ length: firstDay }, () => null),
+    ...Array.from({ length: daysInMonth }, (_, index) => index + 1)
+  ];
+};
+
+const buildWeekdayLabels = (language: string) => {
+  const locale = language === "vi" ? "vi-VN" : "en-US";
+  return Array.from({ length: 7 }, (_, index) =>
+    new Date(2026, 7, 2 + index).toLocaleDateString(locale, { weekday: "narrow" })
+  );
+};
+
+export const HomePage = ({ matrixSakawi, fullSakawi }: HomePageProps) => {
   const { language } = useLanguage();
   const copy = getSiteCopy(language);
+  const today = new Date();
+  const todayItem = fullSakawi.find((item) => sameDate(item.dateGregory, today));
+  const ahierDayCount = todayItem
+    ? Helper.getActualDayNumbersOfAhierMonth(matrixSakawi, todayItem.dateAhier.ahierMonth)
+    : 0;
+  const awalDayCount = todayItem
+    ? Helper.getDayNumbersOfAwalMonth(todayItem.dateAwal.awalMonth.year, todayItem.dateAwal.awalMonth.month)
+    : 0;
+  const weekdayLabels = buildWeekdayLabels(language);
+  const previewDays = buildCalendarPreviewDays(today.getFullYear(), today.getMonth());
+  const upcomingEvents = Helper.getNextEvents(fullSakawi).slice(0, 4);
 
   usePageMetadata(copy.metadata.homeTitle, copy.metadata.homeDescription);
 
@@ -48,10 +104,15 @@ export const HomePage = () => {
             <h1 id="home-title">{copy.home.title}</h1>
             <p className="page-lede">{copy.home.lede}</p>
             <div className="hero-actions">
+              <Link className="download-button hero-download" to="/calendar">
+                {copy.home.primaryCalendarAction}
+              </Link>
+              <Link className="secondary-action" to="/events">
+                {copy.home.primaryEventsAction}
+              </Link>
               <a className="download-button hero-download" href={playStoreUrl} target="_blank" rel="noreferrer">
                 {copy.home.download}
               </a>
-              <span className="ios-note">{copy.home.iosNote}</span>
             </div>
           </div>
           <div className="hero-brand-panel" aria-label={copy.accessibility.heroBrandLabel}>
@@ -61,6 +122,78 @@ export const HomePage = () => {
               <p>{copy.home.qrCaption}</p>
             </div>
           </div>
+        </section>
+
+        <section className="home-preview-section" aria-labelledby="home-calendar-preview-title">
+          <article className="calendar-preview-panel">
+            <div className="section-heading-row">
+              <div>
+                <p className="page-eyebrow">{copy.home.currentMonthLabel}</p>
+                <h2 id="home-calendar-preview-title">{copy.home.calendarPreviewTitle}</h2>
+              </div>
+              <Link to="/calendar">{copy.home.calendarPreviewCta}</Link>
+            </div>
+            <p className="calendar-preview-month">
+              {today.toLocaleDateString(language === "vi" ? "vi-VN" : "en-US", { month: "long", year: "numeric" })}
+            </p>
+            <div className="mini-calendar" aria-label={copy.home.calendarPreviewTitle}>
+              {weekdayLabels.map((dayName, index) => (
+                <span className="mini-calendar-weekday" key={`${dayName}-${index}`}>{dayName}</span>
+              ))}
+              {previewDays.map((day, index) => (
+                <span
+                  className={day === today.getDate() ? "mini-calendar-day mini-calendar-today" : "mini-calendar-day"}
+                  key={`${day ?? "blank"}-${index}`}
+                  aria-current={day === today.getDate() ? "date" : undefined}
+                >
+                  {day}
+                </span>
+              ))}
+            </div>
+            {todayItem && (
+              <dl className="today-date-summary">
+                <div>
+                  <dt>{copy.home.todayLabel}</dt>
+                  <dd>{formatLongDate(todayItem.dateGregory, language)}</dd>
+                </div>
+                <div>
+                  <dt>{copy.home.chamDateLabel}</dt>
+                  <dd>{displayAhierDateSummary(todayItem.dateAhier, ahierDayCount).latin}</dd>
+                </div>
+                <div>
+                  <dt>{copy.home.awalDateLabel}</dt>
+                  <dd>{displayAwalDateSummary(todayItem.dateAwal, awalDayCount).latin}</dd>
+                </div>
+              </dl>
+            )}
+          </article>
+
+          <article className="events-preview-panel">
+            <div className="section-heading-row">
+              <div>
+                <p className="page-eyebrow">{copy.nav.events}</p>
+                <h2>{copy.home.upcomingPreviewTitle}</h2>
+              </div>
+              <Link to="/events">{copy.home.upcomingPreviewCta}</Link>
+            </div>
+            {upcomingEvents.length > 0 ? (
+              <div className="preview-event-list">
+                {upcomingEvents.map((event) => {
+                  const eventInfo = Helper.displayEventDay(event.eventType);
+                  return (
+                    <Link className="preview-event" to={`/calendar?date=${formatDateParam(event.eventDate)}`} key={`${event.eventType}-${event.eventDate.toISOString()}`}>
+                      <span className="preview-event-date">{Helper.displayDateString(event.eventDate)}</span>
+                      <span className="preview-event-name">{eventInfo?.latinName ?? event.eventType}</span>
+                      <span className="preview-event-meta">{eventInfo?.sakawiType === "sakawiAwal" ? copy.home.awalDateLabel : eventInfo?.sakawiType === "sakawiAhier" ? copy.home.chamDateLabel : copy.nav.events}</span>
+                      <span className="preview-event-countdown">{daysUntil(event.eventDate)} {language === "vi" ? "ngày" : "days"}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            ) : (
+              <p>{copy.home.noEvents}</p>
+            )}
+          </article>
         </section>
 
         <section className="formula-section" aria-labelledby="formula-title">
@@ -97,7 +230,7 @@ export const HomePage = () => {
         <section className="quick-links-section" aria-labelledby="quick-links-title">
           <h2 id="quick-links-title">{copy.home.linksTitle}</h2>
           <div className="public-link-row">
-            <Link to="/months">{copy.home.calendarLink}</Link>
+            <Link to="/calendar">{copy.home.calendarLink}</Link>
             <Link to="/events">{copy.home.eventsLink}</Link>
             <Link to="/documents">{copy.nav.documents}</Link>
             <Link to="/privacy">{copy.nav.privacy}</Link>

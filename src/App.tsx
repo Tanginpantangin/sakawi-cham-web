@@ -57,7 +57,16 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/"
-              element={<HomePage />} />
+              element={<HomePage matrixSakawi={matrixSakawiNT} fullSakawi={fullSakawiNT} />} />
+            <Route path="/calendar"
+              element={
+                <MonthCalendarPage
+                  matrixSakawiNT={matrixSakawiNT}
+                  matrixSakawiBT={matrixSakawiBT}
+                  fullSakawiNT={fullSakawiNT}
+                  fullSakawiBT={fullSakawiBT}
+                />
+              } />
             <Route path="/months"
               element={
                 <MonthCalendarPage

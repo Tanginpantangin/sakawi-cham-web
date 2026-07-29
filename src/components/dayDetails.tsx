@@ -3,6 +3,7 @@ import { AwalMonthEnum, displayIkasSarakName, EventType, IkasSarakEnum, SakawiTy
 import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate, AwalMonth } from "../model/AwalDate";
 import Helper from "../utility/helper";
+import { sameDate } from "../utils/dateFormat";
 
 interface DayDetailsProps {
     sakawiType: SakawiType;
@@ -16,6 +17,8 @@ interface DayDetailsProps {
     dayNumbersOfCurrentAhierMonth: number;
     dayNumbersOfCurrentAwalMonth: number;
     showLatinNumberDate: boolean;
+    selectedDate?: Date;
+    onSelectDate: () => void;
 }
 
 interface CalendarDayEvent {
@@ -33,6 +36,8 @@ const EVENT_TYPES: EventType[] = [
     'KatePaleiHamuTanran',
     'KateAngaokBimong',
     'CaMbur',
+    'Lakhah',
+    'AwalNewYear',
     'TamaRicaowRamawan',
     'TalaihAekRamawan',
     'MukTrun',
@@ -73,6 +78,7 @@ export const DayDetails = (props: DayDetailsProps) => {
         opacity: opacityValue,
         backgroundColor: backgroundColor
     }
+    const isSelected = props.selectedDate ? sameDate(props.selectedDate, props.dateGregory) : false;
 
     let gregoryDateClass = 'gregory-date';
     let ahierDateClass = 'ahier-date';
@@ -184,6 +190,10 @@ export const DayDetails = (props: DayDetailsProps) => {
             result.push('Akaok thun');
         }
 
+        if (props.dateAwal.awalMonth.month === AwalMonthEnum.Muharam && props.dateAwal.date === 1) {
+            result.push('Thun birau Awal');
+        }
+
         //TODO
         if (props.dateAhier.ahierMonth.month === 0 && props.dateGregory.getDay() === 4) {
             if (props.dateAwal.awalMonth.month === AwalMonthEnum.Ramadan) {
@@ -257,11 +267,11 @@ export const DayDetails = (props: DayDetailsProps) => {
 
             if (props.dayNumbersOfCurrentAhierMonth === 30) {
                 if (props.dateAhier.date > 15 && (props.dateAhier.date - 15) % 2 === 0) {
-                    result.push('♥️ Lakhah');
+                    result.push('Lakhah');
                 }
             } else {
                 if (props.dateAhier.date > 14 && (props.dateAhier.date - 14) % 2 === 0) {
-                    result.push('♥️ Lakhah');
+                    result.push('Lakhah');
                 }
             }
         }
@@ -282,10 +292,14 @@ export const DayDetails = (props: DayDetailsProps) => {
                 eventType = 'KatePaleiHamuTanran';
             } else if (eventName.indexOf('angaok bimong') >= 0) {
                 eventType = 'KateAngaokBimong';
+            } else if (eventName.indexOf('Thun birau Awal') >= 0) {
+                eventType = 'AwalNewYear';
             } else if (eventName.indexOf('Ram') >= 0 && eventName.indexOf('Talaih') < 0) {
                 eventType = 'TamaRicaowRamawan';
             } else if (eventName.indexOf('Talaih') >= 0 && eventName.indexOf('Ram') >= 0) {
                 eventType = 'TalaihAekRamawan';
+            } else if (eventName.indexOf('Lakhah') >= 0) {
+                eventType = 'Lakhah';
             }
         }
 
@@ -369,8 +383,24 @@ export const DayDetails = (props: DayDetailsProps) => {
     const visibleEvents = events.slice(0, 2);
     const hiddenEventCount = events.length - visibleEvents.length;
 
+    function handleKeyDown(event: React.KeyboardEvent<HTMLTableCellElement>) {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            props.onSelectDate();
+        }
+    }
+
     return (
-        <td className="calendar-day" style={tdStyle}>
+        <td
+            className={isSelected ? "calendar-day calendar-day-selected" : "calendar-day"}
+            style={tdStyle}
+            role="button"
+            tabIndex={0}
+            aria-label={`${Helper.displayDateString(props.dateGregory)} - xem chi tiết`}
+            aria-pressed={isSelected}
+            onClick={props.onSelectDate}
+            onKeyDown={handleKeyDown}
+        >
             <div className="calendar-day-grid">
                 <div className={gregoryDateClass}>
                     {displayGregoryDate(props.sakawiType, props.dateAhier, props.dateAwal, props.dateGregory)}

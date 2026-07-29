@@ -43,10 +43,14 @@ test('defaults to Vietnamese and renders required public links', () => {
 
   expect(document.documentElement.lang).toBe('vi');
   expect(screen.getAllByRole('link', { name: /sakawi/i }).length).toBeGreaterThan(0);
+  expect(screen.getAllByRole('link', { name: /Lịch tháng/i }).length).toBeGreaterThan(0);
+  expect(screen.getAllByRole('link', { name: /Sự kiện/i }).length).toBeGreaterThan(0);
   expect(screen.getAllByRole('link', { name: /Tài liệu/i }).length).toBeGreaterThan(0);
   expect(screen.getAllByRole('link', { name: /Chính sách riêng tư/i }).length).toBeGreaterThan(0);
   expect(screen.getAllByRole('link', { name: /Hỗ trợ/i }).length).toBeGreaterThan(0);
   expect(screen.getAllByRole('link', { name: /Phiên bản/i }).length).toBeGreaterThan(0);
+  expect(screen.getByRole('link', { name: /^Xem Lịch tháng$/i })).toHaveAttribute('href', '#/calendar');
+  expect(screen.getByRole('link', { name: /^Xem Sự kiện sắp tới$/i })).toHaveAttribute('href', '#/events');
   expect(screen.getAllByRole('link', { name: /Google Play/i })[0]).toHaveAttribute(
     'href',
     'https://play.google.com/store/apps/details?id=com.sakawi.cham&hl=vi'
@@ -59,6 +63,8 @@ test('restores saved English language and updates html lang', () => {
   render(<App />);
 
   expect(document.documentElement.lang).toBe('en');
+  expect(screen.getAllByRole('link', { name: /Monthly Calendar/i }).length).toBeGreaterThan(0);
+  expect(screen.getAllByRole('link', { name: /Events/i }).length).toBeGreaterThan(0);
   expect(screen.getAllByRole('link', { name: /Documents/i }).length).toBeGreaterThan(0);
   expect(screen.getByRole('heading', { name: /Sakawi/i, level: 1 })).toBeInTheDocument();
 });
@@ -85,6 +91,32 @@ test('documents route does not reset language and avoids untranslated English de
   expect(document.documentElement.lang).toBe('en');
   expect(screen.getByRole('heading', { name: /Month and year rules/i })).toBeInTheDocument();
   expect(screen.getByText(/Approved detailed website body copy is not available/i)).toBeInTheDocument();
+});
+
+test('calendar route opens a linked date and exposes month controls', async () => {
+  window.location.hash = '#/calendar?date=2026-07-29';
+
+  render(<App />);
+
+  expect(await screen.findByRole('heading', { name: /Lịch tháng/i })).toBeInTheDocument();
+  expect(await screen.findByRole('heading', { name: /Chi tiết ngày/i })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Tháng trước/i })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Tháng sau/i })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Hôm nay/i })).toBeInTheDocument();
+});
+
+test('events route can show all events and link back to the monthly calendar', async () => {
+  window.location.hash = '#/events';
+
+  render(<App />);
+
+  expect(await screen.findByRole('heading', { name: /^Sự kiện$/i })).toBeInTheDocument();
+  fireEvent.click(await screen.findByRole('button', { name: /Tất cả/i }));
+
+  const calendarLinks = await screen.findAllByRole('link', { name: /Mở trong Lịch tháng/i });
+  fireEvent.click(calendarLinks[0]);
+
+  await waitFor(() => expect(window.location.hash).toMatch(/^#\/calendar\?date=\d{4}-\d{2}-\d{2}$/));
 });
 
 test('unsupported browser languages fall back safely to Vietnamese', () => {

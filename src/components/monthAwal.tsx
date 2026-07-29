@@ -10,6 +10,8 @@ interface MonthAwalProps {
     fullSakawi: FullCalendarType[];
     currentAwalMonthMatrix: MatrixCalendarType;
     showLatinNumberDate: boolean;
+    selectedDate?: Date;
+    onSelectDate: (day: FullCalendarType) => void;
 }
 
 export const MonthAwal = (props: MonthAwalProps) => {
@@ -49,6 +51,8 @@ export const MonthAwal = (props: MonthAwalProps) => {
                 dayNumbersOfCurrentAhierMonth={dayNumbersOfCurrentAhierMonth}
                 dayNumbersOfCurrentAwalMonth={dayNumbersOfCurrentAwalMonth}
                 showLatinNumberDate={props.showLatinNumberDate}
+                selectedDate={props.selectedDate}
+                onSelectDate={() => props.onSelectDate(item)}
             />
         );
 

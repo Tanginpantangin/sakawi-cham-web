@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { Accordion, Alert, Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 import { CountDownBar, CountDownBarProps } from "../components/countDownBar";
 import { MonthCalendar } from "../components/monthCalendar";
 import { AreaType } from "../enums/enum";
+import { useLanguage } from "../i18n";
 import { Layout } from "../Layout";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
+import { getSiteCopy } from "../siteContent";
 import Helper from "../utility/helper";
+import { parseDateParam } from "../utils/dateFormat";
 
 export interface MonthCalendarPageProps {
     matrixSakawiNT: MatrixCalendarType[];
@@ -16,6 +20,9 @@ export interface MonthCalendarPageProps {
 }
 
 export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
+    const location = useLocation();
+    const { language } = useLanguage();
+    const copy = getSiteCopy(language);
     const [showWarning, setShowWarning] = useState(true);
     const [areaType, setAreaType] = useState<AreaType>('NinhThuan');
     const [matrixSakawi, setMatrixSakawi] = useState<MatrixCalendarType[]>([]);
@@ -44,6 +51,15 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
     }, [areaType, props.fullSakawiBT, props.fullSakawiNT, props.matrixSakawiBT, props.matrixSakawiNT]);
 
     React.useEffect(() => {
+        document.title = copy.metadata.calendarTitle;
+        document.querySelector('meta[name="description"]')?.setAttribute("content", copy.metadata.calendarDescription);
+        document.querySelector('meta[property="og:title"]')?.setAttribute("content", copy.metadata.calendarTitle);
+        document.querySelector('meta[property="og:description"]')?.setAttribute("content", copy.metadata.calendarDescription);
+        document.querySelector('meta[name="twitter:title"]')?.setAttribute("content", copy.metadata.calendarTitle);
+        document.querySelector('meta[name="twitter:description"]')?.setAttribute("content", copy.metadata.calendarDescription);
+    }, [copy.metadata.calendarDescription, copy.metadata.calendarTitle]);
+
+    React.useEffect(() => {
         const timerId = setTimeout(() => {
             setShowWarning(false);
         }, 30000);
@@ -61,13 +77,18 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
     return (
         <Layout>
             <Container className="page-container calendar-page">
+                <div className="calendar-page-heading">
+                    <p className="page-eyebrow">{copy.shared.productName}</p>
+                    <h1>{copy.calendar.title}</h1>
+                    <p className="page-lede">{copy.calendar.lede}</p>
+                </div>
                 {showWarning &&
                     <Row>
                         <Col sm={12} md={12} lg={12}>
                             <Alert variant='info' onClose={() => setShowWarning(false)} dismissible>
-                                <Alert.Heading>Lưu ý!</Alert.Heading>
-                                - Ứng dụng đang trong quá trình phát triển nên còn những thiếu sót, rất mong nhận được nhiều góp ý để sản phẩm được hoàn thiện hơn.
-                                <br />- Ứng dụng này chỉ mang tính chất tham khảo, Sakawi chính thức được Hội đồng Chức sắc phát hành từng năm.
+                                <Alert.Heading>{copy.calendar.developmentTitle}</Alert.Heading>
+                                - {copy.calendar.developmentBody}
+                                <br />- {copy.calendar.referenceBody}
                             </Alert>
                         </Col>
                     </Row>
@@ -75,18 +96,19 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
                 <Row>
                     <Col xs={12}>
                         <Form>
+                            <Form.Label className="area-selector-label">{copy.calendar.regionLabel}</Form.Label>
                             <div className="area-selector mb-3">
                                 <Form.Check
                                     inline
                                     type={"radio"}
-                                    label={`Sakawi Ninh Thuận`}
+                                    label={copy.calendar.ninhThuan}
                                     checked={areaType === "NinhThuan"}
                                     onChange={() => { setAreaType('NinhThuan') }}
                                 />
                                 <Form.Check
                                     inline
                                     type={"radio"}
-                                    label={`Sakawi Bình Thuận`}
+                                    label={copy.calendar.binhThuan}
                                     checked={areaType === "BinhThuan"}
                                     onChange={() => { setAreaType('BinhThuan') }}
                                 />
@@ -100,7 +122,7 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
                             <Card className="upcoming-events">
                                 <Card.Header>
                                     <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                                        [Các sự kiện sắp diễn ra]
+                                        {copy.calendar.upcomingTitle}
                                     </Accordion.Toggle>
                                 </Card.Header>
                                 <Accordion.Collapse eventKey="0">
@@ -121,6 +143,7 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
                             <MonthCalendar
                                 matrixSakawi={matrixSakawi}
                                 fullSakawi={fullSakawi}
+                                initialSelectedDate={parseDateParam(new URLSearchParams(location.search).get("date"))}
                             />
                         </Col>
                     </Row>

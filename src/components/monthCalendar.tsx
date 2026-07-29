@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import { AhierMonthEnum, GuecTypeEnum, GuenTypeEnum, IkasSarakEnum, NasakEnum, SakawiType } from "../enums/enum";
+import { useLanguage } from "../i18n";
 import { AhierMonth } from "../model/AhierDate";
 import { AwalMonth } from "../model/AwalDate";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
+import { getSiteCopy } from "../siteContent";
 import Helper from "../utility/helper";
+import {
+    displayAhierDateSummary,
+    displayAwalDateSummary,
+    getDayEvents,
+    sameDate
+} from "../utils/dateFormat";
 import { MonthAhier } from "./monthAhier";
 import { MonthAwal } from "./monthAwal";
 import { MonthGregory } from "./monthGregory";
@@ -14,9 +22,12 @@ import { MonthNavigation } from "./monthNavigation";
 interface MonthCalendarProps {
     matrixSakawi: MatrixCalendarType[],
     fullSakawi: FullCalendarType[]
+    initialSelectedDate?: Date;
 }
 
 export const MonthCalendar = (props: MonthCalendarProps) => {
+    const { language } = useLanguage();
+    const copy = getSiteCopy(language);
     const initialAhierMonth: AhierMonth = { month: AhierMonthEnum.BilanSa, year: { nasak: NasakEnum.Pabuei, ikasSarak: IkasSarakEnum.JimLuic, yearNumber: 2019 } };
     const initialAwalMonth: AwalMonth = { month: 0, year: { ikasSarak: 0, yearNumber: 1400 } };
     const initialGregoryDate: Date = new Date();
@@ -41,6 +52,7 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
     const [currentGregoryMonth, setCurrentGregoryMonth] = useState(new Date().getMonth());
     const [currentGregoryYear, setCurrentGregoryYear] = useState(new Date().getFullYear());
     const [showLatinNumberDate, setShowLatinNumberDate] = useState(false);
+    const [selectedDate, setSelectedDate] = useState<FullCalendarType | undefined>();
 
     React.useEffect(() => {
         function init() {
@@ -60,6 +72,20 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
 
         init();
     }, [props.matrixSakawi]);
+
+    React.useEffect(() => {
+        if (!props.initialSelectedDate || props.fullSakawi.length === 0) {
+            return;
+        }
+
+        const matchedDate = props.fullSakawi.find((item) => sameDate(item.dateGregory, props.initialSelectedDate as Date));
+        if (matchedDate) {
+            setSakawiType("sakawiGregory");
+            setCurrentGregoryMonth(matchedDate.dateGregory.getMonth());
+            setCurrentGregoryYear(matchedDate.dateGregory.getFullYear());
+            setSelectedDate(matchedDate);
+        }
+    }, [props.fullSakawi, props.initialSelectedDate]);
 
     function handleOnClickToCurrentMonth() {
         if (sakawiType === "sakawiAhier") {
@@ -133,6 +159,61 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
                     </Form>
                 </Col>
             </Row>
+            {selectedDate &&
+                <Row>
+                    <Col md={12}>
+                        <section className="selected-date-panel" aria-labelledby="selected-date-title">
+                            <h2 id="selected-date-title">{copy.calendar.selectedDateTitle}</h2>
+                            {(() => {
+                                const ahierDayCount = Helper.getActualDayNumbersOfAhierMonth(props.matrixSakawi, selectedDate.dateAhier.ahierMonth);
+                                const awalDayCount = Helper.getDayNumbersOfAwalMonth(selectedDate.dateAwal.awalMonth.year, selectedDate.dateAwal.awalMonth.month);
+                                const dayEvents = getDayEvents(selectedDate.dateAhier, selectedDate.dateAwal, selectedDate.dateGregory, ahierDayCount);
+                                const ahierDate = displayAhierDateSummary(selectedDate.dateAhier, ahierDayCount);
+                                const awalDate = displayAwalDateSummary(selectedDate.dateAwal, awalDayCount);
+
+                                return (
+                                    <>
+                                        <dl className="selected-date-grid">
+                                            <div>
+                                                <dt>{copy.calendar.gregorianDate}</dt>
+                                                <dd>{selectedDate.dateGregory.toLocaleDateString(language === "vi" ? "vi-VN" : "en-US", { year: "numeric", month: "long", day: "numeric" })}</dd>
+                                            </div>
+                                            <div>
+                                                <dt>{copy.calendar.weekday}</dt>
+                                                <dd>{selectedDate.dateGregory.toLocaleDateString(language === "vi" ? "vi-VN" : "en-US", { weekday: "long" })}</dd>
+                                            </div>
+                                            <div>
+                                                <dt>{copy.calendar.chamDate}</dt>
+                                                <dd><span className="detail-cham">{ahierDate.akharThrah}</span><span>{ahierDate.latin}</span></dd>
+                                            </div>
+                                            <div>
+                                                <dt>{copy.calendar.awalDate}</dt>
+                                                <dd><span className="detail-cham detail-awal">{awalDate.akharThrah}</span><span>{awalDate.latin}</span></dd>
+                                            </div>
+                                        </dl>
+                                        <div className="selected-date-events">
+                                            <h3>{copy.calendar.events}</h3>
+                                            {dayEvents.length > 0 ? (
+                                                <ul>
+                                                    {dayEvents.map((event, index) => (
+                                                        <li key={`${event.latinName}-${index}`}>
+                                                            <strong>{event.latinName}</strong>
+                                                            {event.vnName && <span>{event.vnName}</span>}
+                                                            {event.description && <small>{event.description}</small>}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            ) : (
+                                                <p>{copy.calendar.noEvents}</p>
+                                            )}
+                                        </div>
+                                    </>
+                                );
+                            })()}
+                        </section>
+                    </Col>
+                </Row>
+            }
             <Row className="calendar-nav">
                 <MonthNavigation
                     sakawiType={sakawiType}
@@ -154,6 +235,8 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
                             fullSakawi={props.fullSakawi}
                             currentAhierMonthMatrix={currentAhierMonthMatrix}
                             showLatinNumberDate={showLatinNumberDate}
+                            selectedDate={selectedDate?.dateGregory}
+                            onSelectDate={setSelectedDate}
                         />
                     }
                     {sakawiType === 'sakawiAwal' &&
@@ -162,6 +245,8 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
                             fullSakawi={props.fullSakawi}
                             currentAwalMonthMatrix={currentAwalMonthMatrix}
                             showLatinNumberDate={showLatinNumberDate}
+                            selectedDate={selectedDate?.dateGregory}
+                            onSelectDate={setSelectedDate}
                         />
                     }
                     {sakawiType === 'sakawiGregory' &&
@@ -171,6 +256,8 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
                             currentGregoryMonth={currentGregoryMonth ?? 0}
                             currentGregoryYear={currentGregoryYear ?? new Date().getFullYear()}
                             showLatinNumberDate={showLatinNumberDate}
+                            selectedDate={selectedDate?.dateGregory}
+                            onSelectDate={setSelectedDate}
                         />
                     }
                 </Col>

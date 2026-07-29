@@ -37,7 +37,15 @@
         "latinName": "Ca-mbur",
         "akharThrahName": "ꨌꨡꨭꩉ",
         "vnName": "Lễ hội Ca-mbur",
-        "description": "Lễ hội Ca-mbur"
+        "description": ""
+    },
+    {
+        "eventType": "AwalNewYear",
+        "sakawiType": "sakawiAwal",
+        "latinName": "Thun birau Awal",
+        "akharThrahName": "ꨔꨭꩆ ꨝꨪꨣꨭꨥ ꨀꨥꩊ",
+        "vnName": "Năm mới Awal",
+        "description": "Ngày 1 tháng 1 lịch Awal"
     },
     {
         "eventType": "TamaRicaowRamawan",
@@ -61,7 +69,7 @@
         "latinName": "Muk trun",
         "akharThrahName": "ꨟꨭꩀ ꨓꨴꨭꩆ",
         "vnName": "Lễ Bà giáng trần",
-        "description": "Lễ Bà giáng trần"
+        "description": ""
     },
     {
         "eventType": "OngTrun",
@@ -69,15 +77,15 @@
         "latinName": "Ong trun",
         "akharThrahName": "ꨅꩃ ꨓꨴꨭꩆ",
         "vnName": "Lễ Ông giáng trần",
-        "description": "Lễ Ông giáng trần"
+        "description": ""
     },
     {
         "eventType": "IkakWaha",
         "sakawiType": "sakawiAwal",
         "latinName": "Ikak Waha",
-        "akharThrahName": "ꨁꨆꩀ ꨥꨨꨩ ",
+        "akharThrahName": "ꨁꨆꩀ ꨥꨨꨩ",
         "vnName": "Bắt đầu Waha",
-        "description": "Bắt đầu Waha"
+        "description": ""
     },
     {
         "eventType": "TalaihWaha",
@@ -85,7 +93,7 @@
         "latinName": "Talaih Waha",
         "akharThrahName": "ꨓꨤꨰꩍ ꨥꨨꨩ",
         "vnName": "Kết thúc Waha",
-        "description": "Kết thúc Waha"
+        "description": ""
     },
     {
         "eventType": "YuerYang",
@@ -93,14 +101,22 @@
         "latinName": "Yuer Yang",
         "akharThrahName": "ꨢꨶꨮꩉ ꨢꩃ",
         "vnName": "Lễ Yuer Yang",
-        "description": "Lễ Yuer Yang"
+        "description": ""
     },
     {
         "eventType": "VietnameseLunarNewYear",
         "sakawiType": "sakawiGregory",
-        "latinName": "Tết Nguyên Đán",
-        "akharThrahName": "",
+        "latinName": "Thun biruw Biét Nam",
+        "akharThrahName": "ꨔꨭꩆ ꨝꨪꨣꨭꨥ ꨝꨳꨯꨮꩅ ꨘꩌ",
         "vnName": "Tết Nguyên Đán",
         "description": "Ngày mùng 1 Tết theo âm lịch Việt Nam"
+    },
+    {
+        "eventType": "Lakhah",
+        "sakawiType": "sakawiAhier",
+        "latinName": "Lakhah",
+        "akharThrahName": "ꨤꨇꩍ",
+        "vnName": "Đám cưới",
+        "description": "Ngày tổ chức đám cưới theo truyền thống Cham"
     }
 ]

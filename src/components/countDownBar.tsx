@@ -50,6 +50,10 @@ export const CountDownBar = (props: CountDownBarProps) => {
             variantType = 'primary';
             displayEventName = 'Năm mới Chăm lịch';
             break;
+        case "AwalNewYear":
+            variantType = 'success';
+            displayEventName = 'Năm mới Awal';
+            break;
         case "RijaNagar":
             variantType = 'danger';
             displayEventName = 'Rija Nagar';
@@ -65,6 +69,10 @@ export const CountDownBar = (props: CountDownBarProps) => {
         case "VietnameseLunarNewYear":
             variantType = 'secondary';
             displayEventName = 'Tết Nguyên Đán';
+            break;
+        case "Lakhah":
+            variantType = 'danger';
+            displayEventName = 'Lakhah';
             break;
         default:
             variantType = 'warning';

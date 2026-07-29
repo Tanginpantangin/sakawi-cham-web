@@ -760,6 +760,7 @@ export default class Helper {
     static getNextEvents(fullCalendar: FullCalendarType[]) {
         let result: CountDownBarProps[] = [];
         let addedAkaokThun = false;
+        let addedAwalNewYear = false;
         let addedRijaNagar = false;
         let addedVietnameseLunarNewYear = false;
         //let addedKateHamuTanran = false;
@@ -772,12 +773,18 @@ export default class Helper {
         // let addedTalaihWaha = false;
         // let addedYuerYang = false;
 
-        fullCalendar.forEach(function (item, index) {
-            if (item.dateGregory < new Date()) {
-                return;
+        const today = new Date();
+        const cutoffDate = Helper.addGregoryDays(today, 390);
+
+        for (const item of fullCalendar) {
+            if (item.dateGregory < today) {
+                continue;
             }
 
             let eventGregoryDate = item.dateGregory;
+            if (eventGregoryDate > cutoffDate) {
+                break;
+            }
 
             if (!addedVietnameseLunarNewYear && Helper.isVietnameseLunarNewYear(eventGregoryDate)) {
                 result.push({ eventType: 'VietnameseLunarNewYear', eventDate: eventGregoryDate });
@@ -787,6 +794,11 @@ export default class Helper {
             if (!addedAkaokThun && item.dateAhier.ahierMonth.month === 0 && item.dateAhier.date === 1) {
                 result.push({ eventType: 'AkaokThun', eventDate: eventGregoryDate });
                 addedAkaokThun = true;
+            }
+
+            if (!addedAwalNewYear && item.dateAwal.awalMonth.month === AwalMonthEnum.Muharam && item.dateAwal.date === 1) {
+                result.push({ eventType: 'AwalNewYear', eventDate: eventGregoryDate });
+                addedAwalNewYear = true;
             }
 
             // TODO
@@ -863,9 +875,9 @@ export default class Helper {
 
             // Break loop: just look up in a year later (30 days x 13 months)
             if (eventGregoryDate > Helper.addGregoryDays(new Date(), 390)) {
-                return;
+                break;
             }
-        });
+        }
 
         return result;
     }
@@ -883,6 +895,10 @@ export default class Helper {
 
             if (item.dateAhier.ahierMonth.month === 0 && item.dateAhier.date === 1) {
                 result.push({ eventType: 'AkaokThun', sakawiType: 'sakawiAhier', eventDate: eventGregoryDate });
+            }
+
+            if (item.dateAwal.awalMonth.month === AwalMonthEnum.Muharam && item.dateAwal.date === 1) {
+                result.push({ eventType: 'AwalNewYear', sakawiType: 'sakawiAwal', eventDate: eventGregoryDate });
             }
 
             //TODO

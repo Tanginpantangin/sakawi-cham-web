@@ -38,6 +38,8 @@ interface SiteTranslation {
   };
   nav: {
     home: string;
+    calendar: string;
+    events: string;
     documents: string;
     privacy: string;
     support: string;
@@ -54,6 +56,10 @@ interface SiteTranslation {
   metadata: {
     homeTitle: string;
     homeDescription: string;
+    calendarTitle: string;
+    calendarDescription: string;
+    eventsTitle: string;
+    eventsDescription: string;
     documentsTitle: string;
     documentsDescription: string;
     privacyTitle: string;
@@ -95,7 +101,55 @@ interface SiteTranslation {
     linksTitle: string;
     calendarLink: string;
     eventsLink: string;
+    primaryCalendarAction: string;
+    primaryEventsAction: string;
+    calendarPreviewTitle: string;
+    calendarPreviewCta: string;
+    upcomingPreviewTitle: string;
+    upcomingPreviewCta: string;
+    currentMonthLabel: string;
+    todayLabel: string;
+    chamDateLabel: string;
+    awalDateLabel: string;
+    noEvents: string;
     features: readonly string[];
+  };
+  calendar: {
+    title: string;
+    lede: string;
+    upcomingTitle: string;
+    regionLabel: string;
+    ninhThuan: string;
+    binhThuan: string;
+    developmentTitle: string;
+    developmentBody: string;
+    referenceBody: string;
+    selectedDateTitle: string;
+    gregorianDate: string;
+    chamDate: string;
+    awalDate: string;
+    weekday: string;
+    events: string;
+    noEvents: string;
+    previousMonth: string;
+    nextMonth: string;
+    today: string;
+    viewDetails: string;
+  };
+  events: {
+    title: string;
+    lede: string;
+    upcoming: string;
+    all: string;
+    date: string;
+    event: string;
+    category: string;
+    daysRemaining: string;
+    openCalendar: string;
+    noEvents: string;
+    regionLabel: string;
+    ninhThuan: string;
+    binhThuan: string;
   };
   privacy: {
     title: string;
@@ -149,6 +203,8 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
     },
     nav: {
       home: "Trang chủ",
+      calendar: "Lịch tháng",
+      events: "Sự kiện",
       documents: "Tài liệu",
       privacy: "Chính sách riêng tư",
       support: "Hỗ trợ",
@@ -165,6 +221,10 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
     metadata: {
       homeTitle: "Sakawi | Ứng dụng lịch Cham",
       homeDescription: "Sakawi là ứng dụng lịch Cham kết hợp Saka và Jawi, hỗ trợ lịch Saka, lịch Awal, sự kiện, tài liệu và đếm ngược.",
+      calendarTitle: "Lịch tháng | Sakawi",
+      calendarDescription: "Tra cứu lịch tháng Sakawi với ngày Dương lịch, lịch Cham, lịch Awal, sự kiện và lựa chọn khu vực.",
+      eventsTitle: "Sự kiện sắp tới | Sakawi",
+      eventsDescription: "Xem các sự kiện Sakawi sắp tới và mở ngày tương ứng trong lịch tháng.",
       documentsTitle: "Tài liệu | Sakawi",
       documentsDescription: "Tài liệu song ngữ về kiến thức căn bản của lịch Cham trong Sakawi.",
       privacyTitle: "Chính sách riêng tư | Sakawi",
@@ -206,6 +266,17 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       linksTitle: "Liên kết nhanh",
       calendarLink: "Mở lịch tháng",
       eventsLink: "Xem sự kiện",
+      primaryCalendarAction: "Xem Lịch tháng",
+      primaryEventsAction: "Xem Sự kiện sắp tới",
+      calendarPreviewTitle: "Lịch tháng hiện tại",
+      calendarPreviewCta: "Xem lịch tháng đầy đủ",
+      upcomingPreviewTitle: "Sự kiện sắp tới",
+      upcomingPreviewCta: "Xem tất cả sự kiện",
+      currentMonthLabel: "Tháng hiện tại",
+      todayLabel: "Hôm nay",
+      chamDateLabel: "Lịch Cham",
+      awalDateLabel: "Lịch Awal",
+      noEvents: "Không có sự kiện",
       features: [
         "Lịch Chăm theo hệ Saka",
         "Lịch Awal",
@@ -216,6 +287,43 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
         "Tiếng Việt",
         "English"
       ]
+    },
+    calendar: {
+      title: "Lịch tháng",
+      lede: "Tra cứu lịch tháng Sakawi với ngày Dương lịch, lịch Cham, lịch Awal và các sự kiện liên quan.",
+      upcomingTitle: "Sự kiện sắp tới",
+      regionLabel: "Khu vực lịch",
+      ninhThuan: "Sakawi Ninh Thuận",
+      binhThuan: "Sakawi Bình Thuận",
+      developmentTitle: "Lưu ý",
+      developmentBody: "Ứng dụng đang trong quá trình phát triển nên còn những thiếu sót; rất mong nhận được góp ý để sản phẩm được hoàn thiện hơn.",
+      referenceBody: "Ứng dụng này chỉ mang tính chất tham khảo; Sakawi chính thức được Hội đồng Chức sắc phát hành từng năm.",
+      selectedDateTitle: "Chi tiết ngày",
+      gregorianDate: "Ngày Dương lịch",
+      chamDate: "Lịch Cham",
+      awalDate: "Lịch Awal",
+      weekday: "Thứ",
+      events: "Sự kiện",
+      noEvents: "Không có sự kiện",
+      previousMonth: "Tháng trước",
+      nextMonth: "Tháng sau",
+      today: "Hôm nay",
+      viewDetails: "Xem chi tiết"
+    },
+    events: {
+      title: "Sự kiện",
+      lede: "Các sự kiện Sakawi được sắp xếp theo ngày, ưu tiên những ngày sắp tới.",
+      upcoming: "Sự kiện sắp tới",
+      all: "Tất cả",
+      date: "Ngày",
+      event: "Sự kiện",
+      category: "Loại lịch",
+      daysRemaining: "Còn lại",
+      openCalendar: "Mở trong Lịch tháng",
+      noEvents: "Không có sự kiện",
+      regionLabel: "Khu vực lịch",
+      ninhThuan: "Sakawi Ninh Thuận",
+      binhThuan: "Sakawi Bình Thuận"
     },
     privacy: {
       title: "Chính sách riêng tư",
@@ -353,6 +461,8 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
     },
     nav: {
       home: "Home",
+      calendar: "Monthly Calendar",
+      events: "Events",
       documents: "Documents",
       privacy: "Privacy",
       support: "Support",
@@ -369,6 +479,10 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
     metadata: {
       homeTitle: "Sakawi | Cham calendar app",
       homeDescription: "Sakawi is a Cham calendar app combining Saka and Jawi, with Saka calendar, Awal calendar, events, documents, and countdowns.",
+      calendarTitle: "Monthly Calendar | Sakawi",
+      calendarDescription: "Look up the Sakawi monthly calendar with Gregorian, Cham, Awal, event, and regional calendar details.",
+      eventsTitle: "Upcoming Events | Sakawi",
+      eventsDescription: "View upcoming Sakawi events and open their corresponding dates in the monthly calendar.",
       documentsTitle: "Documents | Sakawi",
       documentsDescription: "Bilingual documents for basic Cham Calendar knowledge in Sakawi.",
       privacyTitle: "Privacy | Sakawi",
@@ -410,6 +524,17 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       linksTitle: "Quick links",
       calendarLink: "Open monthly calendar",
       eventsLink: "View events",
+      primaryCalendarAction: "View Monthly Calendar",
+      primaryEventsAction: "View Upcoming Events",
+      calendarPreviewTitle: "Current month",
+      calendarPreviewCta: "View full monthly calendar",
+      upcomingPreviewTitle: "Upcoming Events",
+      upcomingPreviewCta: "View all Events",
+      currentMonthLabel: "Current month",
+      todayLabel: "Today",
+      chamDateLabel: "Cham Calendar",
+      awalDateLabel: "Awal Calendar",
+      noEvents: "No events",
       features: [
         "Cham calendar based on the Saka system",
         "Awal calendar",
@@ -420,6 +545,43 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
         "Vietnamese",
         "English"
       ]
+    },
+    calendar: {
+      title: "Monthly Calendar",
+      lede: "Look up Sakawi monthly dates with Gregorian, Cham, Awal, and related event information.",
+      upcomingTitle: "Upcoming Events",
+      regionLabel: "Calendar region",
+      ninhThuan: "Sakawi Ninh Thuận",
+      binhThuan: "Sakawi Bình Thuận",
+      developmentTitle: "Note",
+      developmentBody: "The app is still in development, so feedback is welcome as the product improves.",
+      referenceBody: "This app is for reference only; official Sakawi calendars are issued yearly by the Council of Dignitaries.",
+      selectedDateTitle: "Date details",
+      gregorianDate: "Gregorian date",
+      chamDate: "Cham Calendar",
+      awalDate: "Awal Calendar",
+      weekday: "Weekday",
+      events: "Events",
+      noEvents: "No events",
+      previousMonth: "Previous month",
+      nextMonth: "Next month",
+      today: "Today",
+      viewDetails: "View details"
+    },
+    events: {
+      title: "Events",
+      lede: "Sakawi events ordered by date, with upcoming dates shown first.",
+      upcoming: "Upcoming Events",
+      all: "All",
+      date: "Date",
+      event: "Event",
+      category: "Calendar type",
+      daysRemaining: "Days remaining",
+      openCalendar: "Open in Monthly Calendar",
+      noEvents: "No events",
+      regionLabel: "Calendar region",
+      ninhThuan: "Sakawi Ninh Thuận",
+      binhThuan: "Sakawi Bình Thuận"
     },
     privacy: {
       title: "Privacy",

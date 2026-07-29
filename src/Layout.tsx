@@ -7,11 +7,17 @@ interface LayoutProps {
     children: JSX.Element;
 }
 
-const publicLinks = [
-    { to: "/", key: "home" },
+const primaryLinks = [
+    { to: "/calendar", key: "calendar" },
+    { to: "/events", key: "events" },
     { to: "/documents", key: "documents" },
-    { to: "/privacy", key: "privacy" },
     { to: "/support", key: "support" },
+] as const;
+
+const footerLinks = [
+    { to: "/", key: "home" },
+    ...primaryLinks,
+    { to: "/privacy", key: "privacy" },
     { to: "/releases", key: "releases" },
 ] as const;
 
@@ -80,8 +86,8 @@ const SiteHeader = () => {
                     </div>
                     <Navbar.Collapse id="site-navigation">
                         <Nav className="site-nav" aria-label={copy.nav.navLabel}>
-                            {publicLinks.map((link) => (
-                                <Nav.Link key={link.to} as={NavLink} to={link.to} end={link.to === "/"}>
+                            {primaryLinks.map((link) => (
+                                <Nav.Link key={link.to} as={NavLink} to={link.to}>
                                     {copy.nav[link.key]}
                                 </Nav.Link>
                             ))}
@@ -117,7 +123,7 @@ const SiteFooter = () => {
                     <p>{copy.footer.description}</p>
                 </div>
                 <nav className="footer-nav" aria-label={copy.nav.navLabel}>
-                    {publicLinks.map((link) => (
+                    {footerLinks.map((link) => (
                         <NavLink key={link.to} to={link.to} end={link.to === "/"}>
                             {copy.nav[link.key]}
                         </NavLink>

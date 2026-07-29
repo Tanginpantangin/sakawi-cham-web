@@ -1,7 +1,9 @@
 import { Button, ButtonGroup, ButtonToolbar, Col } from "react-bootstrap";
 import { AwalMonthEnum, displayAhierMonthName, displayAwalMonthName, displayIkasSarakName, displayNasakName, IkasSarakEnum, SakawiType } from "../enums/enum";
+import { useLanguage } from "../i18n";
 import { AhierMonth } from "../model/AhierDate";
 import { AwalMonth } from "../model/AwalDate";
+import { getSiteCopy } from "../siteContent";
 import Helper from "../utility/helper";
 
 interface MonthNavigationProps {
@@ -17,6 +19,8 @@ interface MonthNavigationProps {
 }
 
 export const MonthNavigation = (props: MonthNavigationProps) => {
+    const { language } = useLanguage();
+    const copy = getSiteCopy(language);
     const currentGregoryMonth = props.currentGregoryMonth ? props.currentGregoryMonth + 1 : 1;
 
     return (
@@ -72,11 +76,11 @@ export const MonthNavigation = (props: MonthNavigationProps) => {
             <Col xs={12} lg={3} className="calendar-nav-section calendar-nav-section-right">
                 <ButtonToolbar aria-label="Toolbar with button groups" className="calendar-nav-toolbar">
                     <ButtonGroup aria-label="Third group" className="calendar-today-group">
-                        <Button variant="secondary" onClick={props.onClickToday}>Hôm nay</Button>
+                        <Button variant="secondary" aria-label={copy.calendar.today} onClick={props.onClickToday}>{copy.calendar.today}</Button>
                     </ButtonGroup>
                     <ButtonGroup aria-label="Navigate months">
-                        <Button variant="secondary" className="fa fa-chevron-left" onClick={props.onClickPreviousMonth} />
-                        <Button variant="secondary" className="fa fa-chevron-right" onClick={props.onClickNextMonth} />
+                        <Button variant="secondary" className="fa fa-chevron-left" aria-label={copy.calendar.previousMonth} onClick={props.onClickPreviousMonth} />
+                        <Button variant="secondary" className="fa fa-chevron-right" aria-label={copy.calendar.nextMonth} onClick={props.onClickNextMonth} />
                     </ButtonGroup>
                 </ButtonToolbar>
             </Col>
