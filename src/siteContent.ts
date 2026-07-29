@@ -132,10 +132,28 @@ interface SiteTranslation {
     weekday: string;
     events: string;
     noEvents: string;
+    emptyDayEvents: string;
     previousMonth: string;
     nextMonth: string;
     today: string;
     viewDetails: string;
+    systemCham: string;
+    systemAwal: string;
+    systemGregorian: string;
+    showLatinNumbers: string;
+    legendTitle: string;
+    legendCham: string;
+    legendAwal: string;
+    legendGregorian: string;
+    legendEvent: string;
+    legendToday: string;
+    legendNotes: readonly string[];
+    detailSubtitle: string;
+    day: string;
+    month: string;
+    year: string;
+    moreEvents: string;
+    regionalWarning: string;
   };
   events: {
     title: string;
@@ -307,10 +325,31 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       weekday: "Thứ",
       events: "Sự kiện",
       noEvents: "Không có sự kiện",
+      emptyDayEvents: "Không có sự kiện trong ngày này",
       previousMonth: "Tháng trước",
       nextMonth: "Tháng sau",
       today: "Hôm nay",
-      viewDetails: "Xem chi tiết"
+      viewDetails: "Xem chi tiết",
+      systemCham: "Lịch Cham",
+      systemAwal: "Lịch Awal",
+      systemGregorian: "Dương lịch",
+      showLatinNumbers: "Hiển thị ngày bằng số Latin",
+      legendTitle: "Chú thích",
+      legendCham: "Lịch Cham",
+      legendAwal: "Lịch Awal",
+      legendGregorian: "Dương lịch",
+      legendEvent: "Sự kiện",
+      legendToday: "Hôm nay",
+      legendNotes: [
+        "꩑ꩃ / ꩑ꩌ [bingun/klem]: ngày trước/sau trăng rằm của lịch Cham và lịch Awal.",
+        "Các tháng thiếu 29 ngày của lịch Cham dùng quy tắc hiển thị hiện có của ứng dụng Sakawi."
+      ],
+      detailSubtitle: "Thông tin ngày được chọn",
+      day: "Ngày",
+      month: "Tháng",
+      year: "Năm",
+      moreEvents: "+{count} nữa",
+      regionalWarning: "Khi đổi khu vực, ngày Dương lịch đang chọn được giữ nguyên và thông tin Sakawi được tính lại theo khu vực mới."
     },
     events: {
       title: "Sự kiện",
@@ -566,10 +605,31 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       weekday: "Weekday",
       events: "Events",
       noEvents: "No events",
+      emptyDayEvents: "No events on this date",
       previousMonth: "Previous month",
       nextMonth: "Next month",
       today: "Today",
-      viewDetails: "View details"
+      viewDetails: "View details",
+      systemCham: "Cham Calendar",
+      systemAwal: "Awal Calendar",
+      systemGregorian: "Gregorian Calendar",
+      showLatinNumbers: "Show dates with Latin numerals",
+      legendTitle: "Legend",
+      legendCham: "Cham Calendar",
+      legendAwal: "Awal Calendar",
+      legendGregorian: "Gregorian Calendar",
+      legendEvent: "Event",
+      legendToday: "Today",
+      legendNotes: [
+        "꩑ꩃ / ꩑ꩌ [bingun/klem]: days before/after the full moon in the Cham and Awal calendars.",
+        "Short 29-day Cham months use the existing Sakawi app display rule."
+      ],
+      detailSubtitle: "Selected date information",
+      day: "Day",
+      month: "Month",
+      year: "Year",
+      moreEvents: "+{count} more",
+      regionalWarning: "When you change region, the selected Gregorian date is preserved and Sakawi details are recalculated for the new region."
     },
     events: {
       title: "Events",

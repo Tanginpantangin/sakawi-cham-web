@@ -1630,6 +1630,35 @@ body {
   color: #4b5b53;
 }
 
+.calendar-table thead th.day-name-primary {
+  background: var(--sakawi-ahier);
+  color: #FFFFFF;
+}
+
+.weekday-cham,
+.weekday-latin {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.weekday-cham {
+  font-family: 'NotoSansCham';
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.weekday-latin {
+  margin-top: 0.08rem;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
 .calendar-table tbody td {
   border-color: #e2e8e4;
   background-color: #FFFFFF;
@@ -1666,6 +1695,35 @@ body {
   cursor: pointer;
   font-family: inherit;
   text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.16rem;
+}
+
+.event-name-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-dot-inline {
+  width: 0.32rem;
+  height: 0.32rem;
+  flex: 0 0 0.32rem;
+  border-radius: 999px;
+  background: #2f80ed;
+}
+
+.event-dot-ahier {
+  background: var(--sakawi-ahier);
+}
+
+.event-dot-awal {
+  background: var(--sakawi-awal);
+}
+
+.event-dot-gregory {
+  background: #2f80ed;
 }
 
 .event-name-button:focus {
@@ -2631,16 +2689,59 @@ button:focus-visible,
   font-weight: 800;
 }
 
+.calendar-region-note {
+  max-width: 52rem;
+  margin: -0.2rem 0 1rem;
+  color: var(--sakawi-muted);
+  font-size: 0.9rem;
+}
+
 .calendar-day-selected {
   box-shadow: inset 0 0 0 2px var(--sakawi-ahier);
 }
 
+.calendar-day-today {
+  background-color: #FFEFBF !important;
+}
+
+.calendar-day-inactive {
+  background-color: #F7F8FA !important;
+  opacity: 0.48;
+}
+
+.calendar-day-inactive .calendar-day-events {
+  visibility: hidden;
+}
+
 .selected-date-panel {
-  margin-bottom: 1rem;
+  margin: 1rem 0;
 }
 
 .selected-date-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.selected-date-heading {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.selected-date-heading p {
+  margin: 0.25rem 0 0;
+  color: var(--sakawi-muted);
+}
+
+.selected-date-region {
+  flex: 0 0 auto;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid var(--sakawi-line);
+  border-radius: 999px;
+  color: var(--sakawi-chrome);
+  font-size: 0.82rem;
+  font-weight: 900;
+  white-space: nowrap;
 }
 
 .selected-date-grid dd {
@@ -2655,6 +2756,55 @@ button:focus-visible,
 
 .detail-awal {
   color: var(--sakawi-awal);
+}
+
+.selected-date-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.selected-calendar-card {
+  padding: 0.85rem;
+  border: 1px solid var(--sakawi-line);
+  border-radius: 0.55rem;
+  background: #FFFFFF;
+}
+
+.selected-calendar-card h3 {
+  margin: 0 0 0.55rem;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.selected-calendar-card-ahier h3 {
+  color: var(--sakawi-ahier);
+}
+
+.selected-calendar-card-awal h3 {
+  color: var(--sakawi-awal);
+}
+
+.selected-calendar-card dl {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+}
+
+.selected-calendar-card dt {
+  color: var(--sakawi-chrome);
+  font-size: 0.74rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.selected-calendar-card dd {
+  display: grid;
+  gap: 0.12rem;
+  margin: 0;
+  color: var(--sakawi-ink);
+  overflow-wrap: anywhere;
 }
 
 .selected-date-events {
@@ -2745,6 +2895,20 @@ button:focus-visible,
 @media only screen and (max-width: 575.98px) {
   .section-heading-row {
     display: grid;
+  }
+
+  .selected-date-heading,
+  .selected-date-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .selected-date-heading {
+    display: grid;
+  }
+
+  .selected-date-region {
+    width: fit-content;
+    white-space: normal;
   }
 
   .selected-date-grid {

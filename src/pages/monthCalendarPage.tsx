@@ -19,12 +19,28 @@ export interface MonthCalendarPageProps {
     fullSakawiBT: FullCalendarType[];
 }
 
+const calendarRegionStorageKey = "sakawi.calendar.region";
+
+function resolveSavedRegion(): AreaType {
+    if (typeof window === "undefined") {
+        return "NinhThuan";
+    }
+
+    return window.localStorage.getItem(calendarRegionStorageKey) === "BinhThuan"
+        ? "BinhThuan"
+        : "NinhThuan";
+}
+
 export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
     const location = useLocation();
     const { language } = useLanguage();
     const copy = getSiteCopy(language);
+    const initialSelectedDate = React.useMemo(
+        () => parseDateParam(new URLSearchParams(location.search).get("date")),
+        [location.search]
+    );
     const [showWarning, setShowWarning] = useState(true);
-    const [areaType, setAreaType] = useState<AreaType>('NinhThuan');
+    const [areaType, setAreaType] = useState<AreaType>(resolveSavedRegion);
     const [matrixSakawi, setMatrixSakawi] = useState<MatrixCalendarType[]>([]);
     const [fullSakawi, setFullSakawi] = useState<FullCalendarType[]>([]);
     const [nextEvents, setNextEvents] = useState<CountDownBarProps[]>([]);
@@ -42,6 +58,7 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
         }
 
         init();
+        window.localStorage.setItem(calendarRegionStorageKey, areaType);
         setLoading(false);
         
         // Cleanup function for asynchronous operations
@@ -97,22 +114,27 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
                     <Col xs={12}>
                         <Form>
                             <Form.Label className="area-selector-label">{copy.calendar.regionLabel}</Form.Label>
-                            <div className="area-selector mb-3">
+                            <div className="area-selector mb-3" role="radiogroup" aria-label={copy.calendar.regionLabel}>
                                 <Form.Check
+                                    id="calendar-region-ninh-thuan"
                                     inline
                                     type={"radio"}
                                     label={copy.calendar.ninhThuan}
+                                    name="calendar-region"
                                     checked={areaType === "NinhThuan"}
                                     onChange={() => { setAreaType('NinhThuan') }}
                                 />
                                 <Form.Check
+                                    id="calendar-region-binh-thuan"
                                     inline
                                     type={"radio"}
                                     label={copy.calendar.binhThuan}
+                                    name="calendar-region"
                                     checked={areaType === "BinhThuan"}
                                     onChange={() => { setAreaType('BinhThuan') }}
                                 />
                             </div>
+                            <p className="calendar-region-note">{copy.calendar.regionalWarning}</p>
                         </Form>
                     </Col>
                 </Row>
@@ -143,7 +165,8 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
                             <MonthCalendar
                                 matrixSakawi={matrixSakawi}
                                 fullSakawi={fullSakawi}
-                                initialSelectedDate={parseDateParam(new URLSearchParams(location.search).get("date"))}
+                                initialSelectedDate={initialSelectedDate}
+                                areaLabel={areaType === "NinhThuan" ? copy.calendar.ninhThuan : copy.calendar.binhThuan}
                             />
                         </Col>
                     </Row>

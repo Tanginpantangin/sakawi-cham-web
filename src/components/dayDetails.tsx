@@ -1,9 +1,21 @@
+import React from "react";
 import { OverlayTrigger, Popover } from "react-bootstrap";
-import { AwalMonthEnum, displayIkasSarakName, EventType, IkasSarakEnum, SakawiType } from "../enums/enum";
+import { SakawiType } from "../enums/enum";
+import { useLanguage } from "../i18n";
 import { AhierDate, AhierMonth } from "../model/AhierDate";
 import { AwalDate, AwalMonth } from "../model/AwalDate";
+import { getSiteCopy } from "../siteContent";
 import Helper from "../utility/helper";
-import { sameDate } from "../utils/dateFormat";
+import {
+    CalendarDayEvent,
+    displayAhierDate,
+    displayAwalDateParts,
+    displayAwalDayMonth,
+    displayGregorianShort,
+    getDayEvents,
+    sameDate
+} from "../utils/dateFormat";
+import { getToday } from "../utils/today";
 
 interface DayDetailsProps {
     sakawiType: SakawiType;
@@ -21,314 +33,85 @@ interface DayDetailsProps {
     onSelectDate: () => void;
 }
 
-interface CalendarDayEvent {
-    eventType?: EventType;
-    sakawiType?: SakawiType;
-    latinName: string;
-    akharThrahName?: string;
-    vnName?: string;
-    description?: string;
+function sameAhierMonth(a?: AhierMonth, b?: AhierMonth) {
+    return !!a && !!b
+        && a.month === b.month
+        && a.year.yearNumber === b.year.yearNumber
+        && a.year.nasak === b.year.nasak
+        && a.year.ikasSarak === b.year.ikasSarak;
 }
 
-const EVENT_TYPES: EventType[] = [
-    'AkaokThun',
-    'RijaNagar',
-    'KatePaleiHamuTanran',
-    'KateAngaokBimong',
-    'CaMbur',
-    'Lakhah',
-    'AwalNewYear',
-    'TamaRicaowRamawan',
-    'TalaihAekRamawan',
-    'MukTrun',
-    'OngTrun',
-    'IkakWaha',
-    'TalaihWaha',
-    'YuerYang',
-    'VietnameseLunarNewYear'
-];
+function sameAwalMonth(a?: AwalMonth, b?: AwalMonth) {
+    return !!a && !!b
+        && a.month === b.month
+        && a.year.yearNumber === b.year.yearNumber
+        && a.year.ikasSarak === b.year.ikasSarak;
+}
+
+function eventClassName(event: CalendarDayEvent) {
+    if (event.sakawiType === "sakawiAwal") return "event-dot-inline event-dot-awal";
+    if (event.sakawiType === "sakawiGregory") return "event-dot-inline event-dot-gregory";
+    return "event-dot-inline event-dot-ahier";
+}
 
 export const DayDetails = (props: DayDetailsProps) => {
-    let opacityValue = 1;
-    let backgroundColor = '';
-
-    if (props.dateGregory.toLocaleDateString() === new Date().toLocaleDateString()) {
-        backgroundColor = '#FFEFBF';
-    }
-
-    if (props.sakawiType === "sakawiAhier") {
-        if (JSON.stringify(props.dateAhier.ahierMonth) !== JSON.stringify(props.currentAhierMonth)) {
-            backgroundColor = '#F2F2F2';
-            opacityValue = 0.3;
-        }
-    } else if (props.sakawiType === "sakawiAwal") {
-        if (JSON.stringify(props.dateAwal.awalMonth) !== JSON.stringify(props.currentAwalMonth)) {
-            backgroundColor = '#F2F2F2';
-            opacityValue = 0.3;
-        }
-    } else if (props.sakawiType === "sakawiGregory") {
-        if (props.dateGregory.getMonth() !== props.currentGregoryMonth
-            || props.dateGregory.getFullYear() !== props.currentGregoryYear) {
-            backgroundColor = '#F2F2F2';
-            opacityValue = 0.3;
-        }
-    }
-
-    const tdStyle: React.CSSProperties = {
-        opacity: opacityValue,
-        backgroundColor: backgroundColor
-    }
+    const { language } = useLanguage();
+    const copy = getSiteCopy(language);
+    const today = sameDate(props.dateGregory, getToday());
     const isSelected = props.selectedDate ? sameDate(props.selectedDate, props.dateGregory) : false;
+    const inactive = props.sakawiType === "sakawiAhier"
+        ? !sameAhierMonth(props.dateAhier.ahierMonth, props.currentAhierMonth)
+        : props.sakawiType === "sakawiAwal"
+            ? !sameAwalMonth(props.dateAwal.awalMonth, props.currentAwalMonth)
+            : props.dateGregory.getMonth() !== props.currentGregoryMonth
+                || props.dateGregory.getFullYear() !== props.currentGregoryYear;
 
-    let gregoryDateClass = 'gregory-date';
-    let ahierDateClass = 'ahier-date';
-    let awalDateClass = 'awal-date';
-    let ikasSarakMonthCellClass = props.showLatinNumberDate ? '' : 'ikasSarak-month-cell';
+    const withAhierMonth = props.dateAhier.date === 1 && props.sakawiType !== "sakawiAhier";
+    const withAwalMonth = props.dateAwal.date === 1 && props.sakawiType !== "sakawiAwal";
+    const withGregoryMonth = (props.sakawiType === "sakawiAwal" && props.dateAwal.date === 1)
+        || (props.sakawiType === "sakawiAhier" && props.dateAhier.date === 1);
+    const awalDate = props.sakawiType === "sakawiAhier" && withAwalMonth
+        ? { text: displayAwalDayMonth(props.dateAwal, props.dayNumbersOfCurrentAwalMonth, props.showLatinNumberDate) }
+        : displayAwalDateParts(props.dateAwal, props.dayNumbersOfCurrentAwalMonth, props.showLatinNumberDate, withAwalMonth);
+    const events = getDayEvents(
+        props.dateAhier,
+        props.dateAwal,
+        props.dateGregory,
+        props.dayNumbersOfCurrentAhierMonth
+    );
+    const visibleEvents = inactive ? [] : events.slice(0, 2);
+    const hiddenEventCount = events.length - visibleEvents.length;
+
+    let gregoryDateClass = "gregory-date";
+    let ahierDateClass = "ahier-date";
+    let awalDateClass = "awal-date";
+    let ikasSarakMonthCellClass = props.showLatinNumberDate ? "" : "ikasSarak-month-cell";
 
     if (props.showLatinNumberDate) {
-        ahierDateClass += ' display-latin-number';
-        awalDateClass += ' display-latin-number';
+        ahierDateClass += " display-latin-number";
+        awalDateClass += " display-latin-number";
     }
 
-    switch (props.sakawiType) {
-        case "sakawiGregory":
-            gregoryDateClass += ' active'
-            break;
-
-        case "sakawiAhier":
-            ahierDateClass += ' active'
-            break;
-
-        case "sakawiAwal":
-            awalDateClass += ' active'
-            ikasSarakMonthCellClass += ' active'
-            break;
-
-        default:
-            break;
-    }
-
-    function displayGregoryDate(sakawiType: SakawiType, dateAhier: AhierDate, dateAwal: AwalDate, dateGregory: Date) {
-        const monthGregogy = dateGregory.getMonth() + 1;
-
-        if ((sakawiType === "sakawiAwal" && dateAwal.date === 1) || (sakawiType === "sakawiAhier" && dateAhier.date === 1)) {
-            return dateGregory.getDate() + "." + monthGregogy;
-        } else {
-            return dateGregory.getDate();
-        }
-    }
-
-    function displayAhierDate(dateAhier: AhierDate) {
-        const monthAhier = dateAhier.ahierMonth.month + 1;
-        const bingun = props.showLatinNumberDate ? '' : 'ꩃ';
-        const klem = props.showLatinNumberDate ? '\'' : 'ꩌ';
-
-        if (dateAhier.date === 1 && props.sakawiType !== 'sakawiAhier') {
-            return (
-                <label style={{ margin: 0 }} >{Helper.convertToChamDigitUnicode(dateAhier.date, props.showLatinNumberDate) + bingun + "." + Helper.convertToChamDigitUnicode(monthAhier, props.showLatinNumberDate)}</label>
-            )
-        } else {
-            if (props.dayNumbersOfCurrentAhierMonth === 30) {
-                if (dateAhier.date <= 15) {
-                    return Helper.convertToChamDigitUnicode(dateAhier.date, props.showLatinNumberDate) + bingun;
-                } else {
-                    return Helper.convertToChamDigitUnicode(dateAhier.date - 15, props.showLatinNumberDate) + klem;
-                }
-            } else {
-                if (dateAhier.date <= 14) {
-                    if (dateAhier.date <= 5) {
-                        return Helper.convertToChamDigitUnicode(dateAhier.date, props.showLatinNumberDate) + bingun;
-                    } else {
-                        return Helper.convertToChamDigitUnicode(dateAhier.date + 1, props.showLatinNumberDate) + bingun;
-                    }
-                } else {
-                    return Helper.convertToChamDigitUnicode(dateAhier.date - 14, props.showLatinNumberDate) + klem;
-                }
-            }
-        }
-    };
-
-    function displayAwalDate(dateAwal: AwalDate) {
-        const monthAwal = dateAwal.awalMonth.month + 1;
-        const bingun = props.showLatinNumberDate ? '' : 'ꩃ';
-        const klem = props.showLatinNumberDate ? '\'' : 'ꩌ';
-
-        if (dateAwal.date === 1 && props.sakawiType !== 'sakawiAwal') {
-            return (
-                <>
-                    <label style={{ margin: 0 }} >{Helper.convertToChamDigitUnicode(dateAwal.date, props.showLatinNumberDate) + bingun + "." + Helper.convertToChamDigitUnicode(monthAwal, props.showLatinNumberDate) + "."}</label>
-                    <label style={{ margin: 0 }} className={ikasSarakMonthCellClass}>
-                        {props.showLatinNumberDate ? IkasSarakEnum[dateAwal.awalMonth.year.ikasSarak] : displayIkasSarakName(dateAwal.awalMonth.year.ikasSarak)}
-                    </label>
-                </>
-            )
-        } else {
-            if (props.dayNumbersOfCurrentAwalMonth === 30) {
-                if (dateAwal.date <= 15) {
-                    return Helper.convertToChamDigitUnicode(dateAwal.date, props.showLatinNumberDate) + bingun;
-                } else {
-                    return Helper.convertToChamDigitUnicode(dateAwal.date - 15, props.showLatinNumberDate) + klem;
-                }
-            } else {
-                if (dateAwal.date <= 14) {
-                    return Helper.convertToChamDigitUnicode(dateAwal.date, props.showLatinNumberDate) + bingun;
-                } else {
-                    return Helper.convertToChamDigitUnicode(dateAwal.date - 14, props.showLatinNumberDate) + klem;
-                }
-            }
-        }
-    }
-
-    function getEvents() {
-        let result: string[] = [];
-
-        if (Helper.isVietnameseLunarNewYear(props.dateGregory)) {
-            result.push('Tết Nguyên Đán');
-        }
-
-        if (props.dateAhier.ahierMonth.month === 0 && props.dateAhier.date === 1) {
-            result.push('Akaok thun');
-        }
-
-        if (props.dateAwal.awalMonth.month === AwalMonthEnum.Muharam && props.dateAwal.date === 1) {
-            result.push('Thun birau Awal');
-        }
-
-        //TODO
-        if (props.dateAhier.ahierMonth.month === 0 && props.dateGregory.getDay() === 4) {
-            if (props.dateAwal.awalMonth.month === AwalMonthEnum.Ramadan) {
-                // closet Thurday and after Muk Trun day
-                if (props.dateAwal.date >= 16 && props.dateAhier.date <= 22) {
-                    result.push('Rija Nagar');
-                }
-            } else {
-                if (props.dateAhier.date >= 1 && props.dateAhier.date <= 7) {
-                    result.push('Rija Nagar');
-                }
-            }
-        }
-
-        if (props.dateAhier.ahierMonth.month === 5 && props.dateAhier.date === props.dayNumbersOfCurrentAhierMonth) {
-            result.push('Katé palei Hamu Tanran');
-        }
-
-        if (props.dateAhier.ahierMonth.month === 6 && props.dateAhier.date === 1) {
-            result.push('Katé angaok bimong');
-        }
-
-        if (props.dayNumbersOfCurrentAhierMonth === 30) {
-            if (props.dateAhier.ahierMonth.month === 8 && props.dateAhier.date === 16) {
-                result.push('Ca-mbur');
-            }
-        } else {
-            if (props.dateAhier.ahierMonth.month === 8 && props.dateAhier.date === 15) {
-                result.push('Ca-mbur');
-            }
-        }
-
-        if (props.dateAwal.awalMonth.month === 8 && props.dateAwal.date === 1) {
-            result.push('Tamâ ricaow Ramâwan');
-        }
-
-        if (props.dateAwal.awalMonth.month === 8 && props.dateAwal.date === 16) {
-            result.push('Muk trun');
-        }
-
-        if (props.dateAwal.awalMonth.month === 8 && props.dateAwal.date === 21) {
-            result.push('Ong trun');
-        }
-
-        if (props.dateAwal.awalMonth.month === 9 && props.dateAwal.date === 2) {
-            result.push('Talaih aek Ramâwan');
-        }
-
-        if (props.dateAwal.awalMonth.month === 11 && props.dateAwal.date === 1) {
-            result.push('Ikak Waha');
-        }
-
-        if (props.dateAwal.awalMonth.month === 11 && props.dateAwal.date === 11) {
-            result.push('Talaih Waha');
-        }
-
-        if (props.dateAhier.ahierMonth.month === 3 && props.dateGregory.getDay() === 0 && props.dateAhier.date < 7) {
-            result.push('Yuer Yang');
-        }
-
-        // TODO: 
-        // if (props.dateAhier.ahierMonth.month === 10 && props.dateGregory.getDay() === 2 && props.dateAhier.date <= 15) {
-        //     result.push('Peh ba-mbeng Yang');
-        // }
-
-        if ((props.dateAhier.ahierMonth.month === 2
-            || props.dateAhier.ahierMonth.month === 5
-            || props.dateAhier.ahierMonth.month === 7
-            || props.dateAhier.ahierMonth.month === 9
-            || props.dateAhier.ahierMonth.month === 10) && props.dateGregory.getDay() === 3) {
-
-            if (props.dayNumbersOfCurrentAhierMonth === 30) {
-                if (props.dateAhier.date > 15 && (props.dateAhier.date - 15) % 2 === 0) {
-                    result.push('Lakhah');
-                }
-            } else {
-                if (props.dateAhier.date > 14 && (props.dateAhier.date - 14) % 2 === 0) {
-                    result.push('Lakhah');
-                }
-            }
-        }
-
-        return result;
-    }
-
-    function mapEventName(eventName: string): CalendarDayEvent {
-        let eventType = EVENT_TYPES.find(type => {
-            const eventInfo = Helper.displayEventDay(type);
-            return eventInfo?.latinName === eventName || eventInfo?.vnName === eventName;
-        });
-
-        if (!eventType) {
-            if (eventName === 'Rija Nagar') {
-                eventType = 'RijaNagar';
-            } else if (eventName.indexOf('Hamu Tanran') >= 0) {
-                eventType = 'KatePaleiHamuTanran';
-            } else if (eventName.indexOf('angaok bimong') >= 0) {
-                eventType = 'KateAngaokBimong';
-            } else if (eventName.indexOf('Thun birau Awal') >= 0) {
-                eventType = 'AwalNewYear';
-            } else if (eventName.indexOf('Ram') >= 0 && eventName.indexOf('Talaih') < 0) {
-                eventType = 'TamaRicaowRamawan';
-            } else if (eventName.indexOf('Talaih') >= 0 && eventName.indexOf('Ram') >= 0) {
-                eventType = 'TalaihAekRamawan';
-            } else if (eventName.indexOf('Lakhah') >= 0) {
-                eventType = 'Lakhah';
-            }
-        }
-
-        if (eventType) {
-            const eventInfo = Helper.displayEventDay(eventType);
-
-            return {
-                eventType,
-                sakawiType: eventInfo?.sakawiType as SakawiType | undefined,
-                latinName: eventInfo?.latinName ?? eventName,
-                akharThrahName: eventInfo?.akharThrahName,
-                vnName: eventInfo?.vnName,
-                description: eventInfo?.description
-            };
-        }
-
-        return {
-            latinName: eventName.replace('â™¥ï¸ ', ''),
-            description: eventName.indexOf('Lakhah') >= 0 ? 'Ngày Lakhah theo lịch Cham' : undefined
-        };
+    if (props.sakawiType === "sakawiGregory") {
+        gregoryDateClass += " active";
+    } else if (props.sakawiType === "sakawiAhier") {
+        ahierDateClass += " active";
+    } else {
+        awalDateClass += " active";
+        ikasSarakMonthCellClass += " active";
     }
 
     function renderEventPopover(event: CalendarDayEvent, index: number) {
-        const eventTypeLabel = event.sakawiType === 'sakawiAwal' ? 'Lịch Awal' : event.sakawiType === 'sakawiAhier' ? 'Lịch Cham' : 'Sự kiện';
-        const eventTypeBadgeClass = event.sakawiType === 'sakawiAwal'
-            ? 'event-type-badge-awal'
-            : event.sakawiType === 'sakawiAhier'
-                ? 'event-type-badge-ahier'
-                : 'event-type-badge-gregory';
+        const eventTypeLabel = event.sakawiType === "sakawiAwal"
+            ? copy.calendar.systemAwal
+            : event.sakawiType === "sakawiAhier"
+                ? copy.calendar.systemCham
+                : copy.calendar.systemGregorian;
+        const eventTypeBadgeClass = event.sakawiType === "sakawiAwal"
+            ? "event-type-badge-awal"
+            : event.sakawiType === "sakawiAhier"
+                ? "event-type-badge-ahier"
+                : "event-type-badge-gregory";
 
         return (
             <Popover id={`calendar-event-popover-${props.dateGregory.getTime()}-${index}`} className="calendar-event-popover">
@@ -356,14 +139,14 @@ export const DayDetails = (props: DayDetailsProps) => {
         );
     }
 
-    function renderMoreEventsPopover(events: CalendarDayEvent[]) {
+    function renderMoreEventsPopover(allEvents: CalendarDayEvent[]) {
         return (
             <Popover id={`calendar-event-more-popover-${props.dateGregory.getTime()}`} className="calendar-event-popover calendar-event-more-popover">
                 <Popover.Title as="div">
-                    {`${events.length} sự kiện - ${Helper.displayDateString(props.dateGregory)}`}
+                    {`${allEvents.length} ${copy.calendar.events.toLocaleLowerCase(language === "vi" ? "vi-VN" : "en-US")} - ${Helper.displayDateString(props.dateGregory)}`}
                 </Popover.Title>
                 <Popover.Content>
-                    {events.map((event, index) =>
+                    {allEvents.map((event, index) =>
                         <div key={`more-event-${index}`} className="event-more-item">
                             {event.akharThrahName &&
                                 <div className="event-popover-cham-name">{event.akharThrahName}</div>
@@ -379,10 +162,6 @@ export const DayDetails = (props: DayDetailsProps) => {
         );
     }
 
-    const events = getEvents().map(mapEventName);
-    const visibleEvents = events.slice(0, 2);
-    const hiddenEventCount = events.length - visibleEvents.length;
-
     function handleKeyDown(event: React.KeyboardEvent<HTMLTableCellElement>) {
         if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
@@ -390,40 +169,53 @@ export const DayDetails = (props: DayDetailsProps) => {
         }
     }
 
+    function stopCellSelection(event: React.MouseEvent<HTMLButtonElement>) {
+        event.stopPropagation();
+    }
+
+    const cellClassNames = [
+        "calendar-day",
+        isSelected ? "calendar-day-selected" : "",
+        today ? "calendar-day-today" : "",
+        inactive ? "calendar-day-inactive" : ""
+    ].filter(Boolean).join(" ");
+
     return (
         <td
-            className={isSelected ? "calendar-day calendar-day-selected" : "calendar-day"}
-            style={tdStyle}
+            className={cellClassNames}
             role="button"
             tabIndex={0}
-            aria-label={`${Helper.displayDateString(props.dateGregory)} - xem chi tiết`}
+            aria-label={`${Helper.displayDateString(props.dateGregory)} - ${copy.calendar.viewDetails}`}
             aria-pressed={isSelected}
+            aria-current={today ? "date" : undefined}
+            data-testid={today ? "calendar-today-cell" : undefined}
             onClick={props.onSelectDate}
             onKeyDown={handleKeyDown}
         >
             <div className="calendar-day-grid">
                 <div className={gregoryDateClass}>
-                    {displayGregoryDate(props.sakawiType, props.dateAhier, props.dateAwal, props.dateGregory)}
+                    {displayGregorianShort(props.dateGregory, withGregoryMonth)}
                 </div>
-                <div className="calendar-day-events">
-                    {visibleEvents.map((item, index) => {
-                        return (
-                            <OverlayTrigger
-                                key={index}
-                                trigger="click"
-                                rootClose
-                                placement="auto"
-                                overlay={renderEventPopover(item, index)}
+                <div className="calendar-day-events" aria-label={events.length > 0 ? copy.calendar.events : undefined}>
+                    {visibleEvents.map((item, index) => (
+                        <OverlayTrigger
+                            key={`${item.latinName}-${index}`}
+                            trigger="click"
+                            rootClose
+                            placement="auto"
+                            overlay={renderEventPopover(item, index)}
+                        >
+                            <button
+                                type="button"
+                                className="event-name event-name-button"
+                                aria-label={`${item.latinName} - ${copy.calendar.events}`}
+                                onClick={stopCellSelection}
                             >
-                                <button
-                                    type="button"
-                                    className="event-name event-name-button"
-                                >
-                                    {item.latinName}
-                                </button>
-                            </OverlayTrigger>
-                        )
-                    })}
+                                <span className={eventClassName(item)} aria-hidden="true"></span>
+                                <span className="event-name-text">{item.latinName}</span>
+                            </button>
+                        </OverlayTrigger>
+                    ))}
                     {hiddenEventCount > 0 &&
                         <OverlayTrigger
                             trigger="click"
@@ -431,17 +223,29 @@ export const DayDetails = (props: DayDetailsProps) => {
                             placement="auto"
                             overlay={renderMoreEventsPopover(events)}
                         >
-                            <button type="button" className="event-name event-name-button event-name-more">{`+${hiddenEventCount} more`}</button>
+                            <button type="button" className="event-name event-name-button event-name-more" onClick={stopCellSelection}>
+                                {copy.calendar.moreEvents.replace("{count}", String(hiddenEventCount))}
+                            </button>
                         </OverlayTrigger>
                     }
                 </div>
                 <div className={awalDateClass}>
-                    {displayAwalDate(props.dateAwal)}
+                    {"ikas" in awalDate && awalDate.ikas ? (
+                        <>
+                            {awalDate.prefix}
+                            <span className={ikasSarakMonthCellClass}>{awalDate.ikas}</span>
+                        </>
+                    ) : awalDate.text}
                 </div>
                 <div className={ahierDateClass}>
-                    {displayAhierDate(props.dateAhier)}
+                    {displayAhierDate(
+                        props.dateAhier,
+                        props.dayNumbersOfCurrentAhierMonth,
+                        props.showLatinNumberDate,
+                        withAhierMonth
+                    )}
                 </div>
             </div>
         </td>
     );
-}
+};

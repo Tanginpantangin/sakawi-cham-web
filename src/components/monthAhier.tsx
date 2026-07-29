@@ -3,6 +3,7 @@ import { Table } from "react-bootstrap";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import Helper from "../utility/helper";
+import { CalendarWeekdayHeader } from "./calendarWeekdays";
 import { DayDetails } from "./dayDetails";
 
 interface MonthAhierProps {
@@ -62,15 +63,12 @@ export const MonthAhier = (props: MonthAhierProps) => {
         }
     })
 
-    const dayNames = ["Adit", "Thom", "Angar", "But", "Jip", "Suk", "Sanacar"]
     return (
         <div className="calendar-table-wrap">
             <Table bordered hover className="calendar-table">
                 <thead>
                     <tr>
-                        {dayNames.map((d, index) =>
-                            <th className="day-name" key={index}>{d}</th>
-                        )}
+                        <CalendarWeekdayHeader />
                     </tr>
                 </thead>
                 <tbody>

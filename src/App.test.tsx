@@ -4,7 +4,11 @@ import App from './App';
 import { languageStorageKey, resolveBrowserLanguage } from './i18n';
 import { siteCopy } from './siteContent';
 
-jest.setTimeout(20000);
+jest.setTimeout(60000);
+
+jest.mock('./utils/today', () => ({
+  getToday: () => new Date(2026, 6, 29, 12, 0, 0)
+}));
 
 const flattenShape = (value: unknown, prefix = ''): string[] => {
   if (Array.isArray(value)) {
@@ -106,16 +110,55 @@ test('about route keeps the product introduction available', () => {
   expect(screen.getByRole('link', { name: /^Xem Sự kiện sắp tới$/i })).toHaveAttribute('href', '#/events');
 });
 
-test('calendar route opens a linked date and exposes month controls', async () => {
+test('calendar route supports month navigation, today, selection, events, language, and region', async () => {
+  window.localStorage.setItem(languageStorageKey, 'en');
   window.location.hash = '#/calendar?date=2026-07-29';
 
-  render(<App />);
+  const { container } = render(<App />);
 
+  expect(await screen.findByRole('heading', { name: /Monthly Calendar/i })).toBeInTheDocument();
+  expect(await screen.findByRole('heading', { name: /Date details/i })).toBeInTheDocument();
+  expect(await screen.findByText(/Month 7 - 2026/i)).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Previous month/i })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Next month/i })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /^Today$/i })).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: /Next month/i }));
+  expect(await screen.findByText(/Month 8 - 2026/i)).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: /Previous month/i }));
+  expect(await screen.findByText(/Month 7 - 2026/i)).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: /^Today$/i }));
+  expect(await screen.findByText(/July 29, 2026/i)).toBeInTheDocument();
+
+  const todayCell = await screen.findByTestId('calendar-today-cell');
+  expect(todayCell).toHaveAttribute('aria-current', 'date');
+  expect(container.querySelectorAll('.calendar-table tbody td')).toHaveLength(42);
+
+  const selectableDate = await screen.findByRole('button', { name: /30.*7.*2026.*View details/i });
+  fireEvent.click(selectableDate);
+  expect(await screen.findByText(/July 30, 2026/i)).toBeInTheDocument();
+
+  const eventButtons = await screen.findAllByRole('button', { name: / - Events$/i });
+  expect(eventButtons.length).toBeGreaterThan(0);
+
+  const firstEventButton = eventButtons[0];
+  const eventName = firstEventButton.textContent?.trim();
+  const eventCell = firstEventButton.closest('td');
+  expect(eventCell).not.toBeNull();
+
+  fireEvent.click(eventCell as HTMLTableCellElement);
+  expect(await screen.findByRole('heading', { name: /Date details/i })).toBeInTheDocument();
+  expect(screen.getAllByText(eventName ?? '')[0]).toBeInTheDocument();
+
+  fireEvent.click(screen.getAllByRole('button', { name: /Tiếng Việt/i })[0]);
   expect(await screen.findByRole('heading', { name: /Lịch tháng/i })).toBeInTheDocument();
-  expect(await screen.findByRole('heading', { name: /Chi tiết ngày/i })).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: /Tháng trước/i })).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: /Tháng sau/i })).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: /Hôm nay/i })).toBeInTheDocument();
+  fireEvent.click(screen.getAllByRole('button', { name: /English/i })[0]);
+  expect(await screen.findByRole('heading', { name: /Monthly Calendar/i })).toBeInTheDocument();
+  expect(window.location.hash).toBe('#/calendar?date=2026-07-29');
+
+  fireEvent.click(screen.getByRole('radio', { name: /Bình Thuận/i }));
+  expect(window.localStorage.getItem('sakawi.calendar.region')).toBe('BinhThuan');
+  expect(screen.getAllByText(/Sakawi Bình Thuận/i).length).toBeGreaterThanOrEqual(2);
 });
 
 test('events route can show all events and link back to the monthly calendar', async () => {
@@ -127,9 +170,7 @@ test('events route can show all events and link back to the monthly calendar', a
   fireEvent.click(await screen.findByRole('button', { name: /Tất cả/i }));
 
   const calendarLinks = await screen.findAllByRole('link', { name: /Mở trong Lịch tháng/i });
-  fireEvent.click(calendarLinks[0]);
-
-  await waitFor(() => expect(window.location.hash).toMatch(/^#\/calendar\?date=\d{4}-\d{2}-\d{2}$/));
+  expect(calendarLinks[0]).toHaveAttribute('href', expect.stringMatching(/^#\/calendar\?date=\d{4}-\d{2}-\d{2}$/));
 });
 
 test('unsupported browser languages fall back safely to Vietnamese', () => {

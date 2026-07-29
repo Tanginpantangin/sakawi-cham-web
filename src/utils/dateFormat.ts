@@ -2,6 +2,7 @@ import {
   AwalMonthEnum,
   displayAhierMonthName,
   displayAwalMonthName,
+  displayIkasSarakName,
   displayNasakName,
   EventType,
   IkasSarakEnum,
@@ -65,6 +66,10 @@ export function parseDateParam(value: string | null) {
     : undefined;
 }
 
+export function displayGregorianShort(date: Date, withMonth: boolean) {
+  return withMonth ? `${date.getDate()}.${date.getMonth() + 1}` : String(date.getDate());
+}
+
 function getAhierDayPhase(dateAhier: AhierDate, dayCount: number) {
   if (dayCount === 30) {
     return dateAhier.date <= 15
@@ -104,6 +109,24 @@ export function displayAhierDayPhaseParts(dateAhier: AhierDate, dayCount: number
   };
 }
 
+function displayAhierDayPhase(dateAhier: AhierDate, dayCount: number, showLatin: boolean) {
+  const { value, phase } = getAhierDayPhase(dateAhier, dayCount);
+  const suffix = showLatin ? (phase === "klem" ? "'" : "") : phase === "bingun" ? "\uAA43" : "\uAA4C";
+
+  return `${Helper.convertToChamDigitUnicode(value, showLatin)}${suffix}`;
+}
+
+export function displayAhierDate(dateAhier: AhierDate, dayCount: number, showLatin: boolean, withMonth: boolean) {
+  const dayPhase = displayAhierDayPhase(dateAhier, dayCount, showLatin);
+
+  if (withMonth) {
+    const month = dateAhier.ahierMonth.month + 1;
+    return `${dayPhase}.${Helper.convertToChamDigitUnicode(month, showLatin)}`;
+  }
+
+  return dayPhase;
+}
+
 export function displayAwalDayPhaseParts(dateAwal: AwalDate, dayCount: number) {
   const { value, phase } = getAwalDayPhase(dateAwal, dayCount);
   const suffix = phase === "bingun" ? "\uAA43" : "\uAA4C";
@@ -114,8 +137,64 @@ export function displayAwalDayPhaseParts(dateAwal: AwalDate, dayCount: number) {
   };
 }
 
+function displayAwalDayPhase(dateAwal: AwalDate, dayCount: number, showLatin: boolean) {
+  const { value, phase } = getAwalDayPhase(dateAwal, dayCount);
+  const suffix = showLatin ? (phase === "klem" ? "'" : "") : phase === "bingun" ? "\uAA43" : "\uAA4C";
+
+  return `${Helper.convertToChamDigitUnicode(value, showLatin)}${suffix}`;
+}
+
 export function displayIkasSarakLatin(ikasSarak: IkasSarakEnum) {
   return IkasSarakEnum[ikasSarak].replace(/([a-z])([A-Z])/g, "$1 $2");
+}
+
+export function displayAhierYearParts(dateAhier: AhierDate, showLatin: boolean) {
+  const year = dateAhier.ahierMonth.year;
+  const nasak = displayNasakName(year.nasak);
+
+  return {
+    nasak: showLatin ? nasak.rumiName : nasak.akharThrahName,
+    ikas: showLatin
+      ? displayIkasSarakLatin(year.ikasSarak)
+      : displayIkasSarakName(year.ikasSarak),
+    year: String(Helper.convertToChamDigitUnicode(year.yearNumber, showLatin))
+  };
+}
+
+export function displayAwalYearParts(dateAwal: AwalDate, showLatin: boolean) {
+  const year = dateAwal.awalMonth.year;
+
+  return {
+    ikas: showLatin
+      ? displayIkasSarakLatin(year.ikasSarak)
+      : displayIkasSarakName(year.ikasSarak),
+    year: year.yearNumber === undefined
+      ? ""
+      : String(Helper.convertToChamDigitUnicode(year.yearNumber, showLatin))
+  };
+}
+
+export function displayAwalDayMonth(dateAwal: AwalDate, dayCount: number, showLatin: boolean) {
+  const dayPhase = displayAwalDayPhase(dateAwal, dayCount, showLatin);
+  const month = dateAwal.awalMonth.month + 1;
+  return `${dayPhase}.${Helper.convertToChamDigitUnicode(month, showLatin)}`;
+}
+
+export function displayAwalDateParts(dateAwal: AwalDate, dayCount: number, showLatin: boolean, withMonth: boolean) {
+  const dayPhase = displayAwalDayPhase(dateAwal, dayCount, showLatin);
+  const month = dateAwal.awalMonth.month + 1;
+  const ikas = showLatin
+    ? displayIkasSarakLatin(dateAwal.awalMonth.year.ikasSarak)
+    : displayIkasSarakName(dateAwal.awalMonth.year.ikasSarak);
+
+  if (withMonth) {
+    return {
+      prefix: `${dayPhase}.${Helper.convertToChamDigitUnicode(month, showLatin)}.`,
+      ikas
+    };
+  }
+
+  return { text: dayPhase };
 }
 
 export function displayAhierDateSummary(dateAhier: AhierDate, dayCount: number) {

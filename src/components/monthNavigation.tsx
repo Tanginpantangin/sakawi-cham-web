@@ -21,64 +21,64 @@ interface MonthNavigationProps {
 export const MonthNavigation = (props: MonthNavigationProps) => {
     const { language } = useLanguage();
     const copy = getSiteCopy(language);
-    const currentGregoryMonth = props.currentGregoryMonth ? props.currentGregoryMonth + 1 : 1;
+    const currentGregoryMonth = (props.currentGregoryMonth ?? 0) + 1;
 
     return (
         <>
             <Col xs={12} lg={4} className="calendar-nav-section calendar-nav-section-left">
-                <ButtonToolbar aria-label="Toolbar with button groups" className="calendar-nav-toolbar">
-                    <ButtonGroup aria-label="Type of calendar" className="calendar-type-group">
-                        <Button variant="outline-secondary" active={props.sakawiType === 'sakawiAhier'} onClick={() => props.onSelectSakawiType('sakawiAhier')}>Lịch Cham</Button>
-                        <Button variant="outline-secondary" active={props.sakawiType === 'sakawiAwal'} onClick={() => props.onSelectSakawiType('sakawiAwal')}>Lịch Awal</Button>
-                        <Button variant="outline-secondary" active={props.sakawiType === 'sakawiGregory'} onClick={() => props.onSelectSakawiType('sakawiGregory')}>Dương lịch</Button>
+                <ButtonToolbar aria-label={copy.calendar.legendTitle} className="calendar-nav-toolbar">
+                    <ButtonGroup aria-label={copy.calendar.legendTitle} className="calendar-type-group">
+                        <Button variant="outline-secondary" active={props.sakawiType === "sakawiAhier"} aria-pressed={props.sakawiType === "sakawiAhier"} onClick={() => props.onSelectSakawiType("sakawiAhier")}>{copy.calendar.systemCham}</Button>
+                        <Button variant="outline-secondary" active={props.sakawiType === "sakawiAwal"} aria-pressed={props.sakawiType === "sakawiAwal"} onClick={() => props.onSelectSakawiType("sakawiAwal")}>{copy.calendar.systemAwal}</Button>
+                        <Button variant="outline-secondary" active={props.sakawiType === "sakawiGregory"} aria-pressed={props.sakawiType === "sakawiGregory"} onClick={() => props.onSelectSakawiType("sakawiGregory")}>{copy.calendar.systemGregorian}</Button>
                     </ButtonGroup>
                 </ButtonToolbar>
             </Col>
             <Col xs={12} lg={5} className="calendar-nav-title">
-                {props.sakawiType === 'sakawiAhier' && props.currentAhierMonth &&
+                {props.sakawiType === "sakawiAhier" && props.currentAhierMonth &&
                     <>
-                        <div className='bilan-title'>
+                        <div className="bilan-title">
                             {displayAhierMonthName(props.currentAhierMonth.month).akharThrahName}
-                            {' - '}{displayNasakName(props.currentAhierMonth.year.nasak).akharThrahName}
-                            {'   '}<label className='ikasSarak-title'>{displayIkasSarakName(props.currentAhierMonth.year.ikasSarak)}</label>
-                            {' - '}{Helper.convertToChamDigitUnicode(props.currentAhierMonth.year.yearNumber ?? 0)}
+                            {" - "}{displayNasakName(props.currentAhierMonth.year.nasak).akharThrahName}
+                            {"   "}<label className="ikasSarak-title">{displayIkasSarakName(props.currentAhierMonth.year.ikasSarak)}</label>
+                            {" - "}{Helper.convertToChamDigitUnicode(props.currentAhierMonth.year.yearNumber ?? 0)}
                         </div>
-                        <div className='bilan-latin-title'>
+                        <div className="bilan-latin-title">
                             {displayAhierMonthName(props.currentAhierMonth.month).rumiName} {`(${(props.currentAhierMonth.month + 1)})`}
-                            {' - '}{displayNasakName(props.currentAhierMonth.year.nasak).rumiName} {IkasSarakEnum[props.currentAhierMonth.year.ikasSarak]}
-                            {' - '}{props.currentAhierMonth.year.yearNumber}
+                            {" - "}{displayNasakName(props.currentAhierMonth.year.nasak).rumiName} {IkasSarakEnum[props.currentAhierMonth.year.ikasSarak]}
+                            {" - "}{props.currentAhierMonth.year.yearNumber}
                         </div>
                     </>
                 }
-                {props.sakawiType === 'sakawiAwal' && props.currentAwalMonth &&
+                {props.sakawiType === "sakawiAwal" && props.currentAwalMonth &&
                     <>
-                        <div className='bilan-title'>
+                        <div className="bilan-title">
                             {displayAwalMonthName(props.currentAwalMonth.month).akharThrahName}
-                            {' - '}<label className='ikasSarak-title'>{displayIkasSarakName(props.currentAwalMonth.year.ikasSarak)}</label>
-                            {' - '}{Helper.convertToChamDigitUnicode(props.currentAwalMonth.year.yearNumber ?? 0)}
+                            {" - "}<label className="ikasSarak-title">{displayIkasSarakName(props.currentAwalMonth.year.ikasSarak)}</label>
+                            {" - "}{Helper.convertToChamDigitUnicode(props.currentAwalMonth.year.yearNumber ?? 0)}
                         </div>
-                        <div className='bilan-latin-title'>
+                        <div className="bilan-latin-title">
                             {AwalMonthEnum[props.currentAwalMonth.month]} {`(${(props.currentAwalMonth.month + 1)})`}
-                            {' - '}{IkasSarakEnum[props.currentAwalMonth.year.ikasSarak]}
-                            {' - '}{props.currentAwalMonth.year.yearNumber}
+                            {" - "}{IkasSarakEnum[props.currentAwalMonth.year.ikasSarak]}
+                            {" - "}{props.currentAwalMonth.year.yearNumber}
                         </div>
                     </>
                 }
-                {props.sakawiType === 'sakawiGregory' &&
+                {props.sakawiType === "sakawiGregory" &&
                     <>
-                        <div className='bilan-latin-title'>
-                            {`Tháng ${currentGregoryMonth} - ${props.currentGregoryYear}`}
+                        <div className="bilan-latin-title">
+                            {`${copy.calendar.month} ${currentGregoryMonth} - ${props.currentGregoryYear}`}
                         </div>
                         <br />
                     </>
                 }
             </Col>
             <Col xs={12} lg={3} className="calendar-nav-section calendar-nav-section-right">
-                <ButtonToolbar aria-label="Toolbar with button groups" className="calendar-nav-toolbar">
-                    <ButtonGroup aria-label="Third group" className="calendar-today-group">
+                <ButtonToolbar aria-label={`${copy.calendar.previousMonth} / ${copy.calendar.nextMonth}`} className="calendar-nav-toolbar">
+                    <ButtonGroup aria-label={copy.calendar.today} className="calendar-today-group">
                         <Button variant="secondary" aria-label={copy.calendar.today} onClick={props.onClickToday}>{copy.calendar.today}</Button>
                     </ButtonGroup>
-                    <ButtonGroup aria-label="Navigate months">
+                    <ButtonGroup aria-label={`${copy.calendar.previousMonth} / ${copy.calendar.nextMonth}`}>
                         <Button variant="secondary" className="fa fa-chevron-left" aria-label={copy.calendar.previousMonth} onClick={props.onClickPreviousMonth} />
                         <Button variant="secondary" className="fa fa-chevron-right" aria-label={copy.calendar.nextMonth} onClick={props.onClickNextMonth} />
                     </ButtonGroup>
@@ -86,4 +86,4 @@ export const MonthNavigation = (props: MonthNavigationProps) => {
             </Col>
         </>
     );
-}
+};
