@@ -1,13 +1,3 @@
-import { Container } from "react-bootstrap"
-import { Layout } from "../Layout"
+import { Navigate } from "react-router-dom";
 
-export const DocumentPage = () => {
-
-    return (
-        <Layout>
-            <Container>
-                <h6>Nội dung sẽ được cập nhật sớm</h6>
-            </Container>
-        </Layout>
-    )
-}
+export const DocumentPage = () => <Navigate to="/documents" replace />;

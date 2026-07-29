@@ -8,7 +8,15 @@ import { MatrixCalendarType } from "./model/MatrixCalendarType";
 import { DocumentPage } from "./pages/documentPage";
 import { EventCalendarPage } from './pages/eventCalendarPage';
 import { MonthCalendarPage } from './pages/monthCalendarPage';
-import { HomePage, PrivacyPage, ReleaseNotesPage, SupportPage } from "./pages/publicPages";
+import {
+  DocumentDetailPage,
+  DocumentsPage,
+  HomePage,
+  NotFoundPage,
+  PrivacyPage,
+  ReleaseNotesPage,
+  SupportPage
+} from "./pages/publicPages";
 import Helper from "./utility/helper";
 
 function App() {
@@ -70,9 +78,12 @@ function App() {
               }
             />
             <Route path="/docs" element={<DocumentPage />} />
+            <Route path="/documents" element={<DocumentsPage />} />
+            <Route path="/documents/:documentId" element={<DocumentDetailPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/support" element={<SupportPage />} />
             <Route path="/releases" element={<ReleaseNotesPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
       </LanguageProvider>

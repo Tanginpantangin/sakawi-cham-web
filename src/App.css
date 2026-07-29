@@ -2347,6 +2347,63 @@ button:focus-visible,
   background: #271913;
 }
 
+.breadcrumb-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  color: var(--sakawi-muted);
+  font-size: 0.9rem;
+}
+
+.breadcrumb-nav a {
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.documents-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 1.25rem;
+}
+
+.document-card {
+  display: grid;
+  gap: 0.55rem;
+  align-content: start;
+  padding: 1rem;
+  border: 1px solid var(--sakawi-line);
+  border-radius: 0.55rem;
+  background: var(--sakawi-soft-surface);
+}
+
+.document-card h2 {
+  margin: 0;
+  font-size: 1.08rem;
+}
+
+.document-card p {
+  margin: 0;
+}
+
+.document-card a {
+  font-weight: 800;
+}
+
+.document-body {
+  margin-top: 1.25rem;
+}
+
+.document-body p {
+  font-size: 1.05rem;
+}
+
+.missing-translation h2 {
+  margin-top: 0;
+}
+
 @media only screen and (max-width: 991.98px) {
   .home-hero {
     grid-template-columns: 1fr;
@@ -2386,6 +2443,10 @@ button:focus-visible,
   }
 
   .formula-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .documents-grid {
     grid-template-columns: 1fr;
   }
 }

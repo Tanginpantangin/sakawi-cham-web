@@ -1,27 +1,42 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 export type SiteLanguage = "vi" | "en";
+export const languageStorageKey = "sakawi.preferences.language";
 
 interface LanguageContextValue {
   language: SiteLanguage;
   setLanguage: (language: SiteLanguage) => void;
 }
 
+const supportedLanguages: readonly SiteLanguage[] = ["vi", "en"];
+const fallbackLanguage: SiteLanguage = "vi";
+const legacyLanguageStorageKey = "sakawi-language";
 const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
+
+export const isSupportedLanguage = (language: string | null | undefined): language is SiteLanguage =>
+  supportedLanguages.includes(language as SiteLanguage);
+
+const normalizeLanguageCode = (language: string | null | undefined) =>
+  language?.split(/[-_]/)[0]?.toLowerCase() ?? null;
+
+export const resolveBrowserLanguage = (language = window.navigator.language): SiteLanguage => {
+  const normalizedLanguage = normalizeLanguageCode(language);
+  return isSupportedLanguage(normalizedLanguage) ? normalizedLanguage : fallbackLanguage;
+};
+
+const readStoredLanguage = (): SiteLanguage | null => {
+  const savedLanguage = window.localStorage.getItem(languageStorageKey)
+    ?? window.localStorage.getItem(legacyLanguageStorageKey);
+
+  return isSupportedLanguage(savedLanguage) ? savedLanguage : null;
+};
 
 const getInitialLanguage = (): SiteLanguage => {
   if (typeof window === "undefined") {
-    return "vi";
+    return fallbackLanguage;
   }
 
-  const params = new URLSearchParams(window.location.search);
-  const queryLanguage = params.get("lang");
-  if (queryLanguage === "en" || queryLanguage === "vi") {
-    return queryLanguage;
-  }
-
-  const storedLanguage = window.localStorage.getItem("sakawi-language");
-  return storedLanguage === "en" ? "en" : "vi";
+  return readStoredLanguage() ?? fallbackLanguage;
 };
 
 export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
@@ -29,7 +44,8 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
 
   const setLanguage = (nextLanguage: SiteLanguage) => {
     setLanguageState(nextLanguage);
-    window.localStorage.setItem("sakawi-language", nextLanguage);
+    window.localStorage.setItem(languageStorageKey, nextLanguage);
+    window.localStorage.removeItem(legacyLanguageStorageKey);
   };
 
   useEffect(() => {

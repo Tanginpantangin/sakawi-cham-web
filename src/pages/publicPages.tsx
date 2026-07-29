@@ -1,22 +1,43 @@
 import { useEffect } from "react";
 import { Container } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Layout } from "../Layout";
 import { useLanguage } from "../i18n";
-import { appIconUrl, getSiteCopy, playStoreUrl, qrCodeUrl } from "../siteContent";
+import { appIconUrl, getDocumentById, getSiteCopy, playStoreUrl, qrCodeUrl } from "../siteContent";
+
+const setMetaContent = (selector: string, content: string) => {
+  document.querySelector(selector)?.setAttribute("content", content);
+};
 
 const usePageMetadata = (title: string, description: string) => {
   useEffect(() => {
     document.title = title;
-    document.querySelector('meta[name="description"]')?.setAttribute("content", description);
+    setMetaContent('meta[name="description"]', description);
+    setMetaContent('meta[property="og:title"]', title);
+    setMetaContent('meta[property="og:description"]', description);
+    setMetaContent('meta[name="twitter:title"]', title);
+    setMetaContent('meta[name="twitter:description"]', description);
   }, [description, title]);
+};
+
+const Breadcrumb = ({ current }: { current: string }) => {
+  const { language } = useLanguage();
+  const copy = getSiteCopy(language);
+
+  return (
+    <nav className="breadcrumb-nav" aria-label={copy.accessibility.breadcrumbLabel}>
+      <Link to="/">{copy.nav.home}</Link>
+      <span aria-hidden="true">/</span>
+      <span>{current}</span>
+    </nav>
+  );
 };
 
 export const HomePage = () => {
   const { language } = useLanguage();
   const copy = getSiteCopy(language);
 
-  usePageMetadata(copy.seo.homeTitle, copy.seo.description);
+  usePageMetadata(copy.metadata.homeTitle, copy.metadata.homeDescription);
 
   return (
     <Layout>
@@ -33,10 +54,10 @@ export const HomePage = () => {
               <span className="ios-note">{copy.home.iosNote}</span>
             </div>
           </div>
-          <div className="hero-brand-panel" aria-label="Sakawi app icon">
-            <img className="hero-app-icon" src={appIconUrl} alt="Sakawi app icon" width="180" height="180" />
+          <div className="hero-brand-panel" aria-label={copy.accessibility.heroBrandLabel}>
+            <img className="hero-app-icon" src={appIconUrl} alt={copy.accessibility.appIconAlt} width="180" height="180" />
             <div className="qr-card">
-              <img src={qrCodeUrl} alt="QR code for Sakawi on Google Play" width="132" height="132" />
+              <img src={qrCodeUrl} alt={copy.accessibility.qrAlt} width="132" height="132" />
               <p>{copy.home.qrCaption}</p>
             </div>
           </div>
@@ -66,7 +87,7 @@ export const HomePage = () => {
           </div>
         </section>
 
-        <section className="screenshot-placeholder" aria-label="App screenshots">
+        <section className="screenshot-placeholder" aria-label={copy.accessibility.screenshotsLabel}>
           <div>
             <img src={appIconUrl} alt="" width="72" height="72" />
             <p>{copy.home.screenshotNote}</p>
@@ -78,7 +99,7 @@ export const HomePage = () => {
           <div className="public-link-row">
             <Link to="/months">{copy.home.calendarLink}</Link>
             <Link to="/events">{copy.home.eventsLink}</Link>
-            <Link to="/docs">{copy.home.docsLink}</Link>
+            <Link to="/documents">{copy.nav.documents}</Link>
             <Link to="/privacy">{copy.nav.privacy}</Link>
             <Link to="/support">{copy.nav.support}</Link>
             <Link to="/releases">{copy.nav.releases}</Link>
@@ -89,16 +110,84 @@ export const HomePage = () => {
   );
 };
 
+export const DocumentsPage = () => {
+  const { language } = useLanguage();
+  const copy = getSiteCopy(language);
+
+  usePageMetadata(copy.metadata.documentsTitle, copy.metadata.documentsDescription);
+
+  return (
+    <Layout>
+      <Container className="page-container public-page documents-page">
+        <Breadcrumb current={copy.nav.documents} />
+        <p className="page-eyebrow">{copy.shared.productName}</p>
+        <h1>{copy.documents.title}</h1>
+        <p className="page-lede">{copy.documents.subtitle}</p>
+        <div className="documents-grid">
+          {copy.documents.documents.map((document) => (
+            <article className="document-card" key={document.id}>
+              <h2>{document.title}</h2>
+              <p>{document.description}</p>
+              <Link to={`/documents/${document.id}`}>{copy.actions.readMore}</Link>
+            </article>
+          ))}
+        </div>
+      </Container>
+    </Layout>
+  );
+};
+
+export const DocumentDetailPage = () => {
+  const { documentId } = useParams<{ documentId: string }>();
+  const { language } = useLanguage();
+  const copy = getSiteCopy(language);
+  const document = getDocumentById(language, documentId);
+
+  usePageMetadata(
+    document ? `${document.title} | ${copy.shared.productName}` : copy.metadata.notFoundTitle,
+    document?.description ?? copy.metadata.notFoundDescription
+  );
+
+  if (!document) {
+    return <NotFoundPage />;
+  }
+
+  return (
+    <Layout>
+      <Container className="page-container public-page document-detail-page">
+        <Breadcrumb current={document.title} />
+        <p className="page-eyebrow">{copy.nav.documents}</p>
+        <h1>{document.title}</h1>
+        <p className="page-lede">{document.description}</p>
+        {document.body.length > 0 ? (
+          <div className="document-body">
+            {document.body.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
+        ) : (
+          <div className="notice public-notice missing-translation">
+            <h2>{copy.documents.missingBodyTitle}</h2>
+            <p>{copy.documents.missingBodyText}</p>
+          </div>
+        )}
+        <p><Link to="/documents">{copy.actions.backToDocuments}</Link></p>
+      </Container>
+    </Layout>
+  );
+};
+
 export const PrivacyPage = () => {
   const { language } = useLanguage();
   const copy = getSiteCopy(language);
 
-  usePageMetadata(copy.seo.privacyTitle, copy.privacy.lede);
+  usePageMetadata(copy.metadata.privacyTitle, copy.metadata.privacyDescription);
 
   return (
     <Layout>
       <Container className="page-container public-page">
-        <p className="page-eyebrow">Sakawi</p>
+        <Breadcrumb current={copy.nav.privacy} />
+        <p className="page-eyebrow">{copy.shared.productName}</p>
         <h1>{copy.privacy.title}</h1>
         <p className="page-lede">{copy.privacy.lede}</p>
         <p className="page-meta">{copy.privacy.updated}</p>
@@ -118,12 +207,13 @@ export const SupportPage = () => {
   const { language } = useLanguage();
   const copy = getSiteCopy(language);
 
-  usePageMetadata(copy.seo.supportTitle, copy.support.lede);
+  usePageMetadata(copy.metadata.supportTitle, copy.metadata.supportDescription);
 
   return (
     <Layout>
       <Container className="page-container public-page">
-        <p className="page-eyebrow">Sakawi</p>
+        <Breadcrumb current={copy.nav.support} />
+        <p className="page-eyebrow">{copy.shared.productName}</p>
         <h1>{copy.support.title}</h1>
         <p className="page-lede">{copy.support.lede}</p>
 
@@ -134,7 +224,7 @@ export const SupportPage = () => {
         <section>
           <h2>{copy.support.installTitle}</h2>
           <p>{copy.support.installBody}</p>
-          <p><a href={playStoreUrl} target="_blank" rel="noreferrer">Google Play</a></p>
+          <p><a href={playStoreUrl} target="_blank" rel="noreferrer">{copy.shared.googlePlay}</a></p>
         </section>
 
         <section>
@@ -165,12 +255,13 @@ export const ReleaseNotesPage = () => {
   const { language } = useLanguage();
   const copy = getSiteCopy(language);
 
-  usePageMetadata(copy.seo.releasesTitle, copy.releases.lede);
+  usePageMetadata(copy.metadata.releasesTitle, copy.metadata.releasesDescription);
 
   return (
     <Layout>
       <Container className="page-container public-page">
-        <p className="page-eyebrow">Sakawi</p>
+        <Breadcrumb current={copy.nav.releases} />
+        <p className="page-eyebrow">{copy.shared.productName}</p>
         <h1>{copy.releases.title}</h1>
         <p className="page-lede">{copy.releases.lede}</p>
         <p className="page-meta">{copy.releases.currentNote}</p>
@@ -178,6 +269,7 @@ export const ReleaseNotesPage = () => {
         {copy.releases.entries.map((entry) => (
           <section className="release-entry" aria-labelledby={`release-${entry.version}`} key={entry.version}>
             <p className="release-version">{entry.version}</p>
+            <p className="page-meta">{entry.date}</p>
             <h2 id={`release-${entry.version}`}>{entry.title}</h2>
             <ul>
               {entry.bullets.map((bullet) => (
@@ -186,6 +278,26 @@ export const ReleaseNotesPage = () => {
             </ul>
           </section>
         ))}
+      </Container>
+    </Layout>
+  );
+};
+
+export const NotFoundPage = () => {
+  const { language } = useLanguage();
+  const copy = getSiteCopy(language);
+
+  usePageMetadata(copy.metadata.notFoundTitle, copy.metadata.notFoundDescription);
+
+  return (
+    <Layout>
+      <Container className="page-container public-page">
+        <p className="page-eyebrow">{copy.shared.productName}</p>
+        <h1>{copy.notFound.title}</h1>
+        <p className="page-lede">{copy.notFound.lede}</p>
+        <div className="public-link-row">
+          <Link to="/">{copy.notFound.homeLink}</Link>
+        </div>
       </Container>
     </Layout>
   );

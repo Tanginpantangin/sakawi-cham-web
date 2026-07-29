@@ -4,24 +4,187 @@ export const playStoreUrl = "https://play.google.com/store/apps/details?id=com.s
 export const appIconUrl = `${process.env.PUBLIC_URL}/sakawi-app-icon.png`;
 export const qrCodeUrl = `${process.env.PUBLIC_URL}/google-play-qr.svg`;
 
-export const siteCopy = {
+export type TranslationTree = Record<string, unknown>;
+
+export type DocumentId =
+  | "comparison"
+  | "calendar-rules"
+  | "foundation"
+  | "months"
+  | "nasak"
+  | "ikas"
+  | "year-name";
+
+interface DocumentCopy {
+  id: DocumentId;
+  title: string;
+  description: string;
+  body: readonly string[];
+}
+
+interface ReleaseEntry {
+  version: string;
+  date: string;
+  title: string;
+  bullets: readonly string[];
+}
+
+interface SiteTranslation {
+  shared: {
+    productName: string;
+    googlePlay: string;
+    homeLabel: string;
+    appIconAlt: string;
+  };
+  nav: {
+    home: string;
+    documents: string;
+    privacy: string;
+    support: string;
+    releases: string;
+    download: string;
+    navLabel: string;
+    languageLabel: string;
+    menuLabel: string;
+  };
+  actions: {
+    readMore: string;
+    backToDocuments: string;
+  };
+  metadata: {
+    homeTitle: string;
+    homeDescription: string;
+    documentsTitle: string;
+    documentsDescription: string;
+    privacyTitle: string;
+    privacyDescription: string;
+    supportTitle: string;
+    supportDescription: string;
+    releasesTitle: string;
+    releasesDescription: string;
+    notFoundTitle: string;
+    notFoundDescription: string;
+    ogHomeTitle: string;
+    ogHomeDescription: string;
+  };
+  accessibility: {
+    appIconAlt: string;
+    heroBrandLabel: string;
+    qrAlt: string;
+    screenshotsLabel: string;
+    breadcrumbLabel: string;
+    currentLanguage: string;
+  };
+  footer: {
+    description: string;
+    copyright: string;
+  };
+  home: {
+    eyebrow: string;
+    title: string;
+    lede: string;
+    formulaTitle: string;
+    formulaIntro: string;
+    saka: string;
+    jawi: string;
+    download: string;
+    qrCaption: string;
+    iosNote: string;
+    screenshotNote: string;
+    featuresTitle: string;
+    linksTitle: string;
+    calendarLink: string;
+    eventsLink: string;
+    features: readonly string[];
+  };
+  privacy: {
+    title: string;
+    lede: string;
+    updated: string;
+    sections: readonly {
+      title: string;
+      body: string;
+    }[];
+  };
+  support: {
+    title: string;
+    lede: string;
+    contactLabel: string;
+    installTitle: string;
+    installBody: string;
+    updateTitle: string;
+    updateBody: string;
+    privacyTitle: string;
+    privacyBody: string;
+    troubleshootingTitle: string;
+    troubleshootingItems: readonly string[];
+  };
+  releases: {
+    title: string;
+    lede: string;
+    currentNote: string;
+    entries: readonly ReleaseEntry[];
+  };
+  documents: {
+    title: string;
+    subtitle: string;
+    missingBodyTitle: string;
+    missingBodyText: string;
+    documents: readonly DocumentCopy[];
+  };
+  notFound: {
+    title: string;
+    lede: string;
+    homeLink: string;
+  };
+}
+
+export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
   vi: {
+    shared: {
+      productName: "Sakawi",
+      googlePlay: "Google Play",
+      homeLabel: "Trang chủ Sakawi",
+      appIconAlt: "Biểu tượng ứng dụng Sakawi"
+    },
     nav: {
       home: "Trang chủ",
-      privacy: "Quyền riêng tư",
+      documents: "Tài liệu",
+      privacy: "Chính sách riêng tư",
       support: "Hỗ trợ",
-      releases: "Phát hành",
+      releases: "Phiên bản",
       download: "Google Play",
       navLabel: "Điều hướng chính",
       languageLabel: "Chọn ngôn ngữ",
       menuLabel: "Mở điều hướng"
     },
-    seo: {
+    actions: {
+      readMore: "Xem chi tiết",
+      backToDocuments: "Quay lại Tài liệu"
+    },
+    metadata: {
       homeTitle: "Sakawi | Ứng dụng lịch Cham",
-      privacyTitle: "Chính sách quyền riêng tư | Sakawi",
+      homeDescription: "Sakawi là ứng dụng lịch Cham kết hợp Saka và Jawi, hỗ trợ lịch Saka, lịch Awal, sự kiện, tài liệu và đếm ngược.",
+      documentsTitle: "Tài liệu | Sakawi",
+      documentsDescription: "Tài liệu song ngữ về kiến thức căn bản của lịch Cham trong Sakawi.",
+      privacyTitle: "Chính sách riêng tư | Sakawi",
+      privacyDescription: "Chính sách riêng tư của Sakawi, bao gồm lựa chọn đồng ý cho Firebase Analytics và Firebase Crashlytics.",
       supportTitle: "Hỗ trợ | Sakawi",
-      releasesTitle: "Ghi chú phát hành | Sakawi",
-      description: "Sakawi là ứng dụng lịch Cham kết hợp Saka và Jawi, hỗ trợ lịch Saka, lịch Awal, sự kiện, tài liệu và đếm ngược."
+      supportDescription: "Hỗ trợ kỹ thuật Sakawi cho cài đặt, cập nhật, quyền riêng tư và xử lý sự cố.",
+      releasesTitle: "Phiên bản | Sakawi",
+      releasesDescription: "Lịch sử phiên bản công khai của Sakawi.",
+      notFoundTitle: "Không tìm thấy trang | Sakawi",
+      notFoundDescription: "Trang Sakawi bạn đang tìm không tồn tại.",
+      ogHomeTitle: "Sakawi | Ứng dụng lịch Cham",
+      ogHomeDescription: "Sakawi = Saka + Jawi. Ứng dụng lịch Cham cho lịch Saka, lịch Awal, sự kiện, tài liệu và đếm ngược."
+    },
+    accessibility: {
+      appIconAlt: "Biểu tượng ứng dụng Sakawi",
+      heroBrandLabel: "Thương hiệu ứng dụng Sakawi",
+      qrAlt: "Mã QR mở Sakawi trên Google Play",
+      screenshotsLabel: "Ảnh chụp ứng dụng",
+      breadcrumbLabel: "Đường dẫn trang",
+      currentLanguage: "Ngôn ngữ đang chọn"
     },
     footer: {
       description: "Sakawi là ứng dụng lịch Cham giúp tra cứu lịch Saka, lịch Awal và các ngày sự kiện liên quan.",
@@ -43,7 +206,6 @@ export const siteCopy = {
       linksTitle: "Liên kết nhanh",
       calendarLink: "Mở lịch tháng",
       eventsLink: "Xem sự kiện",
-      docsLink: "Tài liệu",
       features: [
         "Lịch Chăm theo hệ Saka",
         "Lịch Awal",
@@ -56,7 +218,7 @@ export const siteCopy = {
       ]
     },
     privacy: {
-      title: "Chính sách quyền riêng tư",
+      title: "Chính sách riêng tư",
       lede: "Chính sách này giải thích cách Sakawi xử lý thông tin khi bạn sử dụng ứng dụng Android Sakawi.",
       updated: "Cập nhật lần cuối: 29 tháng 7 năm 2026",
       sections: [
@@ -105,12 +267,13 @@ export const siteCopy = {
       ]
     },
     releases: {
-      title: "Ghi chú phát hành",
-      lede: "Lịch sử phát hành công khai của Sakawi.",
+      title: "Phiên bản",
+      lede: "Lịch sử phiên bản công khai của Sakawi.",
       currentNote: "Phiên bản 1.4.0 đang được chuẩn bị nhưng chưa được trình bày là bản phát hành công khai.",
       entries: [
         {
           version: "1.3.0",
+          date: "29 tháng 7 năm 2026",
           title: "Nền tảng phân tích và độ ổn định",
           bullets: [
             "Bổ sung nền tảng đo lường sử dụng bằng Firebase Analytics.",
@@ -119,11 +282,78 @@ export const siteCopy = {
           ]
         }
       ]
+    },
+    documents: {
+      title: "Tài liệu về Sakawi",
+      subtitle: "Kiến thức căn bản về Lịch Cham",
+      missingBodyTitle: "Cần bản nội dung đã phê duyệt",
+      missingBodyText: "Bản nội dung chi tiết đã được phê duyệt cho website chưa có sẵn trong kho dự án. Trang này chỉ hiển thị tiêu đề và mô tả đã được dịch từ ứng dụng di động.",
+      documents: [
+        {
+          id: "comparison",
+          title: "Sakawi Cham và Sakawi Awal",
+          description: "Nhìn nhanh phần chung và những khác biệt quan trọng.",
+          body: [
+            "Sakawi = Saka + Jawi",
+            "Sakawi là sự kết hợp của hai hệ thống lịch:",
+            "Saka - lịch Chăm theo hệ Saka.",
+            "Jawi - lịch Awal được cộng đồng Chăm Bani sử dụng."
+          ]
+        },
+        {
+          id: "calendar-rules",
+          title: "Quy tắc tháng và năm",
+          description: "Tóm tắt cách hai lịch đi cùng nhau, số ngày trong tháng và số ngày trong năm.",
+          body: []
+        },
+        {
+          id: "foundation",
+          title: "Căn bản về thứ, ngày",
+          description: "Một tuần có mấy ngày, một tháng có bao nhiêu ngày, bingun và klem là gì.",
+          body: []
+        },
+        {
+          id: "months",
+          title: "Tên các tháng",
+          description: "Tra cứu tên tháng Cham hoặc Awal và chuẩn bị âm thanh cho từng tên.",
+          body: []
+        },
+        {
+          id: "nasak",
+          title: "12 Nasak",
+          description: "Chu kỳ 12 tên năm của Sakawi Cham.",
+          body: []
+        },
+        {
+          id: "ikas",
+          title: "8 Ikas Sarak",
+          description: "Chu kỳ 8 tên dùng trong Sakawi Awal và khi gọi tên năm Cham.",
+          body: []
+        },
+        {
+          id: "year-name",
+          title: "Cách ghép tên năm lịch Cham",
+          description: "Chọn năm để xem Nasak và Ikas Sarak cùng chuyển động theo chu kỳ.",
+          body: []
+        }
+      ]
+    },
+    notFound: {
+      title: "Không tìm thấy trang",
+      lede: "Trang bạn đang tìm không tồn tại hoặc đã được chuyển.",
+      homeLink: "Về Trang chủ"
     }
   },
   en: {
+    shared: {
+      productName: "Sakawi",
+      googlePlay: "Google Play",
+      homeLabel: "Sakawi home",
+      appIconAlt: "Sakawi app icon"
+    },
     nav: {
       home: "Home",
+      documents: "Documents",
       privacy: "Privacy",
       support: "Support",
       releases: "Releases",
@@ -132,12 +362,33 @@ export const siteCopy = {
       languageLabel: "Choose language",
       menuLabel: "Open navigation"
     },
-    seo: {
+    actions: {
+      readMore: "Read more",
+      backToDocuments: "Back to Documents"
+    },
+    metadata: {
       homeTitle: "Sakawi | Cham calendar app",
-      privacyTitle: "Privacy Policy | Sakawi",
+      homeDescription: "Sakawi is a Cham calendar app combining Saka and Jawi, with Saka calendar, Awal calendar, events, documents, and countdowns.",
+      documentsTitle: "Documents | Sakawi",
+      documentsDescription: "Bilingual documents for basic Cham Calendar knowledge in Sakawi.",
+      privacyTitle: "Privacy | Sakawi",
+      privacyDescription: "Sakawi privacy policy, including consent choices for Firebase Analytics and Firebase Crashlytics.",
       supportTitle: "Support | Sakawi",
-      releasesTitle: "Release Notes | Sakawi",
-      description: "Sakawi is a Cham calendar app combining Saka and Jawi, with Saka calendar, Awal calendar, events, documents, and countdowns."
+      supportDescription: "Technical help for Sakawi installation, updates, privacy settings, and troubleshooting.",
+      releasesTitle: "Releases | Sakawi",
+      releasesDescription: "Public Sakawi release history.",
+      notFoundTitle: "Page not found | Sakawi",
+      notFoundDescription: "The Sakawi page you are looking for does not exist.",
+      ogHomeTitle: "Sakawi | Cham calendar app",
+      ogHomeDescription: "Sakawi = Saka + Jawi. A Cham calendar app for Saka, Awal, events, documents, and countdowns."
+    },
+    accessibility: {
+      appIconAlt: "Sakawi app icon",
+      heroBrandLabel: "Sakawi app branding",
+      qrAlt: "QR code for Sakawi on Google Play",
+      screenshotsLabel: "App screenshots",
+      breadcrumbLabel: "Breadcrumb",
+      currentLanguage: "Current language"
     },
     footer: {
       description: "Sakawi is a Cham calendar app for looking up Saka, Awal, and related event days.",
@@ -159,7 +410,6 @@ export const siteCopy = {
       linksTitle: "Quick links",
       calendarLink: "Open monthly calendar",
       eventsLink: "View events",
-      docsLink: "Documents",
       features: [
         "Cham calendar based on the Saka system",
         "Awal calendar",
@@ -172,7 +422,7 @@ export const siteCopy = {
       ]
     },
     privacy: {
-      title: "Privacy Policy",
+      title: "Privacy",
       lede: "This policy explains how Sakawi handles information when you use the Sakawi Android app.",
       updated: "Last updated: July 29, 2026",
       sections: [
@@ -203,7 +453,7 @@ export const siteCopy = {
       ]
     },
     support: {
-      title: "Sakawi Support",
+      title: "Support",
       lede: "This page is for technical assistance with installation, updates, privacy settings, and troubleshooting.",
       contactLabel: "Verified support email",
       installTitle: "Installation",
@@ -221,12 +471,13 @@ export const siteCopy = {
       ]
     },
     releases: {
-      title: "Release Notes",
+      title: "Releases",
       lede: "Public Sakawi release history.",
       currentNote: "Version 1.4.0 is being prepared but is not presented here as a public release.",
       entries: [
         {
           version: "1.3.0",
+          date: "July 29, 2026",
           title: "Analytics and stability foundation",
           bullets: [
             "Added Firebase Analytics instrumentation foundation.",
@@ -235,8 +486,71 @@ export const siteCopy = {
           ]
         }
       ]
+    },
+    documents: {
+      title: "Sakawi Documents",
+      subtitle: "Basic Cham Calendar knowledge",
+      missingBodyTitle: "Approved body copy needed",
+      missingBodyText: "Approved detailed website body copy is not available in the repository yet. This page only shows the mobile-app title and description that already have English translations.",
+      documents: [
+        {
+          id: "comparison",
+          title: "Sakawi Cham and Sakawi Awal",
+          description: "A quick view of shared patterns and important differences.",
+          body: [
+            "Sakawi = Saka + Jawi",
+            "Sakawi is a combination of two calendar systems:",
+            "Saka - the Cham calendar based on the Saka system.",
+            "Jawi - the Awal calendar used by the Cham Bani community."
+          ]
+        },
+        {
+          id: "calendar-rules",
+          title: "Month and year rules",
+          description: "A concise guide to how the two calendars move together.",
+          body: []
+        },
+        {
+          id: "foundation",
+          title: "Weekday and day basics",
+          description: "Week structure, month length, Bingun, and Klem.",
+          body: []
+        },
+        {
+          id: "months",
+          title: "Month names",
+          description: "Reference Cham and Awal month names with audio.",
+          body: []
+        },
+        {
+          id: "nasak",
+          title: "12 Nasak",
+          description: "The 12-name year cycle in Sakawi Cham.",
+          body: []
+        },
+        {
+          id: "ikas",
+          title: "8 Ikas Sarak",
+          description: "The 8-name cycle used in Sakawi Awal and Cham year names.",
+          body: []
+        },
+        {
+          id: "year-name",
+          title: "Cham year-name pairing",
+          description: "Choose a year to see Nasak and Ikas Sarak move together.",
+          body: []
+        }
+      ]
+    },
+    notFound: {
+      title: "Page not found",
+      lede: "The page you are looking for does not exist or has moved.",
+      homeLink: "Go home"
     }
   }
-} as const;
+};
 
 export const getSiteCopy = (language: SiteLanguage) => siteCopy[language];
+
+export const getDocumentById = (language: SiteLanguage, documentId: string | undefined) =>
+  getSiteCopy(language).documents.documents.find((document) => document.id === documentId);
