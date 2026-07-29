@@ -2,11 +2,13 @@
 import { useEffect, useState } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import './App.css';
+import { LanguageProvider } from "./i18n";
 import { FullCalendarType } from "./model/FullCalendarType";
 import { MatrixCalendarType } from "./model/MatrixCalendarType";
 import { DocumentPage } from "./pages/documentPage";
 import { EventCalendarPage } from './pages/eventCalendarPage';
 import { MonthCalendarPage } from './pages/monthCalendarPage';
+import { HomePage, PrivacyPage, ReleaseNotesPage, SupportPage } from "./pages/publicPages";
 import Helper from "./utility/helper";
 
 function App() {
@@ -43,39 +45,37 @@ function App() {
 
   return (
     <HashRouter>
-      <div className="App">
-        <Routes>
-          <Route path="/"
-            element={
-              <MonthCalendarPage
-                matrixSakawiNT={matrixSakawiNT}
-                matrixSakawiBT={matrixSakawiBT}
-                fullSakawiNT={fullSakawiNT}
-                fullSakawiBT={fullSakawiBT}
-              />
-            } />
-          <Route path="/months"
-            element={
-              <MonthCalendarPage
-                matrixSakawiNT={matrixSakawiNT}
-                matrixSakawiBT={matrixSakawiBT}
-                fullSakawiNT={fullSakawiNT}
-                fullSakawiBT={fullSakawiBT}
-              />
-            } />
-          <Route path="/events"
-            element={
-              <EventCalendarPage
-                matrixSakawiNT={matrixSakawiNT}
-                matrixSakawiBT={matrixSakawiBT}
-                fullSakawiNT={fullSakawiNT}
-                fullSakawiBT={fullSakawiBT}
-              />
-            }
-          />
-          <Route path="/docs" element={<DocumentPage />} />
-        </Routes>
-      </div>
+      <LanguageProvider>
+        <div className="App">
+          <Routes>
+            <Route path="/"
+              element={<HomePage />} />
+            <Route path="/months"
+              element={
+                <MonthCalendarPage
+                  matrixSakawiNT={matrixSakawiNT}
+                  matrixSakawiBT={matrixSakawiBT}
+                  fullSakawiNT={fullSakawiNT}
+                  fullSakawiBT={fullSakawiBT}
+                />
+              } />
+            <Route path="/events"
+              element={
+                <EventCalendarPage
+                  matrixSakawiNT={matrixSakawiNT}
+                  matrixSakawiBT={matrixSakawiBT}
+                  fullSakawiNT={fullSakawiNT}
+                  fullSakawiBT={fullSakawiBT}
+                />
+              }
+            />
+            <Route path="/docs" element={<DocumentPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/support" element={<SupportPage />} />
+            <Route path="/releases" element={<ReleaseNotesPage />} />
+          </Routes>
+        </div>
+      </LanguageProvider>
     </HashRouter>
   );
 }

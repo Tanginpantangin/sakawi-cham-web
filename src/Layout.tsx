@@ -1,48 +1,125 @@
-import { Col, Container, Nav, Navbar, Row } from "react-bootstrap";
+import { Button, Container, Nav, Navbar } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
+import { SiteLanguage, useLanguage } from "./i18n";
+import { appIconUrl, getSiteCopy, playStoreUrl } from "./siteContent";
 
 interface LayoutProps {
     children: JSX.Element;
 }
 
+const publicLinks = [
+    { to: "/", key: "home" },
+    { to: "/privacy", key: "privacy" },
+    { to: "/support", key: "support" },
+    { to: "/releases", key: "releases" },
+] as const;
+
+const LanguageSwitcher = ({ compact = false }: { compact?: boolean }) => {
+    const { language, setLanguage } = useLanguage();
+    const labels = getSiteCopy(language).nav;
+
+    const handleSetLanguage = (nextLanguage: SiteLanguage) => {
+        setLanguage(nextLanguage);
+    };
+
+    return (
+        <div className={compact ? "language-switch language-switch-compact" : "language-switch"} role="group" aria-label={labels.languageLabel}>
+            <Button type="button" variant="link" className="language-option" aria-pressed={language === "vi"} onClick={() => handleSetLanguage("vi")}>
+                VI
+            </Button>
+            <Button type="button" variant="link" className="language-option" aria-pressed={language === "en"} onClick={() => handleSetLanguage("en")}>
+                EN
+            </Button>
+        </div>
+    );
+};
+
+const Brand = ({ compact = false }: { compact?: boolean }) => (
+    <span className={compact ? "brand brand-compact" : "brand"}>
+        <span className="brand-mark-wrap">
+            <img className="brand-mark" src={appIconUrl} alt="" width="40" height="40" />
+        </span>
+        <span className="branding-text">Sakawi</span>
+    </span>
+);
+
+const SiteHeader = () => {
+    const { language } = useLanguage();
+    const labels = getSiteCopy(language).nav;
+
+    return (
+        <header className="site-header">
+            <Navbar bg="light" expand="lg" className="app-navbar" collapseOnSelect>
+                <Container className="site-frame">
+                    <Navbar.Brand as={NavLink} to="/" end aria-label="Sakawi home">
+                        <Brand />
+                    </Navbar.Brand>
+                    <div className="header-actions-mobile">
+                        <LanguageSwitcher compact />
+                        <Navbar.Toggle aria-controls="site-navigation" aria-label={labels.menuLabel} />
+                    </div>
+                    <Navbar.Collapse id="site-navigation">
+                        <Nav className="site-nav" aria-label={labels.navLabel}>
+                            {publicLinks.map((link) => (
+                                <Nav.Link key={link.to} as={NavLink} to={link.to} end={link.to === "/"}>
+                                    {labels[link.key]}
+                                </Nav.Link>
+                            ))}
+                        </Nav>
+                        <a className="download-button download-button-mobile" href={playStoreUrl} target="_blank" rel="noreferrer">
+                            {labels.download}
+                        </a>
+                        <div className="header-actions">
+                            <LanguageSwitcher />
+                            <a className="download-button" href={playStoreUrl} target="_blank" rel="noreferrer">
+                                {labels.download}
+                            </a>
+                        </div>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
+        </header>
+    );
+};
+
+const SiteFooter = () => {
+    const { language } = useLanguage();
+    const labels = getSiteCopy(language);
+    const currentYear = new Date().getFullYear();
+
+    return (
+        <footer className="site-footer">
+            <Container className="site-frame footer-frame">
+                <div className="footer-brand">
+                    <NavLink to="/" className="footer-brand-link" aria-label="Sakawi home">
+                        <Brand compact />
+                    </NavLink>
+                    <p>{labels.footer.description}</p>
+                </div>
+                <nav className="footer-nav" aria-label={labels.nav.navLabel}>
+                    {publicLinks.map((link) => (
+                        <NavLink key={link.to} to={link.to} end={link.to === "/"}>
+                            {labels.nav[link.key]}
+                        </NavLink>
+                    ))}
+                    <a href={playStoreUrl} target="_blank" rel="noreferrer">Google Play</a>
+                </nav>
+                <p className="footer-copyright">{`${labels.footer.copyright} © ${currentYear} Sakawi`}</p>
+            </Container>
+        </footer>
+    );
+};
+
 export const Layout = (props: LayoutProps) => {
     return (
-        <Container fluid className="app-shell">
-            {/* Header */}
-            <Row>
-                <Col style={{ paddingRight: 0, paddingLeft: 0 }}>
-                    <Navbar bg="dark" variant="dark" expand="lg" className="app-navbar">
-                        <Container>
-                            <Navbar.Brand href="/"><label className="logo">꩜</label><label className="branding-text">SAKAWI</label></Navbar.Brand>
-                            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                            <Navbar.Collapse id="basic-navbar-nav">
-                                <Nav className="mr-auto my-2 my-lg-0" navbarScroll>
-                                    <Nav.Link href="#/months">Lịch tháng</Nav.Link>
-                                    <Nav.Link href="#/events">Lịch sự kiện</Nav.Link>
-                                    <Nav.Link href="#/docs">Tài liệu</Nav.Link>
-                                </Nav>
-                            </Navbar.Collapse>
-                        </Container>
-                    </Navbar>
-                </Col>
-            </Row>
-            {/* Body */}
-            <Row className="app-main">
-                <Col sm={12} md={12} lg={12}>
+        <div className="app-shell">
+            <SiteHeader />
+            <main className="app-main">
+                <div className="site-frame main-frame">
                     {props.children}
-                </Col>
-            </Row>
-            {/* Footer */}
-            <Row>
-                <Col className="app-footer">
-                    {`© ${new Date().getFullYear()} Sakawi - Lịch Cham`}
-                    <br />
-                    <a href="/privacy">Chính sách quyền riêng tư</a>
-                    {' | '}
-                    <a href="/support">Hỗ trợ</a>
-                    {' | '}
-                    <a href="https://play.google.com/store/apps/details?id=com.sakawi.cham" target="_blank" rel="noreferrer">Google Play</a>
-                </Col>
-            </Row>
-        </Container>
+                </div>
+            </main>
+            <SiteFooter />
+        </div>
     );
 }
