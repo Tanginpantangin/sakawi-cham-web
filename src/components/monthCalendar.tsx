@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import {
     AhierMonthEnum,
-    displayAhierMonthName,
-    displayAwalMonthName,
     GuecTypeEnum,
     GuenTypeEnum,
     IkasSarakEnum,
@@ -18,14 +16,11 @@ import { MatrixCalendarType } from "../model/MatrixCalendarType";
 import { getSiteCopy } from "../siteContent";
 import Helper from "../utility/helper";
 import {
-    displayAhierDayPhaseParts,
-    displayAhierYearParts,
-    displayAwalDayPhaseParts,
-    displayAwalYearParts,
-    getDayEvents,
     sameDate
 } from "../utils/dateFormat";
 import { getToday } from "../utils/today";
+import type { CountDownBarProps } from "./countDownBar";
+import { DayDetailPanel } from "./dayDetailPanel";
 import { MonthAhier } from "./monthAhier";
 import { MonthAwal } from "./monthAwal";
 import { MonthGregory } from "./monthGregory";
@@ -36,12 +31,12 @@ interface MonthCalendarProps {
     fullSakawi: FullCalendarType[]
     initialSelectedDate?: Date;
     areaLabel?: string;
+    upcomingEvents?: CountDownBarProps[];
 }
 
 export const MonthCalendar = (props: MonthCalendarProps) => {
     const { language } = useLanguage();
     const copy = getSiteCopy(language);
-    const locale = language === "vi" ? "vi-VN" : "en-US";
     const initialAhierMonth: AhierMonth = { month: AhierMonthEnum.BilanSa, year: { nasak: NasakEnum.Pabuei, ikasSarak: IkasSarakEnum.JimLuic, yearNumber: 2019 } };
     const initialAwalMonth: AwalMonth = { month: 0, year: { ikasSarak: 0, yearNumber: 1400 } };
     const initialGregoryDate: Date = getToday();
@@ -189,99 +184,6 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
         }
     }
 
-    function renderSelectedDatePanel() {
-        if (!selectedDate) {
-            return null;
-        }
-
-        const ahierDayCount = Helper.getActualDayNumbersOfAhierMonth(props.matrixSakawi, selectedDate.dateAhier.ahierMonth);
-        const awalDayCount = Helper.getDayNumbersOfAwalMonth(selectedDate.dateAwal.awalMonth.year, selectedDate.dateAwal.awalMonth.month);
-        const ahierDay = displayAhierDayPhaseParts(selectedDate.dateAhier, ahierDayCount);
-        const awalDay = displayAwalDayPhaseParts(selectedDate.dateAwal, awalDayCount);
-        const ahierMonth = displayAhierMonthName(selectedDate.dateAhier.ahierMonth.month);
-        const awalMonth = displayAwalMonthName(selectedDate.dateAwal.awalMonth.month);
-        const ahierYear = displayAhierYearParts(selectedDate.dateAhier, false);
-        const ahierYearLatin = displayAhierYearParts(selectedDate.dateAhier, true);
-        const awalYear = displayAwalYearParts(selectedDate.dateAwal, false);
-        const awalYearLatin = displayAwalYearParts(selectedDate.dateAwal, true);
-        const dayEvents = getDayEvents(selectedDate.dateAhier, selectedDate.dateAwal, selectedDate.dateGregory, ahierDayCount);
-
-        return (
-            <section className="selected-date-panel" aria-labelledby="selected-date-title">
-                <div className="selected-date-heading">
-                    <div>
-                        <h2 id="selected-date-title">{copy.calendar.selectedDateTitle}</h2>
-                        <p>{copy.calendar.detailSubtitle}</p>
-                    </div>
-                    {props.areaLabel && <span className="selected-date-region">{props.areaLabel}</span>}
-                </div>
-                <dl className="selected-date-grid">
-                    <div>
-                        <dt>{copy.calendar.gregorianDate}</dt>
-                        <dd>{selectedDate.dateGregory.toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" })}</dd>
-                    </div>
-                    <div>
-                        <dt>{copy.calendar.weekday}</dt>
-                        <dd>{selectedDate.dateGregory.toLocaleDateString(locale, { weekday: "long" })}</dd>
-                    </div>
-                </dl>
-                <div className="selected-date-cards">
-                    <article className="selected-calendar-card selected-calendar-card-ahier">
-                        <h3>{copy.calendar.systemCham}</h3>
-                        <dl>
-                            <div>
-                                <dt>{copy.calendar.day}</dt>
-                                <dd><span className="detail-cham">{ahierDay.akharThrah}</span><span>{ahierDay.latin}</span></dd>
-                            </div>
-                            <div>
-                                <dt>{copy.calendar.month}</dt>
-                                <dd><span className="detail-cham">{ahierMonth.akharThrahName}</span><span>{`${ahierMonth.rumiName} (${selectedDate.dateAhier.ahierMonth.month + 1})`}</span></dd>
-                            </div>
-                            <div>
-                                <dt>{copy.calendar.year}</dt>
-                                <dd><span className="detail-cham">{`${ahierYear.nasak} ${ahierYear.ikas} · ${ahierYear.year}`}</span><span>{`${ahierYearLatin.nasak} ${ahierYearLatin.ikas} · ${ahierYearLatin.year}`}</span></dd>
-                            </div>
-                        </dl>
-                    </article>
-                    <article className="selected-calendar-card selected-calendar-card-awal">
-                        <h3>{copy.calendar.systemAwal}</h3>
-                        <dl>
-                            <div>
-                                <dt>{copy.calendar.day}</dt>
-                                <dd><span className="detail-cham detail-awal">{awalDay.akharThrah}</span><span>{awalDay.latin}</span></dd>
-                            </div>
-                            <div>
-                                <dt>{copy.calendar.month}</dt>
-                                <dd><span className="detail-cham detail-awal">{awalMonth.akharThrahName}</span><span>{`${awalMonth.rumiName} (${selectedDate.dateAwal.awalMonth.month + 1})`}</span></dd>
-                            </div>
-                            <div>
-                                <dt>{copy.calendar.year}</dt>
-                                <dd><span className="detail-cham detail-awal">{[awalYear.ikas, awalYear.year].filter(Boolean).join(" · ")}</span><span>{[awalYearLatin.ikas, awalYearLatin.year].filter(Boolean).join(" · ")}</span></dd>
-                            </div>
-                        </dl>
-                    </article>
-                </div>
-                <div className="selected-date-events">
-                    <h3>{copy.calendar.events}</h3>
-                    {dayEvents.length > 0 ? (
-                        <ul>
-                            {dayEvents.map((event, index) => (
-                                <li key={`${event.latinName}-${index}`}>
-                                    {event.akharThrahName && <span className="detail-cham">{event.akharThrahName}</span>}
-                                    <strong>{event.latinName}</strong>
-                                    {event.vnName && <span>{event.vnName}</span>}
-                                    {event.description && <small>{event.description}</small>}
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>{copy.calendar.emptyDayEvents}</p>
-                    )}
-                </div>
-            </section>
-        );
-    }
-
     return (
         <Container className="month-calendar">
             <Row className="calendar-control-row">
@@ -349,7 +251,14 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
             </Row>
             <Row>
                 <Col md={12}>
-                    {renderSelectedDatePanel()}
+                    {selectedDate && (
+                        <DayDetailPanel
+                            day={selectedDate}
+                            matrixSakawi={props.matrixSakawi}
+                            areaLabel={props.areaLabel}
+                            upcomingEvents={props.upcomingEvents}
+                        />
+                    )}
                 </Col>
             </Row>
             <Row>

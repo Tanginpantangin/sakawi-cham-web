@@ -128,7 +128,7 @@ test('calendar route supports month navigation, today, selection, events, langua
   fireEvent.click(screen.getByRole('button', { name: /Previous month/i }));
   expect(await screen.findByText(/Month 7 - 2026/i)).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: /^Today$/i }));
-  expect(await screen.findByText(/July 29, 2026/i)).toBeInTheDocument();
+  await waitFor(() => expect(screen.getAllByText(/July 29, 2026/i).length).toBeGreaterThan(0));
 
   const todayCell = await screen.findByTestId('calendar-today-cell');
   expect(todayCell).toHaveAttribute('aria-current', 'date');
@@ -136,7 +136,7 @@ test('calendar route supports month navigation, today, selection, events, langua
 
   const selectableDate = await screen.findByRole('button', { name: /30.*7.*2026.*View details/i });
   fireEvent.click(selectableDate);
-  expect(await screen.findByText(/July 30, 2026/i)).toBeInTheDocument();
+  await waitFor(() => expect(screen.getAllByText(/July 30, 2026/i).length).toBeGreaterThan(0));
 
   const eventButtons = await screen.findAllByRole('button', { name: / - Events$/i });
   expect(eventButtons.length).toBeGreaterThan(0);

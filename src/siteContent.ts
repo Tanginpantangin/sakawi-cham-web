@@ -1,4 +1,5 @@
 import { SiteLanguage } from "./i18n";
+import { EventType } from "./enums/enum";
 
 export const playStoreUrl = "https://play.google.com/store/apps/details?id=com.sakawi.cham&hl=vi";
 export const appIconUrl = `${process.env.PUBLIC_URL}/sakawi-app-icon.png`;
@@ -127,6 +128,7 @@ interface SiteTranslation {
     referenceBody: string;
     selectedDateTitle: string;
     gregorianDate: string;
+    gregorianMonthYear: string;
     chamDate: string;
     awalDate: string;
     weekday: string;
@@ -154,6 +156,12 @@ interface SiteTranslation {
     year: string;
     moreEvents: string;
     regionalWarning: string;
+    countdownTitle: string;
+    countdownToday: string;
+    countdownFuture: string;
+    countdownPast: string;
+    countdownEmpty: string;
+    regionContext: string;
   };
   events: {
     title: string;
@@ -169,6 +177,8 @@ interface SiteTranslation {
     regionLabel: string;
     ninhThuan: string;
     binhThuan: string;
+    names: Partial<Record<EventType, string>>;
+    descriptions: Partial<Record<EventType, string>>;
   };
   privacy: {
     title: string;
@@ -320,6 +330,7 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       referenceBody: "Ứng dụng này chỉ mang tính chất tham khảo; Sakawi chính thức được Hội đồng Chức sắc phát hành từng năm.",
       selectedDateTitle: "Chi tiết ngày",
       gregorianDate: "Ngày Dương lịch",
+      gregorianMonthYear: "Tháng và năm Dương lịch",
       chamDate: "Lịch Cham",
       awalDate: "Lịch Awal",
       weekday: "Thứ",
@@ -349,7 +360,13 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       month: "Tháng",
       year: "Năm",
       moreEvents: "+{count} nữa",
-      regionalWarning: "Khi đổi khu vực, ngày Dương lịch đang chọn được giữ nguyên và thông tin Sakawi được tính lại theo khu vực mới."
+      regionalWarning: "Khi đổi khu vực, ngày Dương lịch đang chọn được giữ nguyên và thông tin Sakawi được tính lại theo khu vực mới.",
+      countdownTitle: "Sự kiện quan trọng sắp tới",
+      countdownToday: "Diễn ra hôm nay",
+      countdownFuture: "Còn {count} ngày",
+      countdownPast: "Đã qua {count} ngày",
+      countdownEmpty: "Không có sự kiện quan trọng sắp tới trong dữ liệu hiện tại.",
+      regionContext: "Thông tin ngày này đang dùng khu vực {region}."
     },
     events: {
       title: "Sự kiện",
@@ -364,7 +381,41 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       noEvents: "Không có sự kiện",
       regionLabel: "Khu vực lịch",
       ninhThuan: "Sakawi Ninh Thuận",
-      binhThuan: "Sakawi Bình Thuận"
+      binhThuan: "Sakawi Bình Thuận",
+      names: {
+        AkaokThun: "Năm mới Chăm lịch",
+        RijaNagar: "Rija Nagar",
+        KatePaleiHamuTanran: "Katê Palei Hamu Tanran",
+        KateAngaokBimong: "Katê",
+        CaMbur: "Ca-mbur",
+        Lakhah: "Lakhah",
+        AwalNewYear: "Năm mới Awal",
+        TamaRicaowRamawan: "Ramawan",
+        TalaihAekRamawan: "Talaih Aek Ramawan",
+        MukTrun: "Muk Trun",
+        OngTrun: "Ong Trun",
+        IkakWaha: "Ikak Waha",
+        TalaihWaha: "Talaih Waha",
+        YuerYang: "Yuer Yang",
+        VietnameseLunarNewYear: "Tết Nguyên Đán"
+      },
+      descriptions: {
+        AkaokThun: "Ngày đầu năm Chăm lịch.",
+        RijaNagar: "Ngày lễ/việc Chăm theo vùng.",
+        KatePaleiHamuTanran: "Ngày Katê.",
+        KateAngaokBimong: "Lễ hội lớn của người Chăm.",
+        CaMbur: "Ngày lễ/việc Chăm.",
+        Lakhah: "Ngày lễ/việc Chăm.",
+        AwalNewYear: "Ngày đầu năm Awal.",
+        TamaRicaowRamawan: "Bắt đầu Ramawan.",
+        TalaihAekRamawan: "Ngày liên quan đến Ramawan.",
+        MukTrun: "Ngày liên quan đến Ramawan.",
+        OngTrun: "Ngày liên quan đến Ramawan.",
+        IkakWaha: "Ngày lễ/việc Awal.",
+        TalaihWaha: "Ngày lễ/việc Awal.",
+        YuerYang: "Ngày lễ/việc Chăm.",
+        VietnameseLunarNewYear: "Tết theo âm lịch Việt Nam."
+      }
     },
     privacy: {
       title: "Chính sách riêng tư",
@@ -600,6 +651,7 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       referenceBody: "This app is for reference only; official Sakawi calendars are issued yearly by the Council of Dignitaries.",
       selectedDateTitle: "Date details",
       gregorianDate: "Gregorian date",
+      gregorianMonthYear: "Gregorian month and year",
       chamDate: "Cham Calendar",
       awalDate: "Awal Calendar",
       weekday: "Weekday",
@@ -629,7 +681,13 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       month: "Month",
       year: "Year",
       moreEvents: "+{count} more",
-      regionalWarning: "When you change region, the selected Gregorian date is preserved and Sakawi details are recalculated for the new region."
+      regionalWarning: "When you change region, the selected Gregorian date is preserved and Sakawi details are recalculated for the new region.",
+      countdownTitle: "Next important event",
+      countdownToday: "Happening today",
+      countdownFuture: "{count} day(s) remaining",
+      countdownPast: "{count} day(s) ago",
+      countdownEmpty: "No upcoming important events are available in the current data.",
+      regionContext: "This date uses the {region} calendar region."
     },
     events: {
       title: "Events",
@@ -644,7 +702,41 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       noEvents: "No events",
       regionLabel: "Calendar region",
       ninhThuan: "Sakawi Ninh Thuận",
-      binhThuan: "Sakawi Bình Thuận"
+      binhThuan: "Sakawi Bình Thuận",
+      names: {
+        AkaokThun: "Cham New Year",
+        RijaNagar: "Rija Nagar",
+        KatePaleiHamuTanran: "Katê Palei Hamu Tanran",
+        KateAngaokBimong: "Katê",
+        CaMbur: "Ca-mbur",
+        Lakhah: "Lakhah",
+        AwalNewYear: "Awal New Year",
+        TamaRicaowRamawan: "Ramawan",
+        TalaihAekRamawan: "Talaih Aek Ramawan",
+        MukTrun: "Muk Trun",
+        OngTrun: "Ong Trun",
+        IkakWaha: "Ikak Waha",
+        TalaihWaha: "Talaih Waha",
+        YuerYang: "Yuer Yang",
+        VietnameseLunarNewYear: "Vietnamese Lunar New Year"
+      },
+      descriptions: {
+        AkaokThun: "First day of the Cham calendar year.",
+        RijaNagar: "Regional Cham observance.",
+        KatePaleiHamuTanran: "Katê observance.",
+        KateAngaokBimong: "Major Cham festival.",
+        CaMbur: "Cham observance.",
+        Lakhah: "Cham observance.",
+        AwalNewYear: "First day of the Awal calendar year.",
+        TamaRicaowRamawan: "Beginning of Ramawan.",
+        TalaihAekRamawan: "Ramawan-related observance.",
+        MukTrun: "Ramawan-related observance.",
+        OngTrun: "Ramawan-related observance.",
+        IkakWaha: "Awal observance.",
+        TalaihWaha: "Awal observance.",
+        YuerYang: "Cham observance.",
+        VietnameseLunarNewYear: "Vietnamese lunar calendar new year."
+      }
     },
     privacy: {
       title: "Privacy",

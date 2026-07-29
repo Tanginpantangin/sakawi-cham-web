@@ -2744,6 +2744,28 @@ button:focus-visible,
   white-space: nowrap;
 }
 
+.selected-date-primary {
+  display: grid;
+  gap: 0.18rem;
+  margin-top: 1rem;
+  padding: 0.85rem;
+  border: 1px solid #F0D4C7;
+  border-radius: 0.55rem;
+  background: #FFF8F4;
+}
+
+.selected-date-primary time {
+  color: var(--sakawi-ink);
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.selected-date-primary span {
+  color: var(--sakawi-muted);
+  font-weight: 800;
+}
+
 .selected-date-grid dd {
   display: grid;
   gap: 0.15rem;
@@ -2813,22 +2835,134 @@ button:focus-visible,
   border-top: 1px solid var(--sakawi-line);
 }
 
-.selected-date-events h3 {
+.selected-date-events h3,
+.selected-date-countdown h3 {
   margin: 0 0 0.65rem;
   font-size: 1.05rem;
 }
 
-.selected-date-events ul {
+.selected-event-list {
   display: grid;
-  gap: 0.45rem;
+  gap: 0.5rem;
   margin: 0;
-  padding-left: 1.1rem;
+  padding: 0;
+  list-style: none;
 }
 
-.selected-date-events li span,
-.selected-date-events li small {
+.selected-event-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.55rem;
+  padding: 0.7rem;
+  border: 1px solid var(--sakawi-line);
+  border-left-width: 4px;
+  border-radius: 0.55rem;
+  background: #FFFFFF;
+}
+
+.selected-event-marker {
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-top: 0.35rem;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.selected-event-body {
+  display: grid;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.selected-event-body strong,
+.selected-countdown-card strong {
+  color: var(--sakawi-ink);
+  overflow-wrap: anywhere;
+}
+
+.selected-event-body span,
+.selected-event-body small,
+.selected-countdown-card span,
+.selected-countdown-card small,
+.selected-date-empty,
+.selected-date-region-context {
   display: block;
   color: var(--sakawi-muted);
+  overflow-wrap: anywhere;
+}
+
+.selected-event-meta {
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.selected-event-ahier {
+  border-left-color: var(--sakawi-ahier);
+  color: var(--sakawi-ahier);
+}
+
+.selected-event-awal {
+  border-left-color: var(--sakawi-awal);
+  color: var(--sakawi-awal);
+}
+
+.selected-event-gregory {
+  border-left-color: #2f80ed;
+  color: #2f80ed;
+}
+
+.selected-date-countdown {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--sakawi-line);
+}
+
+.selected-countdown-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.65rem 1rem;
+  align-items: start;
+  padding: 0.8rem;
+  border: 1px solid var(--sakawi-line);
+  border-left-width: 4px;
+  border-radius: 0.55rem;
+  background: #FFFFFF;
+}
+
+.selected-countdown-card>div:first-child {
+  display: grid;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.selected-countdown-days {
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  background: #f8faf9;
+  color: currentColor !important;
+  font-size: 0.84rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.selected-countdown-track {
+  grid-column: 1 / -1;
+  height: 0.32rem;
+  border-radius: 999px;
+  background: #eef2ef;
+  overflow: hidden;
+}
+
+.selected-countdown-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: currentColor;
+}
+
+.selected-date-region-context {
+  margin: 1rem 0 0;
+  font-size: 0.9rem;
 }
 
 .event-filter-row {
@@ -2907,6 +3041,15 @@ button:focus-visible,
   }
 
   .selected-date-region {
+    width: fit-content;
+    white-space: normal;
+  }
+
+  .selected-countdown-card {
+    grid-template-columns: 1fr;
+  }
+
+  .selected-countdown-days {
     width: fit-content;
     white-space: normal;
   }

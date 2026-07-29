@@ -167,6 +167,7 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
                                 fullSakawi={fullSakawi}
                                 initialSelectedDate={initialSelectedDate}
                                 areaLabel={areaType === "NinhThuan" ? copy.calendar.ninhThuan : copy.calendar.binhThuan}
+                                upcomingEvents={nextEvents}
                             />
                         </Col>
                     </Row>
