@@ -7,22 +7,6 @@ export const qrCodeUrl = `${process.env.PUBLIC_URL}/google-play-qr.svg`;
 
 export type TranslationTree = Record<string, unknown>;
 
-export type DocumentId =
-  | "comparison"
-  | "calendar-rules"
-  | "foundation"
-  | "months"
-  | "nasak"
-  | "ikas"
-  | "year-name";
-
-interface DocumentCopy {
-  id: DocumentId;
-  title: string;
-  description: string;
-  body: readonly string[];
-}
-
 interface ReleaseEntry {
   version: string;
   date: string;
@@ -233,9 +217,28 @@ interface SiteTranslation {
   documents: {
     title: string;
     subtitle: string;
-    missingBodyTitle: string;
-    missingBodyText: string;
-    documents: readonly DocumentCopy[];
+    indexIntro: string;
+    openDocument: string;
+    contentsLabel: string;
+    sharedHeading: string;
+    differencesHeading: string;
+    topicLabel: string;
+    awalLabel: string;
+    chamLabel: string;
+    ruleGroupsHeading: string;
+    factsHeading: string;
+    phaseHeading: string;
+    monthRuleHeading: string;
+    fullMonthTitle: string;
+    shortMonthTitle: string;
+    yearExampleHeading: string;
+    yearFormulaHeading: string;
+    sourceHeading: string;
+    previousDocument: string;
+    nextDocument: string;
+    documentNavigationLabel: string;
+    notFoundTitle: string;
+    notFoundText: string;
   };
   notFound: {
     title: string;
@@ -530,57 +533,28 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
     documents: {
       title: "Tài liệu về Sakawi",
       subtitle: "Kiến thức căn bản về Lịch Cham",
-      missingBodyTitle: "Cần bản nội dung đã phê duyệt",
-      missingBodyText: "Bản nội dung chi tiết đã được phê duyệt cho website chưa có sẵn trong kho dự án. Trang này chỉ hiển thị tiêu đề và mô tả đã được dịch từ ứng dụng di động.",
-      documents: [
-        {
-          id: "comparison",
-          title: "Sakawi Cham và Sakawi Awal",
-          description: "Nhìn nhanh phần chung và những khác biệt quan trọng.",
-          body: [
-            "Sakawi = Saka + Jawi",
-            "Sakawi là sự kết hợp của hai hệ thống lịch:",
-            "Saka - lịch Chăm theo hệ Saka.",
-            "Jawi - lịch Awal được cộng đồng Chăm Bani sử dụng."
-          ]
-        },
-        {
-          id: "calendar-rules",
-          title: "Quy tắc tháng và năm",
-          description: "Tóm tắt cách hai lịch đi cùng nhau, số ngày trong tháng và số ngày trong năm.",
-          body: []
-        },
-        {
-          id: "foundation",
-          title: "Căn bản về thứ, ngày",
-          description: "Một tuần có mấy ngày, một tháng có bao nhiêu ngày, bingun và klem là gì.",
-          body: []
-        },
-        {
-          id: "months",
-          title: "Tên các tháng",
-          description: "Tra cứu tên tháng Cham hoặc Awal và chuẩn bị âm thanh cho từng tên.",
-          body: []
-        },
-        {
-          id: "nasak",
-          title: "12 Nasak",
-          description: "Chu kỳ 12 tên năm của Sakawi Cham.",
-          body: []
-        },
-        {
-          id: "ikas",
-          title: "8 Ikas Sarak",
-          description: "Chu kỳ 8 tên dùng trong Sakawi Awal và khi gọi tên năm Cham.",
-          body: []
-        },
-        {
-          id: "year-name",
-          title: "Cách ghép tên năm lịch Cham",
-          description: "Chọn năm để xem Nasak và Ikas Sarak cùng chuyển động theo chu kỳ.",
-          body: []
-        }
-      ]
+      indexIntro: "Tra cứu các chủ đề nền tảng giống bộ Tài liệu trong ứng dụng Sakawi.",
+      openDocument: "Mở tài liệu",
+      contentsLabel: "Mục lục tài liệu",
+      sharedHeading: "Phần chung",
+      differencesHeading: "Khác biệt chính",
+      topicLabel: "Chủ đề",
+      awalLabel: "Sakawi Awal",
+      chamLabel: "Sakawi Cham",
+      ruleGroupsHeading: "Nhóm quy tắc",
+      factsHeading: "Thông tin căn bản",
+      phaseHeading: "Bingun và klem",
+      monthRuleHeading: "Cách đếm ngày trong tháng",
+      fullMonthTitle: "Tháng đủ · 30 ngày",
+      shortMonthTitle: "Tháng thiếu · 29 ngày",
+      yearExampleHeading: "Ví dụ tên năm",
+      yearFormulaHeading: "Công thức ghép",
+      sourceHeading: "Lưu ý",
+      previousDocument: "Tài liệu trước",
+      nextDocument: "Tài liệu sau",
+      documentNavigationLabel: "Điều hướng tài liệu",
+      notFoundTitle: "Không tìm thấy tài liệu",
+      notFoundText: "Tài liệu này không tồn tại hoặc đã được chuyển."
     },
     notFound: {
       title: "Không tìm thấy trang",
@@ -873,57 +847,28 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
     documents: {
       title: "Sakawi Documents",
       subtitle: "Basic Cham Calendar knowledge",
-      missingBodyTitle: "Approved body copy needed",
-      missingBodyText: "Approved detailed website body copy is not available in the repository yet. This page only shows the mobile-app title and description that already have English translations.",
-      documents: [
-        {
-          id: "comparison",
-          title: "Sakawi Cham and Sakawi Awal",
-          description: "A quick view of shared patterns and important differences.",
-          body: [
-            "Sakawi = Saka + Jawi",
-            "Sakawi is a combination of two calendar systems:",
-            "Saka - the Cham calendar based on the Saka system.",
-            "Jawi - the Awal calendar used by the Cham Bani community."
-          ]
-        },
-        {
-          id: "calendar-rules",
-          title: "Month and year rules",
-          description: "A concise guide to how the two calendars move together.",
-          body: []
-        },
-        {
-          id: "foundation",
-          title: "Weekday and day basics",
-          description: "Week structure, month length, Bingun, and Klem.",
-          body: []
-        },
-        {
-          id: "months",
-          title: "Month names",
-          description: "Reference Cham and Awal month names with audio.",
-          body: []
-        },
-        {
-          id: "nasak",
-          title: "12 Nasak",
-          description: "The 12-name year cycle in Sakawi Cham.",
-          body: []
-        },
-        {
-          id: "ikas",
-          title: "8 Ikas Sarak",
-          description: "The 8-name cycle used in Sakawi Awal and Cham year names.",
-          body: []
-        },
-        {
-          id: "year-name",
-          title: "Cham year-name pairing",
-          description: "Choose a year to see Nasak and Ikas Sarak move together.",
-          body: []
-        }
-      ]
+      indexIntro: "Browse the same foundational reference topics available in the Sakawi mobile app.",
+      openDocument: "Open document",
+      contentsLabel: "Document contents",
+      sharedHeading: "Shared patterns",
+      differencesHeading: "Key differences",
+      topicLabel: "Topic",
+      awalLabel: "Sakawi Awal",
+      chamLabel: "Sakawi Cham",
+      ruleGroupsHeading: "Rule groups",
+      factsHeading: "Basic facts",
+      phaseHeading: "Bingun and klem",
+      monthRuleHeading: "Counting days in a month",
+      fullMonthTitle: "Full month · 30 days",
+      shortMonthTitle: "Short month · 29 days",
+      yearExampleHeading: "Year-name example",
+      yearFormulaHeading: "Pairing formula",
+      sourceHeading: "Note",
+      previousDocument: "Previous document",
+      nextDocument: "Next document",
+      documentNavigationLabel: "Document navigation",
+      notFoundTitle: "Document not found",
+      notFoundText: "This document does not exist or has moved."
     },
     notFound: {
       title: "Page not found",
@@ -934,6 +879,3 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
 };
 
 export const getSiteCopy = (language: SiteLanguage) => siteCopy[language];
-
-export const getDocumentById = (language: SiteLanguage, documentId: string | undefined) =>
-  getSiteCopy(language).documents.documents.find((document) => document.id === documentId);

@@ -89,7 +89,24 @@ test('switches language without leaving the current route', async () => {
   expect(document.documentElement.lang).toBe('en');
 });
 
-test('documents route does not reset language and avoids untranslated English detail bodies', () => {
+test('documents index shows the mobile app document set', async () => {
+  window.localStorage.setItem(languageStorageKey, 'en');
+  window.location.hash = '#/documents';
+
+  render(<App />);
+
+  expect(screen.getByRole('heading', { name: /Sakawi Documents/i })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /Sakawi Cham and Sakawi Awal/i })).toBeInTheDocument();
+  const documentLinks = screen.getAllByRole('link', { name: /Open document/i });
+  expect(documentLinks).toHaveLength(7);
+  expect(documentLinks[0]).toHaveAttribute('href', '#/documents/comparison');
+
+  fireEvent.click(documentLinks[0]);
+  await waitFor(() => expect(window.location.hash).toBe('#/documents/comparison'));
+  expect(screen.getByRole('heading', { name: /Sakawi Cham and Sakawi Awal/i, level: 1 })).toBeInTheDocument();
+});
+
+test('documents route preserves language and renders approved mobile detail bodies', async () => {
   window.localStorage.setItem(languageStorageKey, 'en');
   window.location.hash = '#/documents/calendar-rules';
 
@@ -97,7 +114,24 @@ test('documents route does not reset language and avoids untranslated English de
 
   expect(document.documentElement.lang).toBe('en');
   expect(screen.getByRole('heading', { name: /Month and year rules/i })).toBeInTheDocument();
-  expect(screen.getByText(/Approved detailed website body copy is not available/i)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /Rule groups/i })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /Sakawi Awal/i })).toBeInTheDocument();
+  expect(screen.getByText(/Awal khik, Cham nduec/i)).toBeInTheDocument();
+  expect(screen.queryByText(/Approved detailed website body copy is not available/i)).not.toBeInTheDocument();
+
+  fireEvent.click(screen.getAllByRole('button', { name: /Tiếng Việt/i })[0]);
+  await waitFor(() => expect(document.documentElement.lang).toBe('vi'));
+  expect(window.location.hash).toBe('#/documents/calendar-rules');
+});
+
+test('invalid document slugs stay inside the documents section', () => {
+  window.localStorage.setItem(languageStorageKey, 'en');
+  window.location.hash = '#/documents/not-real';
+
+  render(<App />);
+
+  expect(screen.getByRole('heading', { name: /Document not found/i })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /Back to Documents/i })).toHaveAttribute('href', '#/documents');
 });
 
 test('about route keeps the product introduction available', () => {

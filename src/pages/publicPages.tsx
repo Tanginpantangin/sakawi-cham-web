@@ -1,11 +1,27 @@
 import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
+import {
+  calendarRuleGroups,
+  comparisonRows,
+  foundationFacts,
+  getAdjacentDocuments,
+  getDocumentById,
+  getDocuments,
+  monthPhaseTerms,
+  monthRules,
+  sakawiDefinition,
+  sharedFeatures,
+  yearExample,
+  type DocumentBlock,
+  type DocumentTone,
+  type TermItem
+} from "../data/documentLibrary";
 import { Layout } from "../Layout";
 import { useLanguage } from "../i18n";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
-import { appIconUrl, getDocumentById, getSiteCopy, playStoreUrl, qrCodeUrl } from "../siteContent";
+import { appIconUrl, getSiteCopy, playStoreUrl, qrCodeUrl } from "../siteContent";
 import Helper from "../utility/helper";
 import {
   displayAhierDateSummary,
@@ -40,6 +56,184 @@ const Breadcrumb = ({ current }: { current: string }) => {
       <span>{current}</span>
     </nav>
   );
+};
+
+const documentToneClass = (tone: DocumentTone) => `document-tone-${tone}`;
+
+const renderTerms = (terms: readonly TermItem[], tone: DocumentTone) => (
+  <div className="document-term-grid">
+    {terms.map((term) => (
+      <article className={`document-term-card ${documentToneClass(tone)}`} key={`${term.name}-${term.detail}`}>
+        {term.symbol && <span className="document-term-symbol" aria-hidden="true">{term.symbol}</span>}
+        {term.chamText && <span className="document-term-cham">{term.chamText}</span>}
+        <h3>{term.name}</h3>
+        <p>{term.detail}</p>
+      </article>
+    ))}
+  </div>
+);
+
+const renderDocumentBlock = (
+  block: DocumentBlock,
+  copy: ReturnType<typeof getSiteCopy>,
+  index: number
+) => {
+  switch (block.type) {
+    case "sakawi-definition":
+      return (
+        <section className="document-section document-definition" aria-labelledby="sakawi-definition-title" key={block.type}>
+          <h2 id="sakawi-definition-title">{sakawiDefinition.formula}</h2>
+          <p>{sakawiDefinition.intro}</p>
+          <ul>
+            {sakawiDefinition.parts.map((part) => (
+              <li key={part.term}><strong>{part.term}</strong> - {part.detail}</li>
+            ))}
+          </ul>
+        </section>
+      );
+    case "shared-features":
+      return (
+        <section className="document-section" aria-labelledby="document-shared-title" key={block.type}>
+          <h2 id="document-shared-title">{copy.documents.sharedHeading}</h2>
+          <ul className="document-check-list">
+            {sharedFeatures.map((feature) => (
+              <li key={feature}>{feature}</li>
+            ))}
+          </ul>
+        </section>
+      );
+    case "comparison-table":
+      return (
+        <section className="document-section" aria-labelledby="document-comparison-title" key={block.type}>
+          <h2 id="document-comparison-title">{copy.documents.differencesHeading}</h2>
+          <div className="document-table-wrap">
+            <table className="document-comparison-table">
+              <thead>
+                <tr>
+                  <th scope="col">{copy.documents.topicLabel}</th>
+                  <th scope="col">{copy.documents.awalLabel}</th>
+                  <th scope="col">{copy.documents.chamLabel}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparisonRows.map((row) => (
+                  <tr key={row.topic}>
+                    <th scope="row">{row.topic}</th>
+                    <td>{row.awal}</td>
+                    <td>{row.cham}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      );
+    case "paragraph":
+      return <p className="document-paragraph" key={`${block.type}-${index}`}>{block.text}</p>;
+    case "rule-groups":
+      return (
+        <section className="document-section" aria-labelledby="document-rule-groups-title" key={block.type}>
+          <h2 id="document-rule-groups-title">{copy.documents.ruleGroupsHeading}</h2>
+          <div className="document-rule-grid">
+            {calendarRuleGroups.map((group) => (
+              <article className={`document-rule-card ${documentToneClass(group.tone)}`} key={group.title}>
+                <h3>{group.title}</h3>
+                <ul>
+                  {group.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+      );
+    case "facts":
+      return (
+        <section className="document-section" aria-labelledby="document-facts-title" key={block.type}>
+          <h2 id="document-facts-title">{copy.documents.factsHeading}</h2>
+          <div className="document-fact-grid">
+            {foundationFacts.map((fact) => (
+              <article key={fact.value}>
+                <strong>{fact.value}</strong>
+                <span>{fact.label}</span>
+              </article>
+            ))}
+          </div>
+        </section>
+      );
+    case "terms":
+      return (
+        <section className="document-section" aria-labelledby={`document-terms-${index}`} key={`${block.type}-${index}`}>
+          {block.title && <h2 id={`document-terms-${index}`}>{block.title}</h2>}
+          {!block.title && <h2 className="sr-only" id={`document-terms-${index}`}>{copy.documents.contentsLabel}</h2>}
+          {renderTerms(block.terms, block.tone)}
+        </section>
+      );
+    case "phases":
+      return (
+        <section className="document-section" aria-labelledby="document-phases-title" key={block.type}>
+          <h2 id="document-phases-title">{copy.documents.phaseHeading}</h2>
+          {renderTerms(monthPhaseTerms, "accent")}
+        </section>
+      );
+    case "month-rules":
+      return (
+        <section className="document-section" aria-labelledby="document-month-rules-title" key={block.type}>
+          <h2 id="document-month-rules-title">{copy.documents.monthRuleHeading}</h2>
+          <div className="document-rule-grid document-month-rule-grid">
+            {monthRules.map((rule) => (
+              <article className={`document-rule-card ${documentToneClass(rule.tone)}`} key={rule.type}>
+                <h3>{rule.type === "full" ? copy.documents.fullMonthTitle : copy.documents.shortMonthTitle}</h3>
+                <ul>
+                  {rule.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+      );
+    case "month-grid":
+      return (
+        <section className="document-section" aria-labelledby={`document-month-grid-${index}`} key={`${block.type}-${block.title}`}>
+          <h2 id={`document-month-grid-${index}`}>{block.title}</h2>
+          {renderTerms(block.terms, block.tone)}
+        </section>
+      );
+    case "year-example":
+      return (
+        <section className="document-section" aria-labelledby="document-year-example-title" key={block.type}>
+          <h2 id="document-year-example-title">{copy.documents.yearExampleHeading}</h2>
+          <article className="document-year-example document-tone-chrome">
+            <span>{yearExample.year.yearNumber}</span>
+            <strong>{yearExample.nasak.rumiName} {yearExample.ikasLatin}</strong>
+            <small>{yearExample.nasak.akharThrahName} {yearExample.ikasCham}</small>
+          </article>
+        </section>
+      );
+    case "year-formula":
+      return (
+        <section className="document-section" aria-labelledby="document-year-formula-title" key={block.type}>
+          <h2 id="document-year-formula-title">{copy.documents.yearFormulaHeading}</h2>
+          <div className="document-formula">
+            <span>Nasak</span>
+            <span aria-hidden="true">+</span>
+            <span>Ikas Sarak</span>
+          </div>
+        </section>
+      );
+    case "source-note":
+      return (
+        <aside className="notice public-notice document-source-note" aria-labelledby={`document-source-${index}`} key={`${block.type}-${index}`}>
+          <h2 id={`document-source-${index}`}>{copy.documents.sourceHeading}</h2>
+          <p>{block.text}</p>
+        </aside>
+      );
+    default:
+      return null;
+  }
 };
 
 interface HomePageProps {
@@ -246,6 +440,7 @@ export const AboutPage = ({ matrixSakawi, fullSakawi }: HomePageProps) => {
 export const DocumentsPage = () => {
   const { language } = useLanguage();
   const copy = getSiteCopy(language);
+  const documents = getDocuments(language);
 
   usePageMetadata(copy.metadata.documentsTitle, copy.metadata.documentsDescription);
 
@@ -256,12 +451,14 @@ export const DocumentsPage = () => {
         <p className="page-eyebrow">{copy.shared.productName}</p>
         <h1>{copy.documents.title}</h1>
         <p className="page-lede">{copy.documents.subtitle}</p>
+        <p className="documents-intro">{copy.documents.indexIntro}</p>
         <div className="documents-grid">
-          {copy.documents.documents.map((document) => (
-            <article className="document-card" key={document.id}>
-              <h2>{document.title}</h2>
-              <p>{document.description}</p>
-              <Link to={`/documents/${document.id}`}>{copy.actions.readMore}</Link>
+          {documents.map((item) => (
+            <article className={`document-card ${documentToneClass(item.tone)}`} key={item.id}>
+              <span className="document-card-number" aria-hidden="true">{item.number}</span>
+              <h2>{item.title}</h2>
+              <p>{item.summary}</p>
+              <Link to={`/documents/${item.id}`}>{copy.documents.openDocument}</Link>
             </article>
           ))}
         </div>
@@ -274,37 +471,57 @@ export const DocumentDetailPage = () => {
   const { documentId } = useParams<{ documentId: string }>();
   const { language } = useLanguage();
   const copy = getSiteCopy(language);
-  const document = getDocumentById(language, documentId);
+  const currentDocument = getDocumentById(language, documentId);
+  const adjacent = currentDocument ? getAdjacentDocuments(language, currentDocument.id) : undefined;
 
   usePageMetadata(
-    document ? `${document.title} | ${copy.shared.productName}` : copy.metadata.notFoundTitle,
-    document?.description ?? copy.metadata.notFoundDescription
+    currentDocument ? `${currentDocument.title} | ${copy.shared.productName}` : copy.metadata.notFoundTitle,
+    currentDocument?.summary ?? copy.metadata.notFoundDescription
   );
 
-  if (!document) {
-    return <NotFoundPage />;
+  if (!currentDocument) {
+    return (
+      <Layout>
+        <Container className="page-container public-page document-detail-page">
+          <Breadcrumb current={copy.documents.notFoundTitle} />
+          <p className="page-eyebrow">{copy.nav.documents}</p>
+          <h1>{copy.documents.notFoundTitle}</h1>
+          <p className="page-lede">{copy.documents.notFoundText}</p>
+          <div className="public-link-row">
+            <Link to="/documents">{copy.actions.backToDocuments}</Link>
+          </div>
+        </Container>
+      </Layout>
+    );
   }
 
   return (
     <Layout>
       <Container className="page-container public-page document-detail-page">
-        <Breadcrumb current={document.title} />
+        <Breadcrumb current={currentDocument.title} />
         <p className="page-eyebrow">{copy.nav.documents}</p>
-        <h1>{document.title}</h1>
-        <p className="page-lede">{document.description}</p>
-        {document.body.length > 0 ? (
-          <div className="document-body">
-            {document.body.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-        ) : (
-          <div className="notice public-notice missing-translation">
-            <h2>{copy.documents.missingBodyTitle}</h2>
-            <p>{copy.documents.missingBodyText}</p>
-          </div>
+        <h1>{currentDocument.title}</h1>
+        <p className="page-lede">{currentDocument.summary}</p>
+        <p><Link className="document-back-link" to="/documents">{copy.actions.backToDocuments}</Link></p>
+        <article className={`document-body ${documentToneClass(currentDocument.tone)}`}>
+          {currentDocument.blocks.map((block, index) => renderDocumentBlock(block, copy, index))}
+        </article>
+        {adjacent && (
+          <nav className="document-adjacent-nav" aria-label={copy.documents.documentNavigationLabel}>
+            {adjacent.previous ? (
+              <Link to={`/documents/${adjacent.previous.id}`}>
+                <span>{copy.documents.previousDocument}</span>
+                <strong>{adjacent.previous.title}</strong>
+              </Link>
+            ) : <span />}
+            {adjacent.next ? (
+              <Link to={`/documents/${adjacent.next.id}`}>
+                <span>{copy.documents.nextDocument}</span>
+                <strong>{adjacent.next.title}</strong>
+              </Link>
+            ) : <span />}
+          </nav>
         )}
-        <p><Link to="/documents">{copy.actions.backToDocuments}</Link></p>
       </Container>
     </Layout>
   );
