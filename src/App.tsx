@@ -1,6 +1,6 @@
 //import logo from './logo.svg';
 import { useEffect, useState } from "react";
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import './App.css';
 import { LanguageProvider } from "./i18n";
 import { FullCalendarType } from "./model/FullCalendarType";
@@ -11,7 +11,7 @@ import { MonthCalendarPage } from './pages/monthCalendarPage';
 import {
   DocumentDetailPage,
   DocumentsPage,
-  HomePage,
+  AboutPage,
   NotFoundPage,
   PrivacyPage,
   ReleaseNotesPage,
@@ -57,7 +57,7 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/"
-              element={<HomePage matrixSakawi={matrixSakawiNT} fullSakawi={fullSakawiNT} />} />
+              element={<Navigate to="/calendar" replace />} />
             <Route path="/calendar"
               element={
                 <MonthCalendarPage
@@ -86,6 +86,8 @@ function App() {
                 />
               }
             />
+            <Route path="/about"
+              element={<AboutPage matrixSakawi={matrixSakawiNT} fullSakawi={fullSakawiNT} />} />
             <Route path="/docs" element={<DocumentPage />} />
             <Route path="/documents" element={<DocumentsPage />} />
             <Route path="/documents/:documentId" element={<DocumentDetailPage />} />

@@ -41,6 +41,7 @@ interface SiteTranslation {
     calendar: string;
     events: string;
     documents: string;
+    about: string;
     privacy: string;
     support: string;
     releases: string;
@@ -206,6 +207,7 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       calendar: "Lịch tháng",
       events: "Sự kiện",
       documents: "Tài liệu",
+      about: "Giới thiệu",
       privacy: "Chính sách riêng tư",
       support: "Hỗ trợ",
       releases: "Phiên bản",
@@ -464,6 +466,7 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       calendar: "Monthly Calendar",
       events: "Events",
       documents: "Documents",
+      about: "About",
       privacy: "Privacy",
       support: "Support",
       releases: "Releases",

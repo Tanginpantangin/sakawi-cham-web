@@ -78,7 +78,7 @@ const buildWeekdayLabels = (language: string) => {
   );
 };
 
-export const HomePage = ({ matrixSakawi, fullSakawi }: HomePageProps) => {
+export const AboutPage = ({ matrixSakawi, fullSakawi }: HomePageProps) => {
   const { language } = useLanguage();
   const copy = getSiteCopy(language);
   const today = new Date();

@@ -11,12 +11,12 @@ const primaryLinks = [
     { to: "/calendar", key: "calendar" },
     { to: "/events", key: "events" },
     { to: "/documents", key: "documents" },
-    { to: "/support", key: "support" },
+    { to: "/about", key: "about" },
 ] as const;
 
 const footerLinks = [
-    { to: "/", key: "home" },
     ...primaryLinks,
+    { to: "/support", key: "support" },
     { to: "/privacy", key: "privacy" },
     { to: "/releases", key: "releases" },
 ] as const;
@@ -124,7 +124,7 @@ const SiteFooter = () => {
                 </div>
                 <nav className="footer-nav" aria-label={copy.nav.navLabel}>
                     {footerLinks.map((link) => (
-                        <NavLink key={link.to} to={link.to} end={link.to === "/"}>
+                        <NavLink key={link.to} to={link.to}>
                             {copy.nav[link.key]}
                         </NavLink>
                     ))}
