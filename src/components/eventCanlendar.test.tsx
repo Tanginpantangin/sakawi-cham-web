@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { EventCalendar } from "./eventCanlendar";
 import { LanguageProvider, languageStorageKey } from "../i18n";
@@ -66,14 +66,26 @@ const matrix: MatrixCalendarType[] = [
   }
 ];
 
+const defaultNextEvents = [
+  { eventType: "AkaokThun" as const, eventDate: new Date(2026, 6, 29), sakawiType: "sakawiAhier" as const },
+  { eventType: "RijaNagar" as const, eventDate: new Date(2026, 6, 30), sakawiType: "sakawiAhier" as const }
+];
+
+type RenderEventsOptions = {
+  nextEvents?: typeof defaultNextEvents;
+  areaType?: "NinhThuan" | "BinhThuan";
+  areaLabel?: string;
+};
+
 beforeEach(() => {
   window.localStorage.setItem(languageStorageKey, "en");
 });
 
-function renderEvents(nextEvents = [
-  { eventType: "AkaokThun" as const, eventDate: new Date(2026, 6, 29), sakawiType: "sakawiAhier" as const },
-  { eventType: "RijaNagar" as const, eventDate: new Date(2026, 6, 30), sakawiType: "sakawiAhier" as const }
-]) {
+function renderEvents({
+  nextEvents = defaultNextEvents,
+  areaType = "NinhThuan",
+  areaLabel = "Sakawi Ninh Thuận"
+}: RenderEventsOptions = {}) {
   return render(
     <LanguageProvider>
       <MemoryRouter>
@@ -81,21 +93,77 @@ function renderEvents(nextEvents = [
           matrixSakawi={matrix}
           fullSakawi={fullCalendar}
           nextEvents={nextEvents}
-          areaType="NinhThuan"
-          areaLabel="Sakawi Ninh Thuận"
+          areaType={areaType}
+          areaLabel={areaLabel}
         />
       </MemoryRouter>
     </LanguageProvider>
   );
 }
 
-test("renders the next important event summary and calendar action", () => {
+test("uses a centered Events year heading group with the Akhar Takai Cham year line", () => {
+  const { container, unmount } = renderEvents();
+
+  const headingGroup = container.querySelector(".event-year-title-group");
+  expect(headingGroup).toBeInTheDocument();
+  expect(headingGroup).toContainElement(screen.getByText("Sakawi Ninh Thuận"));
+  expect(headingGroup).toContainElement(screen.getByRole("heading", { name: /Events in 2019/i }));
+
+  const chamYearLine = headingGroup?.querySelector(".event-year-name-cham");
+  expect(chamYearLine).toBeInTheDocument();
+  expect(chamYearLine).toHaveTextContent(/ - /);
+  expect(chamYearLine?.textContent).toMatch(/[\uAA50-\uAA59]/);
+  expect(chamYearLine?.textContent).toContain("꩒꩐꩑꩙");
+
+  const latinYearLine = within(headingGroup as HTMLElement).getByText(/Pabuei JimLuic - 2019/i);
+  expect(latinYearLine).not.toHaveClass("event-year-name-cham");
+
+  const firstEventCard = container.querySelector(".event-list-card");
+  expect(firstEventCard).toBeInTheDocument();
+  expect(firstEventCard).not.toHaveClass("event-year-title-group");
+  expect(firstEventCard).not.toHaveClass("event-year-name-cham");
+
+  fireEvent.click(screen.getByRole("button", { name: /Next year/i }));
+  const nextChamYearLine = container.querySelector(".event-year-name-cham");
+  expect(nextChamYearLine).toHaveTextContent(/ - /);
+  expect(nextChamYearLine?.textContent).toMatch(/[\uAA50-\uAA59]/);
+  expect(nextChamYearLine?.textContent).toContain("꩒꩐꩒꩐");
+
+  unmount();
+
+  const binhThuanRender = renderEvents({
+    areaType: "BinhThuan",
+    areaLabel: "Sakawi Bình Thuận"
+  });
+  const binhThuanHeadingGroup = binhThuanRender.container.querySelector(".event-year-title-group");
+  expect(binhThuanHeadingGroup).toContainElement(screen.getByText("Sakawi Bình Thuận"));
+  expect(binhThuanHeadingGroup?.querySelector(".event-year-name-cham")).toHaveTextContent(/ - /);
+});
+
+test("renders yearly timeline cards and opens event details in a dialog", () => {
   renderEvents();
 
-  expect(screen.getByRole("heading", { name: /Next important event/i })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /Events in 2019/i })).toBeInTheDocument();
   expect(screen.getAllByText(/Cham New Year/i).length).toBeGreaterThan(0);
   expect(screen.getAllByText(/Happening today/i).length).toBeGreaterThan(0);
-  expect(screen.getAllByRole("link", { name: /Open in Monthly Calendar: Cham New Year/i })[0]).toHaveAttribute(
+
+  const chamNewYearCard = screen.getByRole("button", { name: /Cham New Year, Happening today/i });
+  expect(chamNewYearCard.querySelector(".event-cham-name")?.textContent).toBeTruthy();
+  expect(within(chamNewYearCard).getByRole("heading", { name: /Cham New Year/i })).toBeInTheDocument();
+  expect(within(chamNewYearCard).getByText(/First day of the Cham calendar year/i)).toBeInTheDocument();
+  expect(within(chamNewYearCard).getByText(/Happening today/i)).toBeInTheDocument();
+  expect(within(chamNewYearCard).getByText(/Read more/i)).toBeInTheDocument();
+  expect(within(chamNewYearCard).queryByText(/Bilan sa/i)).not.toBeInTheDocument();
+  expect(within(chamNewYearCard).queryByText(/July 29, 2026/i)).not.toBeInTheDocument();
+  expect(within(chamNewYearCard).queryByText(/^Cham Calendar$/i)).not.toBeInTheDocument();
+
+  fireEvent.click(chamNewYearCard);
+  const dialog = screen.getByRole("dialog", { name: /Cham New Year/i });
+  expect(dialog).toBeInTheDocument();
+  expect(within(dialog).getByText(/July 29, 2026/i)).toBeInTheDocument();
+  expect(within(dialog).getAllByText(/Cham Calendar/i).length).toBeGreaterThan(0);
+  expect(within(dialog).getByText(/Bilan sa/i)).toBeInTheDocument();
+  expect(within(dialog).getByRole("link", { name: /Open in Monthly Calendar/i })).toHaveAttribute(
     "href",
     "/calendar?date=2026-07-29"
   );
@@ -127,7 +195,6 @@ test("renders empty states when no event data is available", () => {
     </LanguageProvider>
   );
 
-  expect(screen.getAllByText(/No upcoming important events found/i).length).toBeGreaterThan(0);
   expect(screen.getByText(/No upcoming events found for this year/i)).toBeInTheDocument();
   expect(screen.getByText(/No past events found for this year/i)).toBeInTheDocument();
 });

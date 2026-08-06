@@ -138,20 +138,6 @@ export const DayDetailPanel = ({ day, matrixSakawi, areaLabel, upcomingEvents = 
         </time>
         <span>{day.dateGregory.toLocaleDateString(locale, { weekday: "long" })}</span>
       </div>
-      <dl className="selected-date-grid">
-        <div>
-          <dt>{copy.calendar.gregorianDate}</dt>
-          <dd>{day.dateGregory.toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" })}</dd>
-        </div>
-        <div>
-          <dt>{copy.calendar.weekday}</dt>
-          <dd>{day.dateGregory.toLocaleDateString(locale, { weekday: "long" })}</dd>
-        </div>
-        <div>
-          <dt>{copy.calendar.gregorianMonthYear}</dt>
-          <dd>{day.dateGregory.toLocaleDateString(locale, { year: "numeric", month: "long" })}</dd>
-        </div>
-      </dl>
       <div className="selected-date-cards">
         <article className="selected-calendar-card selected-calendar-card-ahier">
           <h3>{copy.calendar.systemCham}</h3>

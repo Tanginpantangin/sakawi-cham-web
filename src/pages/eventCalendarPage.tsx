@@ -46,16 +46,12 @@ export const EventCalendarPage = (props: EventCalendarPageProps) => {
     return (
         <Layout>
             <Container className="page-container event-page">
-                <div className="calendar-page-heading">
-                    <p className="page-eyebrow">{copy.shared.productName}</p>
-                    <h1>{copy.events.title}</h1>
-                    <p className="page-lede">{copy.events.lede}</p>
-                </div>
+                <h1 className="sr-only">{copy.events.title}</h1>
                 <Row>
                     <Col xs={12}>
                         <Form>
                             <Form.Label className="area-selector-label">{copy.events.regionLabel}</Form.Label>
-                            <div className="area-selector mb-3" role="radiogroup" aria-label={copy.events.regionLabel}>
+                            <div className="area-selector mb-2" role="radiogroup" aria-label={copy.events.regionLabel}>
                                 <Form.Check
                                     id="events-region-ninh-thuan"
                                     inline

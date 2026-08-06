@@ -83,11 +83,7 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
     return (
         <Layout>
             <Container className="page-container calendar-page">
-                <div className="calendar-page-heading">
-                    <p className="page-eyebrow">{copy.shared.productName}</p>
-                    <h1>{copy.calendar.title}</h1>
-                    <p className="page-lede">{copy.calendar.lede}</p>
-                </div>
+                <h1 className="sr-only">{copy.calendar.title}</h1>
                 {showWarning &&
                     <Row>
                         <Col sm={12} md={12} lg={12}>
@@ -103,7 +99,7 @@ export const MonthCalendarPage = (props: MonthCalendarPageProps) => {
                     <Col xs={12}>
                         <Form>
                             <Form.Label className="area-selector-label">{copy.calendar.regionLabel}</Form.Label>
-                            <div className="area-selector mb-3" role="radiogroup" aria-label={copy.calendar.regionLabel}>
+                            <div className="area-selector mb-2" role="radiogroup" aria-label={copy.calendar.regionLabel}>
                                 <Form.Check
                                     id="calendar-region-ninh-thuan"
                                     inline

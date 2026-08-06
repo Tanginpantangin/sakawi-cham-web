@@ -98,7 +98,9 @@ test("renders Gregorian, Cham, Awal, region, and localized event details", () =>
   expect(screen.getByRole("heading", { name: /Date details/i })).toBeInTheDocument();
   expect(screen.getAllByText(/July 29, 2026/i).length).toBeGreaterThan(0);
   expect(screen.getAllByText(/Wednesday/i).length).toBeGreaterThan(0);
-  expect(screen.getByText(/July 2026/i)).toBeInTheDocument();
+  expect(screen.queryByText(/^Gregorian date$/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/^Weekday$/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/^Gregorian month and year$/i)).not.toBeInTheDocument();
   expect(screen.getByRole("heading", { name: /Cham Calendar/i })).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: /Awal Calendar/i })).toBeInTheDocument();
   expect(screen.getAllByText(/Sakawi Ninh Thuận/i).length).toBeGreaterThan(0);

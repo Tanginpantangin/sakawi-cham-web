@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Button, ButtonGroup } from "react-bootstrap";
+import { Button, ButtonGroup, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { displayIkasSarakName, displayNasakName, IkasSarakEnum, SakawiType } from "../enums/enum";
 import { useLanguage } from "../i18n";
@@ -12,7 +12,6 @@ import { formatDateParam } from "../utils/dateFormat";
 import {
     currentAhierYear,
     getEventsForAhierYear,
-    getUpcomingMainEvents,
     SakawiEventItem
 } from "../utils/eventViewModel";
 import { getToday } from "../utils/today";
@@ -77,51 +76,37 @@ function yearTitleCham(year: AhierYear) {
 interface EventCardProps {
     event: SakawiEventItem;
     headingLevel?: 2 | 3;
-    featured?: boolean;
+    onOpen: (event: SakawiEventItem) => void;
 }
 
-const EventCard = ({ event, headingLevel = 3, featured = false }: EventCardProps) => {
+const EventCard = ({ event, headingLevel = 3, onOpen }: EventCardProps) => {
     const { language } = useLanguage();
     const copy = getSiteCopy(language);
-    const locale = language === "vi" ? "vi-VN" : "en-US";
     const eventName = getEventDisplayName(copy, event);
     const description = getEventDescription(copy, event);
     const colorClass = getEventTypeColorClass(event.sakawiType);
     const HeadingTag = `h${headingLevel}` as keyof JSX.IntrinsicElements;
 
     return (
-        <article
-            className={`event-list-card event-app-card ${colorClass} ${event.timing === "past" ? "event-card-past" : ""} ${featured ? "event-card-featured" : ""}`}
+        <button
+            type="button"
+            className={`event-list-card event-app-card ${colorClass} ${event.timing === "past" ? "event-card-past" : ""}`}
             aria-label={`${eventName}, ${countdownText(copy, event)}`}
+            onClick={() => onOpen(event)}
         >
             <span className="circle-event-type" aria-hidden="true"></span>
             <div className="event-list-main">
                 {event.info?.akharThrahName && <div className="event-cham-name">{event.info.akharThrahName}</div>}
                 <HeadingTag>{eventName}</HeadingTag>
                 {description && <p>{description}</p>}
-                {event.calendarContext && (
-                    <div className="event-calendar-context">
-                        <span className="detail-cham">{event.calendarContext.akharThrah}</span>
-                        <span>{event.calendarContext.latin}</span>
-                    </div>
-                )}
             </div>
             <div className="event-list-meta">
-                <time dateTime={formatDateParam(event.eventDate)}>
-                    {event.eventDate.toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" })}
-                </time>
-                <span>{eventCategory(copy, event.sakawiType)}</span>
                 <strong className={`event-status event-status-${event.timing}`}>
                     {countdownText(copy, event)}
                 </strong>
-                <Link
-                    to={`/calendar?date=${formatDateParam(event.eventDate)}`}
-                    aria-label={`${copy.events.openCalendar}: ${eventName}`}
-                >
-                    {copy.events.openCalendar}
-                </Link>
+                <span className="event-card-action">{copy.actions.readMore}</span>
             </div>
-        </article>
+        </button>
     );
 };
 
@@ -129,6 +114,8 @@ export const EventCalendar = (props: EventCalendarProps) => {
     const { language } = useLanguage();
     const copy = getSiteCopy(language);
     const [currentYear, setCurrentYear] = useState<AhierYear>(() => currentAhierYear(props.matrixSakawi) ?? fallbackAhierYear());
+    const [selectedEvent, setSelectedEvent] = useState<SakawiEventItem | undefined>();
+    const locale = language === "vi" ? "vi-VN" : "en-US";
 
     useEffect(() => {
         const nextCurrentYear = currentAhierYear(props.matrixSakawi);
@@ -141,11 +128,6 @@ export const EventCalendar = (props: EventCalendarProps) => {
         () => getEventsForAhierYear(props.matrixSakawi, props.fullSakawi, currentYear),
         [currentYear, props.fullSakawi, props.matrixSakawi]
     );
-    const upcomingMainEvents = useMemo(
-        () => getUpcomingMainEvents(props.nextEvents, props.matrixSakawi, props.fullSakawi),
-        [props.fullSakawi, props.matrixSakawi, props.nextEvents]
-    );
-    const nextImportantEvent = upcomingMainEvents[0];
     const visibleUpcoming = yearlyEvents.upcoming;
     const visiblePast = yearlyEvents.past;
 
@@ -176,7 +158,7 @@ export const EventCalendar = (props: EventCalendarProps) => {
                 {events.length > 0 ? (
                     <div className="event-list">
                         {events.map((event, index) => (
-                            <EventCard event={event} key={`${event.eventType}-${event.eventDate.toISOString()}-${index}`} />
+                            <EventCard event={event} onOpen={setSelectedEvent} key={`${event.eventType}-${event.eventDate.toISOString()}-${index}`} />
                         ))}
                     </div>
                 ) : (
@@ -188,45 +170,13 @@ export const EventCalendar = (props: EventCalendarProps) => {
 
     return (
         <div className="event-calendar" data-region={props.areaType}>
-            <section className="event-summary-section" aria-labelledby="next-important-event-heading">
-                <div className="section-heading-row">
-                    <div>
-                        <h2 id="next-important-event-heading">{copy.events.nextImportant}</h2>
-                        <p>{copy.events.nextImportantDescription.replace("{region}", props.areaLabel)}</p>
-                    </div>
-                </div>
-                {nextImportantEvent ? (
-                    <EventCard event={nextImportantEvent} headingLevel={3} featured />
-                ) : (
-                    <p className="event-empty">{copy.events.noUpcomingEvents}</p>
-                )}
-            </section>
-
-            <section className="event-section" aria-labelledby="upcoming-important-events-heading">
-                <div className="section-heading-row">
-                    <div>
-                        <h2 id="upcoming-important-events-heading">{copy.events.upcoming}</h2>
-                        <p>{copy.events.upcomingDescription}</p>
-                    </div>
-                </div>
-                {upcomingMainEvents.length > 0 ? (
-                    <div className="event-list event-main-list">
-                        {upcomingMainEvents.map((event, index) => (
-                            <EventCard event={event} key={`${event.eventType}-${event.eventDate.toISOString()}-${index}`} />
-                        ))}
-                    </div>
-                ) : (
-                    <p className="event-empty">{copy.events.noUpcomingEvents}</p>
-                )}
-            </section>
-
             <section className="event-year-section" aria-labelledby="event-year-heading">
                 <div className="event-year-heading">
-                    <div>
+                    <div className="event-year-title-group">
                         <p className="page-eyebrow">{props.areaLabel}</p>
                         <h2 id="event-year-heading">{copy.events.yearTitle.replace("{year}", String(currentYear.yearNumber))}</h2>
                         <p className="event-year-name">
-                            <span className="detail-cham">{yearTitleCham(currentYear)}</span>
+                            <span className="event-year-name-cham">{yearTitleCham(currentYear)}</span>
                             <span>{yearTitle(currentYear)}</span>
                         </p>
                     </div>
@@ -246,6 +196,66 @@ export const EventCalendar = (props: EventCalendarProps) => {
                 {renderEventSection("year-upcoming-events", copy.events.yearUpcoming, copy.events.yearUpcomingDescription, visibleUpcoming, copy.events.noYearUpcomingEvents)}
                 {renderEventSection("past-events", copy.events.past, copy.events.pastDescription, visiblePast, copy.events.noPastEvents)}
             </section>
+            <Modal
+                show={Boolean(selectedEvent)}
+                onHide={() => setSelectedEvent(undefined)}
+                centered
+                scrollable
+                dialogClassName="event-detail-dialog"
+                aria-labelledby="event-detail-title"
+            >
+                {selectedEvent && (
+                    <>
+                        <Modal.Header closeButton>
+                            <Modal.Title id="event-detail-title">{getEventDisplayName(copy, selectedEvent)}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className={`event-dialog-content ${getEventTypeColorClass(selectedEvent.sakawiType)}`}>
+                                {selectedEvent.info?.akharThrahName && <div className="event-cham-name">{selectedEvent.info.akharThrahName}</div>}
+                                {getEventDescription(copy, selectedEvent) && <p>{getEventDescription(copy, selectedEvent)}</p>}
+                                <dl className="event-dialog-details">
+                                    <div>
+                                        <dt>{copy.events.date}</dt>
+                                        <dd>
+                                            <time dateTime={formatDateParam(selectedEvent.eventDate)}>
+                                                {selectedEvent.eventDate.toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" })}
+                                            </time>
+                                        </dd>
+                                    </div>
+                                    <div>
+                                        <dt>{copy.events.category}</dt>
+                                        <dd>{eventCategory(copy, selectedEvent.sakawiType)}</dd>
+                                    </div>
+                                    <div>
+                                        <dt>{copy.events.daysRemaining}</dt>
+                                        <dd>
+                                            <strong className={`event-status event-status-${selectedEvent.timing}`}>
+                                                {countdownText(copy, selectedEvent)}
+                                            </strong>
+                                        </dd>
+                                    </div>
+                                    {selectedEvent.calendarContext && (
+                                        <div>
+                                            <dt>{eventCategory(copy, selectedEvent.sakawiType)}</dt>
+                                            <dd>
+                                                <span className="detail-cham">{selectedEvent.calendarContext.akharThrah}</span>
+                                                <span>{selectedEvent.calendarContext.latin}</span>
+                                            </dd>
+                                        </div>
+                                    )}
+                                </dl>
+                                <Link
+                                    className="download-button event-dialog-link"
+                                    to={`/calendar?date=${formatDateParam(selectedEvent.eventDate)}`}
+                                    onClick={() => setSelectedEvent(undefined)}
+                                >
+                                    {copy.events.openCalendar}
+                                </Link>
+                            </div>
+                        </Modal.Body>
+                    </>
+                )}
+            </Modal>
         </div>
     );
 };

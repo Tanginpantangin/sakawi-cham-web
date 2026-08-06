@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Col, ProgressBar, Row } from "react-bootstrap";
 import { EventType, SakawiType, VariantType } from "../enums/enum";
+import { useLanguage } from "../i18n";
+import { getSiteCopy } from "../siteContent";
 import Helper from "../utility/helper";
 
 export interface CountDownBarProps {
@@ -9,76 +11,70 @@ export interface CountDownBarProps {
     sakawiType?: SakawiType;
 }
 
+function startOfDay(date: Date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function variantForEvent(eventType: EventType): VariantType {
+    switch (eventType) {
+        case "AkaokThun":
+            return "primary";
+        case "AwalNewYear":
+        case "TamaRicaowRamawan":
+            return "success";
+        case "RijaNagar":
+        case "Lakhah":
+            return "danger";
+        case "VietnameseLunarNewYear":
+            return "secondary";
+        default:
+            return "warning";
+    }
+}
+
 export const CountDownBar = (props: CountDownBarProps) => {
+    const { language } = useLanguage();
+    const copy = getSiteCopy(language);
     const [percent, setPercent] = useState(100);
     const [days, setDays] = useState(0);
 
     useEffect(() => {
-        const timerId = setTimeout(() => {
-            init();
-        }, 1000);
+        function init() {
+            if (!props.eventDate) {
+                return;
+            }
 
-        // Cleanup function for the timeout
+            const now = new Date();
+            const distance = props.eventDate.getTime() - now.getTime();
+            const timeOfYear = 365 * 24 * 60 * 60 * 1000;
+            setPercent(distance / timeOfYear * 100);
+            setDays(Math.ceil((startOfDay(props.eventDate).getTime() - startOfDay(now).getTime()) / 86400000));
+        }
+
+        init();
+        const timerId = setTimeout(init, 1000);
+
         return () => {
             clearTimeout(timerId);
         };
+    }, [props.eventDate]);
+
+    const locale = language === "vi" ? "vi-VN" : "en-US";
+    const dateStr = props.eventDate.toLocaleDateString(locale, {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
     });
-
-    function init() {
-        if (!props.eventDate) {
-            return;
-        }
-
-        const now = new Date().getTime();
-        const distance = props.eventDate.getTime() - now;
-        const timeOfYear = 365 * 24 * 60 * 60 * 1000;
-        const percent = distance / timeOfYear * 100;
-        setPercent(percent);
-
-        // Time calculations for days, hours, minutes and seconds
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-
-        setDays(days);
-    }
-
-    const dateStr = Helper.displayDateString(props.eventDate);
-
-    let variantType: VariantType;
-    let displayEventName = '';
-    switch (props.eventType) {
-        case "AkaokThun":
-            variantType = 'primary';
-            displayEventName = 'Năm mới Chăm lịch';
-            break;
-        case "AwalNewYear":
-            variantType = 'success';
-            displayEventName = 'Năm mới Awal';
-            break;
-        case "RijaNagar":
-            variantType = 'danger';
-            displayEventName = 'Rija Nagar';
-            break;
-        case "KateAngaokBimong":
-            variantType = 'warning';
-            displayEventName = 'Katé';
-            break;
-        case "TamaRicaowRamawan":
-            variantType = 'success';
-            displayEventName = 'Ramâwan';
-            break;
-        case "VietnameseLunarNewYear":
-            variantType = 'secondary';
-            displayEventName = 'Tết Nguyên Đán';
-            break;
-        case "Lakhah":
-            variantType = 'danger';
-            displayEventName = 'Lakhah';
-            break;
-        default:
-            variantType = 'warning';
-            displayEventName = props.eventType;
-            break;
-    }
+    const displayEventName = copy.events.names[props.eventType]
+        ?? Helper.displayEventDay(props.eventType)?.latinName
+        ?? props.eventType;
+    const countdown = days === 0
+        ? copy.events.countdownToday
+        : days === 1
+            ? copy.events.countdownTomorrow
+            : days > 0
+                ? copy.events.countdownFuture.replace("{count}", String(days))
+                : copy.events.countdownPast.replace("{count}", String(Math.abs(days)));
 
     return (
         <Row className="countdown-bar">
@@ -86,10 +82,10 @@ export const CountDownBar = (props: CountDownBarProps) => {
                 <div className="countdown-bar-text">
                     <span className="countdown-event-name">{`${displayEventName}:`}</span>
                     <span>{` ${dateStr}`}</span>
-                    <span>{` - Còn: ${days} ngày`}</span>
+                    <span>{` - ${countdown}`}</span>
                 </div>
-                <ProgressBar className="countdown-progress" variant={variantType.toString()} now={percent} />
+                <ProgressBar className="countdown-progress" variant={variantForEvent(props.eventType).toString()} now={percent} />
             </Col>
         </Row>
     );
-}
+};

@@ -1,5 +1,5 @@
-import { SiteLanguage } from "./i18n";
 import { EventType } from "./enums/enum";
+import { SiteLanguage } from "./i18n";
 
 export const playStoreUrl = "https://play.google.com/store/apps/details?id=com.sakawi.cham&hl=vi";
 export const appIconUrl = `${process.env.PUBLIC_URL}/sakawi-app-icon.png`;
@@ -80,6 +80,8 @@ interface SiteTranslation {
     saka: string;
     jawi: string;
     download: string;
+    downloadPanelTitle: string;
+    downloadPanelText: string;
     qrCaption: string;
     iosNote: string;
     screenshotNote: string;
@@ -302,18 +304,20 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       currentLanguage: "Ngôn ngữ đang chọn"
     },
     footer: {
-      description: "Sakawi là ứng dụng lịch Cham giúp tra cứu lịch Saka, lịch Awal và các ngày sự kiện liên quan.",
+      description: "Sakawi là ứng dụng lịch giúp tra cứu lịch Chăm, lịch Awal, lịch Dương và các ngày sự kiện liên quan.",
       copyright: "Bản quyền"
     },
     home: {
       eyebrow: "Ứng dụng lịch Cham",
       title: "Sakawi",
-      lede: "Sakawi giúp tra cứu lịch Saka, lịch Awal, các ngày sự kiện và tài liệu liên quan trong một ứng dụng gọn nhẹ.",
+      lede: "Sakawi giúp tra cứu lịch Chăm, lịch Awal, lịch Dương và các ngày sự kiện liên quan trong một ứng dụng gọn nhẹ.",
       formulaTitle: "Sakawi = Saka + Jawi",
       formulaIntro: "Sakawi là sự kết hợp của hai hệ thống lịch:",
       saka: "Saka - lịch Chăm theo hệ Saka.",
       jawi: "Jawi - lịch Awal được cộng đồng Chăm Bani sử dụng.",
       download: "Tải trên Google Play",
+      downloadPanelTitle: "Tải Sakawi",
+      downloadPanelText: "Dùng nút tải hoặc quét mã QR.",
       qrCaption: "Quét mã QR để mở Google Play.",
       iosNote: "Phiên bản iOS có thể được xem xét sau.",
       screenshotNote: "Ảnh chụp ứng dụng sẽ được bổ sung khi có nguồn chính thức trong kho dự án.",
@@ -622,12 +626,14 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
     home: {
       eyebrow: "Cham calendar app",
       title: "Sakawi",
-      lede: "Sakawi helps you look up the Saka calendar, Awal calendar, event days, and related documents in a lightweight app.",
+      lede: "Sakawi helps you look up the Cham calendar, Awal calendar, event days, and related documents in a lightweight app.",
       formulaTitle: "Sakawi = Saka + Jawi",
       formulaIntro: "Sakawi is a combination of two calendar systems:",
       saka: "Saka - the Cham calendar based on the Saka system.",
       jawi: "Jawi - the Awal calendar used by the Cham Bani community.",
       download: "Get it on Google Play",
+      downloadPanelTitle: "Download Sakawi",
+      downloadPanelText: "Use the button or scan the QR code.",
       qrCaption: "Scan the QR code to open Google Play.",
       iosNote: "iOS may come later.",
       screenshotNote: "App screenshots will be added when official source images are available in the project repository.",

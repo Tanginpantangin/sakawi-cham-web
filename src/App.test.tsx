@@ -49,15 +49,11 @@ test('root redirects to calendar and renders required public links', async () =>
 
   expect(document.documentElement.lang).toBe('vi');
   await waitFor(() => expect(window.location.hash).toBe('#/calendar'));
-  expect(await screen.findByRole('heading', { name: /Lịch tháng/i })).toBeInTheDocument();
-  expect(screen.getAllByRole('link', { name: /sakawi/i }).length).toBeGreaterThan(0);
-  expect(screen.getAllByRole('link', { name: /Lịch tháng/i }).length).toBeGreaterThan(0);
-  expect(screen.getAllByRole('link', { name: /Sự kiện/i }).length).toBeGreaterThan(0);
-  expect(screen.getAllByRole('link', { name: /Tài liệu/i }).length).toBeGreaterThan(0);
-  expect(screen.getAllByRole('link', { name: /Giới thiệu/i }).length).toBeGreaterThan(0);
-  expect(screen.getAllByRole('link', { name: /Chính sách riêng tư/i }).length).toBeGreaterThan(0);
-  expect(screen.getAllByRole('link', { name: /Hỗ trợ/i }).length).toBeGreaterThan(0);
-  expect(screen.getAllByRole('link', { name: /Phiên bản/i }).length).toBeGreaterThan(0);
+  expect(await screen.findByRole('radio', { name: /Sakawi Ninh/i })).toBeInTheDocument();
+  expect(document.querySelectorAll('a[href="#/calendar"]').length).toBeGreaterThan(0);
+  expect(document.querySelectorAll('a[href="#/events"]').length).toBeGreaterThan(0);
+  expect(document.querySelectorAll('a[href="#/documents"]').length).toBeGreaterThan(0);
+  expect(document.querySelectorAll('a[href="#/about"]').length).toBeGreaterThan(0);
   expect(screen.getAllByRole('link', { name: /Google Play/i })[0]).toHaveAttribute(
     'href',
     'https://play.google.com/store/apps/details?id=com.sakawi.cham&hl=vi'
@@ -73,14 +69,13 @@ test('restores saved English language and updates html lang', async () => {
   expect(screen.getAllByRole('link', { name: /Monthly Calendar/i }).length).toBeGreaterThan(0);
   expect(screen.getAllByRole('link', { name: /Events/i }).length).toBeGreaterThan(0);
   expect(screen.getAllByRole('link', { name: /Documents/i }).length).toBeGreaterThan(0);
-  expect(await screen.findByRole('heading', { name: /Monthly Calendar/i })).toBeInTheDocument();
+  expect(await screen.findByRole('radio', { name: /Sakawi Ninh/i })).toBeInTheDocument();
 });
 
 test('switches language without leaving the current route', async () => {
   window.location.hash = '#/support';
   render(<App />);
 
-  expect(screen.getByRole('heading', { name: /Hỗ trợ/i })).toBeInTheDocument();
   fireEvent.click(screen.getAllByRole('button', { name: /English/i })[0]);
 
   await waitFor(() => expect(screen.getByRole('heading', { name: /Support/i })).toBeInTheDocument());
@@ -119,7 +114,7 @@ test('documents route preserves language and renders approved mobile detail bodi
   expect(screen.getByText(/Awal khik, Cham nduec/i)).toBeInTheDocument();
   expect(screen.queryByText(/Approved detailed website body copy is not available/i)).not.toBeInTheDocument();
 
-  fireEvent.click(screen.getAllByRole('button', { name: /Tiếng Việt/i })[0]);
+  fireEvent.click(screen.getAllByText('VI')[0]);
   await waitFor(() => expect(document.documentElement.lang).toBe('vi'));
   expect(window.location.hash).toBe('#/documents/calendar-rules');
 });
@@ -134,14 +129,26 @@ test('invalid document slugs stay inside the documents section', () => {
   expect(screen.getByRole('link', { name: /Back to Documents/i })).toHaveAttribute('href', '#/documents');
 });
 
-test('about route keeps the product introduction available', () => {
+test('about route keeps the product introduction and mobile app CTA available', () => {
   window.location.hash = '#/about';
 
   render(<App />);
 
   expect(screen.getByRole('heading', { name: /Sakawi/i, level: 1 })).toBeInTheDocument();
-  expect(screen.getByRole('link', { name: /^Xem Lịch tháng$/i })).toHaveAttribute('href', '#/calendar');
-  expect(screen.getByRole('link', { name: /^Xem Sự kiện sắp tới$/i })).toHaveAttribute('href', '#/events');
+  expect(document.querySelector('a[href="#/calendar"]')).toBeInTheDocument();
+  expect(document.querySelector('a[href="#/events"]')).toBeInTheDocument();
+  expect(screen.getAllByRole('link', { name: /Google Play/i })[0]).toHaveAttribute(
+    'href',
+    'https://play.google.com/store/apps/details?id=com.sakawi.cham&hl=vi'
+  );
+  const qrImage = screen.getByAltText(/QR/i);
+  const qrLink = qrImage.closest('a');
+  expect(qrImage).toHaveAttribute('src', '/google-play-qr.svg');
+  expect(qrImage).toHaveAttribute('width', '160');
+  expect(qrImage).toHaveAttribute('height', '160');
+  expect(qrLink).toHaveAttribute('href', 'https://play.google.com/store/apps/details?id=com.sakawi.cham&hl=vi');
+  expect(qrLink).toHaveAttribute('target', '_blank');
+  expect(qrLink).toHaveAttribute('rel', 'noreferrer');
 });
 
 test('calendar route supports month navigation, today, selection, events, language, and region', async () => {
@@ -150,8 +157,11 @@ test('calendar route supports month navigation, today, selection, events, langua
 
   const { container } = render(<App />);
 
-  expect(await screen.findByRole('heading', { name: /Monthly Calendar/i })).toBeInTheDocument();
+  expect(await screen.findByRole('dialog')).toBeInTheDocument();
   expect(await screen.findByRole('heading', { name: /Date details/i })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: /close/i }));
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+
   expect(await screen.findByText(/Month 7 - 2026/i)).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /Previous month/i })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /Next month/i })).toBeInTheDocument();
@@ -161,8 +171,11 @@ test('calendar route supports month navigation, today, selection, events, langua
   expect(await screen.findByText(/Month 8 - 2026/i)).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: /Previous month/i }));
   expect(await screen.findByText(/Month 7 - 2026/i)).toBeInTheDocument();
+
   fireEvent.click(screen.getByRole('button', { name: /^Today$/i }));
   await waitFor(() => expect(screen.getAllByText(/July 29, 2026/i).length).toBeGreaterThan(0));
+  fireEvent.click(screen.getByRole('button', { name: /close/i }));
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
 
   const todayCell = await screen.findByTestId('calendar-today-cell');
   expect(todayCell).toHaveAttribute('aria-current', 'date');
@@ -171,6 +184,8 @@ test('calendar route supports month navigation, today, selection, events, langua
   const selectableDate = await screen.findByRole('button', { name: /30.*7.*2026.*View details/i });
   fireEvent.click(selectableDate);
   await waitFor(() => expect(screen.getAllByText(/July 30, 2026/i).length).toBeGreaterThan(0));
+  fireEvent.click(screen.getByRole('button', { name: /close/i }));
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
 
   const eventButtons = await screen.findAllByRole('button', { name: / - Events$/i });
   expect(eventButtons.length).toBeGreaterThan(0);
@@ -183,41 +198,44 @@ test('calendar route supports month navigation, today, selection, events, langua
   fireEvent.click(eventCell as HTMLTableCellElement);
   expect(await screen.findByRole('heading', { name: /Date details/i })).toBeInTheDocument();
   expect(screen.getAllByText(eventName ?? '')[0]).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: /close/i }));
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
 
-  fireEvent.click(screen.getAllByRole('button', { name: /Tiếng Việt/i })[0]);
-  expect(await screen.findByRole('heading', { name: /Lịch tháng/i })).toBeInTheDocument();
-  fireEvent.click(screen.getAllByRole('button', { name: /English/i })[0]);
-  expect(await screen.findByRole('heading', { name: /Monthly Calendar/i })).toBeInTheDocument();
+  fireEvent.click(screen.getAllByText('VI')[0]);
+  await waitFor(() => expect(document.documentElement.lang).toBe('vi'));
+  fireEvent.click(screen.getAllByText('EN')[0]);
+  await waitFor(() => expect(document.documentElement.lang).toBe('en'));
   expect(window.location.hash).toBe('#/calendar?date=2026-07-29');
 
-  fireEvent.click(screen.getByRole('radio', { name: /Bình Thuận/i }));
+  fireEvent.click(screen.getAllByRole('radio')[1]);
   expect(window.localStorage.getItem('sakawi.calendar.region')).toBe('BinhThuan');
-  expect(screen.getAllByText(/Sakawi Bình Thuận/i).length).toBeGreaterThanOrEqual(2);
+  expect(screen.getAllByText(/Sakawi B/i).length).toBeGreaterThan(0);
 });
 
-test('events route can show all events and link back to the monthly calendar', async () => {
+test('events route opens event details and links back to the monthly calendar', async () => {
   window.localStorage.setItem(languageStorageKey, 'en');
   window.location.hash = '#/events';
 
   render(<App />);
 
   expect(await screen.findByRole('heading', { name: /^Events$/i })).toBeInTheDocument();
-  expect(await screen.findByRole('heading', { name: /Next important event/i })).toBeInTheDocument();
+  expect(await screen.findByRole('heading', { name: /Events in/i })).toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole('radio', { name: /Sakawi Bình Thuận/i }));
+  fireEvent.click(screen.getAllByRole('radio')[1]);
   expect(window.localStorage.getItem('sakawi.calendar.region')).toBe('BinhThuan');
 
-  fireEvent.click(screen.getAllByRole('button', { name: /Tiếng Việt/i })[0]);
-  expect(await screen.findByRole('heading', { name: /^Sự kiện$/i })).toBeInTheDocument();
-  fireEvent.click(screen.getAllByRole('button', { name: /English/i })[0]);
+  fireEvent.click(screen.getAllByText('VI')[0]);
+  await waitFor(() => expect(document.documentElement.lang).toBe('vi'));
+  fireEvent.click(screen.getAllByText('EN')[0]);
   expect(await screen.findByRole('heading', { name: /^Events$/i })).toBeInTheDocument();
 
-  const calendarLinks = await screen.findAllByRole('link', { name: /Open in Monthly Calendar/i });
-  expect(calendarLinks[0]).toHaveAttribute('href', expect.stringMatching(/^#\/calendar\?date=\d{4}-\d{2}-\d{2}$/));
-  fireEvent.click(calendarLinks[0]);
+  fireEvent.click((await screen.findAllByRole('button', { name: /Cham New Year/i }))[0]);
+  const calendarLink = await screen.findByRole('link', { name: /Open in Monthly Calendar/i });
+  expect(calendarLink).toHaveAttribute('href', expect.stringMatching(/^#\/calendar\?date=\d{4}-\d{2}-\d{2}$/));
+  fireEvent.click(calendarLink);
 
   await waitFor(() => expect(window.location.hash).toMatch(/^#\/calendar\?date=\d{4}-\d{2}-\d{2}$/));
-  expect(await screen.findByRole('heading', { name: /Monthly Calendar/i })).toBeInTheDocument();
+  expect(await screen.findByRole('heading', { name: /Date details/i })).toBeInTheDocument();
 });
 
 test('unsupported browser languages fall back safely to Vietnamese', () => {

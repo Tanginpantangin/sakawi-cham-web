@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Col, Container, Form, Row } from "react-bootstrap";
+import { Col, Container, Form, Modal, Row } from "react-bootstrap";
 import {
     AhierMonthEnum,
     GuecTypeEnum,
@@ -62,6 +62,7 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
     const [currentGregoryYear, setCurrentGregoryYear] = useState(getToday().getFullYear());
     const [showLatinNumberDate, setShowLatinNumberDate] = useState(false);
     const [selectedDate, setSelectedDate] = useState<FullCalendarType | undefined>();
+    const [showDayDialog, setShowDayDialog] = useState(false);
 
     React.useEffect(() => {
         const now = getToday();
@@ -89,6 +90,7 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
             setCurrentGregoryMonth(matchedDate.dateGregory.getMonth());
             setCurrentGregoryYear(matchedDate.dateGregory.getFullYear());
             setSelectedDate(matchedDate);
+            setShowDayDialog(true);
         }
     }, [props.fullSakawi, props.initialSelectedDate]);
 
@@ -118,7 +120,13 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
         const today = props.fullSakawi.find((item) => sameDate(item.dateGregory, getToday()));
         if (today) {
             setSelectedDate(today);
+            setShowDayDialog(true);
         }
+    }
+
+    function handleSelectDate(day: FullCalendarType) {
+        setSelectedDate(day);
+        setShowDayDialog(true);
     }
 
     function handleOnClickToCurrentMonth() {
@@ -223,7 +231,7 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
                             currentAhierMonthMatrix={currentAhierMonthMatrix}
                             showLatinNumberDate={showLatinNumberDate}
                             selectedDate={selectedDate?.dateGregory}
-                            onSelectDate={setSelectedDate}
+                            onSelectDate={handleSelectDate}
                         />
                     }
                     {sakawiType === "sakawiAwal" &&
@@ -233,7 +241,7 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
                             currentAwalMonthMatrix={currentAwalMonthMatrix}
                             showLatinNumberDate={showLatinNumberDate}
                             selectedDate={selectedDate?.dateGregory}
-                            onSelectDate={setSelectedDate}
+                            onSelectDate={handleSelectDate}
                         />
                     }
                     {sakawiType === "sakawiGregory" &&
@@ -244,23 +252,32 @@ export const MonthCalendar = (props: MonthCalendarProps) => {
                             currentGregoryYear={currentGregoryYear ?? getToday().getFullYear()}
                             showLatinNumberDate={showLatinNumberDate}
                             selectedDate={selectedDate?.dateGregory}
-                            onSelectDate={setSelectedDate}
+                            onSelectDate={handleSelectDate}
                         />
                     }
                 </Col>
             </Row>
-            <Row>
-                <Col md={12}>
-                    {selectedDate && (
+            {selectedDate && (
+                <Modal
+                    show={showDayDialog}
+                    onHide={() => setShowDayDialog(false)}
+                    size="lg"
+                    centered
+                    scrollable
+                    dialogClassName="day-detail-dialog"
+                    aria-labelledby="selected-date-title"
+                >
+                    <Modal.Header closeButton className="day-detail-dialog-header" />
+                    <Modal.Body>
                         <DayDetailPanel
                             day={selectedDate}
                             matrixSakawi={props.matrixSakawi}
                             areaLabel={props.areaLabel}
                             upcomingEvents={props.upcomingEvents}
                         />
-                    )}
-                </Col>
-            </Row>
+                    </Modal.Body>
+                </Modal>
+            )}
             <Row>
                 <Col md={12}>
                     <div className="calendar-legend-strip" aria-label={copy.calendar.legendTitle}>

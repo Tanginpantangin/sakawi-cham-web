@@ -304,16 +304,31 @@ export const AboutPage = ({ matrixSakawi, fullSakawi }: HomePageProps) => {
               <Link className="secondary-action" to="/events">
                 {copy.home.primaryEventsAction}
               </Link>
-              <a className="download-button hero-download" href={playStoreUrl} target="_blank" rel="noreferrer">
-                {copy.home.download}
-              </a>
             </div>
           </div>
           <div className="hero-brand-panel" aria-label={copy.accessibility.heroBrandLabel}>
-            <img className="hero-app-icon" src={appIconUrl} alt={copy.accessibility.appIconAlt} width="180" height="180" />
-            <div className="qr-card">
-              <img src={qrCodeUrl} alt={copy.accessibility.qrAlt} width="132" height="132" />
-              <p>{copy.home.qrCaption}</p>
+            <div className="download-panel-header">
+              <img className="hero-app-icon" src={appIconUrl} alt={copy.accessibility.appIconAlt} width="112" height="112" />
+              <div className="download-panel-copy">
+                <h2>{copy.home.downloadPanelTitle}</h2>
+                <p>{copy.home.downloadPanelText}</p>
+              </div>
+            </div>
+            <div className="app-download-card">
+              <a className="google-play-badge" href={playStoreUrl} target="_blank" rel="noreferrer" aria-label={copy.home.download}>
+                <span>{copy.home.download}</span>
+                <strong>{copy.shared.googlePlay}</strong>
+              </a>
+              <a
+                className="qr-card"
+                href={playStoreUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={copy.accessibility.qrAlt}
+              >
+                <img src={qrCodeUrl} alt={copy.accessibility.qrAlt} width="160" height="160" />
+                <p>{copy.home.qrCaption}</p>
+              </a>
             </div>
           </div>
         </section>
@@ -455,7 +470,6 @@ export const DocumentsPage = () => {
         <div className="documents-grid">
           {documents.map((item) => (
             <article className={`document-card ${documentToneClass(item.tone)}`} key={item.id}>
-              <span className="document-card-number" aria-hidden="true">{item.number}</span>
               <h2>{item.title}</h2>
               <p>{item.summary}</p>
               <Link to={`/documents/${item.id}`}>{copy.documents.openDocument}</Link>
