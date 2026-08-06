@@ -21,7 +21,7 @@ import { Layout } from "../Layout";
 import { useLanguage } from "../i18n";
 import { FullCalendarType } from "../model/FullCalendarType";
 import { MatrixCalendarType } from "../model/MatrixCalendarType";
-import { appIconUrl, getSiteCopy, playStoreUrl, qrCodeUrl } from "../siteContent";
+import { appIconUrl, getSiteCopy, playStoreUrl, qrCodeUrl, supportEmail } from "../siteContent";
 import Helper from "../utility/helper";
 import {
   displayAhierDateSummary,
@@ -559,7 +559,10 @@ export const PrivacyPage = () => {
         {copy.privacy.sections.map((section) => (
           <section key={section.title}>
             <h2>{section.title}</h2>
-            <p>{section.body}</p>
+            <p>
+              {section.body}
+              {section.contactEmail && <> <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.</>}
+            </p>
           </section>
         ))}
       </Container>
@@ -582,7 +585,7 @@ export const SupportPage = () => {
         <p className="page-lede">{copy.support.lede}</p>
 
         <div className="notice public-notice">
-          <p>{copy.support.contactLabel}: <a href="mailto:hoangminhgiam88@gmail.com">hoangminhgiam88@gmail.com</a></p>
+          <p>{copy.support.contactLabel}: <a href={`mailto:${supportEmail}`}>{supportEmail}</a></p>
         </div>
 
         <section>

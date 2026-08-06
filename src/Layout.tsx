@@ -111,7 +111,6 @@ const SiteHeader = () => {
 const SiteFooter = () => {
     const { language } = useLanguage();
     const copy = getSiteCopy(language);
-    const currentYear = new Date().getFullYear();
 
     return (
         <footer className="site-footer">
@@ -130,7 +129,7 @@ const SiteFooter = () => {
                     ))}
                     <a href={playStoreUrl} target="_blank" rel="noreferrer">{copy.shared.googlePlay}</a>
                 </nav>
-                <p className="footer-copyright">{`${copy.footer.copyright} © ${currentYear} ${copy.shared.productName}`}</p>
+                <p className="footer-copyright">{`© 2026 ${copy.shared.productName}`}</p>
             </Container>
         </footer>
     );

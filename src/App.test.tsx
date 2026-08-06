@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from './App';
 import { languageStorageKey, resolveBrowserLanguage } from './i18n';
-import { siteCopy } from './siteContent';
+import { siteCopy, supportEmail } from './siteContent';
 
 jest.setTimeout(60000);
 
@@ -149,6 +149,25 @@ test('about route keeps the product introduction and mobile app CTA available', 
   expect(qrLink).toHaveAttribute('href', 'https://play.google.com/store/apps/details?id=com.sakawi.cham&hl=vi');
   expect(qrLink).toHaveAttribute('target', '_blank');
   expect(qrLink).toHaveAttribute('rel', 'noreferrer');
+});
+
+test('public contact pages use Sakawi official contact and copyright', () => {
+  window.localStorage.setItem(languageStorageKey, 'en');
+  window.location.hash = '#/privacy';
+
+  const { unmount } = render(<App />);
+
+  expect(screen.getByRole('heading', { name: /^Privacy$/i, level: 1 })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: supportEmail })).toHaveAttribute('href', `mailto:${supportEmail}`);
+  expect(screen.getByText('© 2026 Sakawi')).toBeInTheDocument();
+
+  unmount();
+  window.location.hash = '#/support';
+  render(<App />);
+
+  expect(screen.getByRole('heading', { name: /^Support$/i })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: supportEmail })).toHaveAttribute('href', `mailto:${supportEmail}`);
+  expect(screen.getByText('© 2026 Sakawi')).toBeInTheDocument();
 });
 
 test('calendar route supports month navigation, today, selection, events, language, and region', async () => {

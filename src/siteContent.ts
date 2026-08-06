@@ -4,6 +4,7 @@ import { SiteLanguage } from "./i18n";
 export const playStoreUrl = "https://play.google.com/store/apps/details?id=com.sakawi.cham&hl=vi";
 export const appIconUrl = `${process.env.PUBLIC_URL}/sakawi-app-icon.png`;
 export const qrCodeUrl = `${process.env.PUBLIC_URL}/google-play-qr.svg`;
+export const supportEmail = "sakawi.app@gmail.com";
 
 export type TranslationTree = Record<string, unknown>;
 
@@ -69,7 +70,6 @@ interface SiteTranslation {
   };
   footer: {
     description: string;
-    copyright: string;
   };
   home: {
     eyebrow: string;
@@ -195,6 +195,7 @@ interface SiteTranslation {
     sections: readonly {
       title: string;
       body: string;
+      contactEmail?: boolean;
     }[];
   };
   support: {
@@ -304,8 +305,7 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       currentLanguage: "Ngôn ngữ đang chọn"
     },
     footer: {
-      description: "Sakawi là ứng dụng lịch giúp tra cứu lịch Chăm, lịch Awal, lịch Dương và các ngày sự kiện liên quan.",
-      copyright: "Bản quyền"
+      description: "Sakawi là ứng dụng giúp tra cứu lịch Chăm, lịch Awal, lịch Dương và các ngày sự kiện liên quan."
     },
     home: {
       eyebrow: "Ứng dụng lịch Cham",
@@ -496,6 +496,11 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
         {
           title: "Dữ liệu Sakawi không cố ý thu thập",
           body: "Sakawi không cố ý thu thập Advertising ID, vị trí, danh bạ, ảnh, video, microphone, camera, dữ liệu sức khỏe, nội dung lịch thiết bị hoặc thông tin thanh toán."
+        },
+        {
+          title: "Liên hệ",
+          body: "Nếu có câu hỏi về ứng dụng Sakawi hoặc website Sakawi, vui lòng liên hệ Sakawi qua",
+          contactEmail: true
         }
       ]
     },
@@ -620,8 +625,7 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       currentLanguage: "Current language"
     },
     footer: {
-      description: "Sakawi is a Cham calendar app for looking up Saka, Awal, and related event days.",
-      copyright: "Copyright"
+      description: "Sakawi is a Cham calendar app for looking up Saka, Awal, and related event days."
     },
     home: {
       eyebrow: "Cham calendar app",
@@ -812,6 +816,11 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
         {
           title: "Data Sakawi does not intentionally collect",
           body: "Sakawi does not intentionally collect Advertising ID, location, contacts, photos, videos, microphone data, camera data, health information, device calendar contents, or payment information."
+        },
+        {
+          title: "Contact",
+          body: "For questions about the Sakawi application or the Sakawi website, contact Sakawi at",
+          contactEmail: true
         }
       ]
     },
