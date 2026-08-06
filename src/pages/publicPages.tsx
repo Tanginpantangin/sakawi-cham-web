@@ -444,7 +444,6 @@ export const AboutPage = ({ matrixSakawi, fullSakawi }: HomePageProps) => {
             <Link to="/documents">{copy.nav.documents}</Link>
             <Link to="/privacy">{copy.nav.privacy}</Link>
             <Link to="/support">{copy.nav.support}</Link>
-            <Link to="/releases">{copy.nav.releases}</Link>
           </div>
         </section>
       </Container>
@@ -613,38 +612,6 @@ export const SupportPage = () => {
             ))}
           </ul>
         </section>
-      </Container>
-    </Layout>
-  );
-};
-
-export const ReleaseNotesPage = () => {
-  const { language } = useLanguage();
-  const copy = getSiteCopy(language);
-
-  usePageMetadata(copy.metadata.releasesTitle, copy.metadata.releasesDescription);
-
-  return (
-    <Layout>
-      <Container className="page-container public-page">
-        <Breadcrumb current={copy.nav.releases} />
-        <p className="page-eyebrow">{copy.shared.productName}</p>
-        <h1>{copy.releases.title}</h1>
-        <p className="page-lede">{copy.releases.lede}</p>
-        <p className="page-meta">{copy.releases.currentNote}</p>
-
-        {copy.releases.entries.map((entry) => (
-          <section className="release-entry" aria-labelledby={`release-${entry.version}`} key={entry.version}>
-            <p className="release-version">{entry.version}</p>
-            <p className="page-meta">{entry.date}</p>
-            <h2 id={`release-${entry.version}`}>{entry.title}</h2>
-            <ul>
-              {entry.bullets.map((bullet) => (
-                <li key={bullet}>{bullet}</li>
-              ))}
-            </ul>
-          </section>
-        ))}
       </Container>
     </Layout>
   );

@@ -18,7 +18,6 @@ const footerLinks = [
     ...primaryLinks,
     { to: "/support", key: "support" },
     { to: "/privacy", key: "privacy" },
-    { to: "/releases", key: "releases" },
 ] as const;
 
 const LanguageSwitcher = ({ compact = false }: { compact?: boolean }) => {

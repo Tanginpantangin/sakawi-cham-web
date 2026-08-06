@@ -1518,12 +1518,6 @@ body {
   gap: 0.6rem;
 }
 
-.release-entry {
-  margin-top: 1.75rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid #e5e7eb;
-}
-
 .calendar-control-row {
   margin-bottom: 0.65rem;
 }
@@ -2444,16 +2438,6 @@ button:focus-visible,
 .public-notice {
   border-left-color: var(--sakawi-ahier);
   background: #FFF8F4;
-}
-
-.release-version {
-  display: inline-flex;
-  margin: 0 0 0.4rem;
-  padding: 0.2rem 0.55rem;
-  border-radius: 999px;
-  background: #FFF1E9;
-  color: var(--sakawi-chrome);
-  font-weight: 800;
 }
 
 .site-footer {

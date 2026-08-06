@@ -8,13 +8,6 @@ export const supportEmail = "sakawi.app@gmail.com";
 
 export type TranslationTree = Record<string, unknown>;
 
-interface ReleaseEntry {
-  version: string;
-  date: string;
-  title: string;
-  bullets: readonly string[];
-}
-
 interface SiteTranslation {
   shared: {
     productName: string;
@@ -30,7 +23,6 @@ interface SiteTranslation {
     about: string;
     privacy: string;
     support: string;
-    releases: string;
     download: string;
     navLabel: string;
     languageLabel: string;
@@ -53,8 +45,6 @@ interface SiteTranslation {
     privacyDescription: string;
     supportTitle: string;
     supportDescription: string;
-    releasesTitle: string;
-    releasesDescription: string;
     notFoundTitle: string;
     notFoundDescription: string;
     ogHomeTitle: string;
@@ -211,12 +201,6 @@ interface SiteTranslation {
     troubleshootingTitle: string;
     troubleshootingItems: readonly string[];
   };
-  releases: {
-    title: string;
-    lede: string;
-    currentNote: string;
-    entries: readonly ReleaseEntry[];
-  };
   documents: {
     title: string;
     subtitle: string;
@@ -266,7 +250,6 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       about: "Giới thiệu",
       privacy: "Chính sách riêng tư",
       support: "Hỗ trợ",
-      releases: "Phiên bản",
       download: "Google Play",
       navLabel: "Điều hướng chính",
       languageLabel: "Chọn ngôn ngữ",
@@ -289,8 +272,6 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       privacyDescription: "Chính sách riêng tư của Sakawi, bao gồm lựa chọn đồng ý cho Firebase Analytics và Firebase Crashlytics.",
       supportTitle: "Hỗ trợ | Sakawi",
       supportDescription: "Hỗ trợ kỹ thuật Sakawi cho cài đặt, cập nhật, quyền riêng tư và xử lý sự cố.",
-      releasesTitle: "Phiên bản | Sakawi",
-      releasesDescription: "Lịch sử phiên bản công khai của Sakawi.",
       notFoundTitle: "Không tìm thấy trang | Sakawi",
       notFoundDescription: "Trang Sakawi bạn đang tìm không tồn tại.",
       ogHomeTitle: "Sakawi | Ứng dụng lịch Cham",
@@ -522,23 +503,6 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
         "Gửi phiên bản ứng dụng, phiên bản Android, mẫu thiết bị và mô tả lỗi khi liên hệ hỗ trợ."
       ]
     },
-    releases: {
-      title: "Phiên bản",
-      lede: "Lịch sử phiên bản công khai của Sakawi.",
-      currentNote: "Phiên bản 1.4.0 đang được chuẩn bị nhưng chưa được trình bày là bản phát hành công khai.",
-      entries: [
-        {
-          version: "1.3.0",
-          date: "29 tháng 7 năm 2026",
-          title: "Nền tảng phân tích và độ ổn định",
-          bullets: [
-            "Bổ sung nền tảng đo lường sử dụng bằng Firebase Analytics.",
-            "Bổ sung nền tảng báo cáo lỗi bằng Firebase Crashlytics.",
-            "Cải thiện theo dõi độ ổn định và chẩn đoán kỹ thuật."
-          ]
-        }
-      ]
-    },
     documents: {
       title: "Tài liệu về Sakawi",
       subtitle: "Kiến thức căn bản về Lịch Cham",
@@ -586,7 +550,6 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       about: "About",
       privacy: "Privacy",
       support: "Support",
-      releases: "Releases",
       download: "Google Play",
       navLabel: "Primary navigation",
       languageLabel: "Choose language",
@@ -609,8 +572,6 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       privacyDescription: "Sakawi privacy policy, including consent choices for Firebase Analytics and Firebase Crashlytics.",
       supportTitle: "Support | Sakawi",
       supportDescription: "Technical help for Sakawi installation, updates, privacy settings, and troubleshooting.",
-      releasesTitle: "Releases | Sakawi",
-      releasesDescription: "Public Sakawi release history.",
       notFoundTitle: "Page not found | Sakawi",
       notFoundDescription: "The Sakawi page you are looking for does not exist.",
       ogHomeTitle: "Sakawi | Cham calendar app",
@@ -840,23 +801,6 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
         "Check Google Play for updates.",
         "Check notification permission if event reminders do not work.",
         "Include app version, Android version, device model, and issue description when contacting support."
-      ]
-    },
-    releases: {
-      title: "Releases",
-      lede: "Public Sakawi release history.",
-      currentNote: "Version 1.4.0 is being prepared but is not presented here as a public release.",
-      entries: [
-        {
-          version: "1.3.0",
-          date: "July 29, 2026",
-          title: "Analytics and stability foundation",
-          bullets: [
-            "Added Firebase Analytics instrumentation foundation.",
-            "Added Firebase Crashlytics crash reporting foundation.",
-            "Improved stability tracking and technical diagnostics."
-          ]
-        }
       ]
     },
     documents: {

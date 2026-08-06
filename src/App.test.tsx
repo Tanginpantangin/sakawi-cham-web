@@ -54,6 +54,7 @@ test('root redirects to calendar and renders required public links', async () =>
   expect(document.querySelectorAll('a[href="#/events"]').length).toBeGreaterThan(0);
   expect(document.querySelectorAll('a[href="#/documents"]').length).toBeGreaterThan(0);
   expect(document.querySelectorAll('a[href="#/about"]').length).toBeGreaterThan(0);
+  expect(document.querySelectorAll('a[href="#/releases"]')).toHaveLength(0);
   expect(screen.getAllByRole('link', { name: /Google Play/i })[0]).toHaveAttribute(
     'href',
     'https://play.google.com/store/apps/details?id=com.sakawi.cham&hl=vi'
@@ -137,6 +138,7 @@ test('about route keeps the product introduction and mobile app CTA available', 
   expect(screen.getByRole('heading', { name: /Sakawi/i, level: 1 })).toBeInTheDocument();
   expect(document.querySelector('a[href="#/calendar"]')).toBeInTheDocument();
   expect(document.querySelector('a[href="#/events"]')).toBeInTheDocument();
+  expect(document.querySelector('a[href="#/releases"]')).not.toBeInTheDocument();
   expect(screen.getAllByRole('link', { name: /Google Play/i })[0]).toHaveAttribute(
     'href',
     'https://play.google.com/store/apps/details?id=com.sakawi.cham&hl=vi'
@@ -149,6 +151,18 @@ test('about route keeps the product introduction and mobile app CTA available', 
   expect(qrLink).toHaveAttribute('href', 'https://play.google.com/store/apps/details?id=com.sakawi.cham&hl=vi');
   expect(qrLink).toHaveAttribute('target', '_blank');
   expect(qrLink).toHaveAttribute('rel', 'noreferrer');
+});
+
+test('releases route redirects to about without exposing releases navigation', async () => {
+  window.localStorage.setItem(languageStorageKey, 'en');
+  window.location.hash = '#/releases';
+
+  render(<App />);
+
+  await waitFor(() => expect(window.location.hash).toBe('#/about'));
+  expect(screen.getByRole('heading', { name: /^Sakawi$/i, level: 1 })).toBeInTheDocument();
+  expect(document.querySelector('a[href="#/releases"]')).not.toBeInTheDocument();
+  expect(screen.queryByRole('heading', { name: /Releases/i })).not.toBeInTheDocument();
 });
 
 test('public contact pages use Sakawi official contact and copyright', () => {

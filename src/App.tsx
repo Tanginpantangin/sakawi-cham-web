@@ -14,7 +14,6 @@ import {
   AboutPage,
   NotFoundPage,
   PrivacyPage,
-  ReleaseNotesPage,
   SupportPage
 } from "./pages/publicPages";
 import Helper from "./utility/helper";
@@ -93,7 +92,7 @@ function App() {
             <Route path="/documents/:documentId" element={<DocumentDetailPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/support" element={<SupportPage />} />
-            <Route path="/releases" element={<ReleaseNotesPage />} />
+            <Route path="/releases" element={<Navigate to="/about" replace />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
