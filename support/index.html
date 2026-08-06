@@ -3,103 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hỗ trợ Sakawi | Sakawi</title>
-  <meta name="description" content="Trang hỗ trợ Sakawi với email liên hệ, thông tin nên gửi khi báo lỗi, liên kết Chính sách quyền riêng tư và Google Play." />
+  <title>Support | Sakawi</title>
   <link rel="canonical" href="https://www.sakawi.com/support" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Sakawi" />
-  <meta property="og:title" content="Hỗ trợ Sakawi" />
-  <meta property="og:description" content="Liên hệ hỗ trợ Sakawi và xem các liên kết quan trọng cho ứng dụng Android." />
-  <meta property="og:url" content="https://www.sakawi.com/support" />
   <link rel="icon" href="/sakawi.ico" />
-  <link rel="stylesheet" href="/legal.css" />
-</head>
-<body>
-  <header class="site-header">
-    <a class="brand-link" href="/">Sakawi</a>
-    <nav class="language-switch" aria-label="Language">
-      <a href="/support?lang=vi" data-lang-link="vi" aria-current="true">Tiếng Việt</a>
-      <a href="/support?lang=en" data-lang-link="en">English</a>
-    </nav>
-  </header>
-
-  <main>
-    <article id="support-vi" class="language-panel" lang="vi">
-      <p class="eyebrow">Sakawi</p>
-      <h1>Hỗ trợ Sakawi</h1>
-      <p class="lede">Nếu bạn cần trợ giúp, muốn báo lỗi hoặc muốn gửi góp ý cho ứng dụng Sakawi, vui lòng liên hệ qua email hỗ trợ.</p>
-
-      <div class="notice">
-        <p>Email hỗ trợ: <a href="mailto:hoangminhgiam88@gmail.com">hoangminhgiam88@gmail.com</a></p>
-      </div>
-
-      <h2>Thông tin nên gửi khi yêu cầu hỗ trợ</h2>
-      <p>Để chúng tôi hiểu và xử lý vấn đề nhanh hơn, bạn có thể gửi kèm các thông tin sau nếu phù hợp:</p>
-      <ul>
-        <li>Phiên bản ứng dụng Sakawi.</li>
-        <li>Phiên bản Android.</li>
-        <li>Mẫu thiết bị.</li>
-        <li>Mô tả vấn đề hoặc nội dung góp ý.</li>
-        <li>Ảnh chụp màn hình, nếu có thể và không chứa thông tin riêng tư không cần thiết.</li>
-      </ul>
-
-      <h2>Liên kết hữu ích</h2>
-      <ul class="link-list">
-        <li><a href="/privacy">Chính sách quyền riêng tư</a></li>
-        <li><a href="https://play.google.com/store/apps/details?id=com.sakawi.cham">Google Play</a></li>
-        <li><a href="/">Trang chủ Sakawi</a></li>
-      </ul>
-    </article>
-
-    <article id="support-en" class="language-panel" lang="en">
-      <p class="eyebrow">Sakawi</p>
-      <h1>Sakawi Support</h1>
-      <p class="lede">If you need help, want to report a problem, or want to send feedback about the Sakawi app, please contact the support email.</p>
-
-      <div class="notice">
-        <p>Support email: <a href="mailto:hoangminhgiam88@gmail.com">hoangminhgiam88@gmail.com</a></p>
-      </div>
-
-      <h2>Useful information for support requests</h2>
-      <p>To help us understand and resolve the issue faster, include the following information when relevant:</p>
-      <ul>
-        <li>Sakawi app version.</li>
-        <li>Android version.</li>
-        <li>Device model.</li>
-        <li>Description of the issue or feedback.</li>
-        <li>Screenshots, when appropriate and when they do not include unnecessary private information.</li>
-      </ul>
-
-      <h2>Useful links</h2>
-      <ul class="link-list">
-        <li><a href="/privacy?lang=en">Privacy Policy</a></li>
-        <li><a href="https://play.google.com/store/apps/details?id=com.sakawi.cham">Google Play</a></li>
-        <li><a href="/">Sakawi home</a></li>
-      </ul>
-    </article>
-  </main>
-
-  <footer class="site-footer">
-    <p><a href="/">Sakawi home</a> · <a href="/privacy">Privacy Policy</a> · <a href="https://play.google.com/store/apps/details?id=com.sakawi.cham">Google Play</a></p>
-  </footer>
-
   <script>
     (function () {
-      var params = new URLSearchParams(window.location.search);
-      var lang = params.get("lang") === "en" ? "en" : "vi";
-      var vi = document.getElementById("support-vi");
-      var en = document.getElementById("support-en");
-      var links = document.querySelectorAll("[data-lang-link]");
-
-      document.documentElement.lang = lang;
-      document.title = lang === "en" ? "Sakawi Support | Sakawi" : "Hỗ trợ Sakawi | Sakawi";
-      vi.hidden = lang !== "vi";
-      en.hidden = lang !== "en";
-
-      links.forEach(function (link) {
-        link.setAttribute("aria-current", link.getAttribute("data-lang-link") === lang ? "true" : "false");
-      });
+      var query = window.location.search || "";
+      window.location.replace("/" + query + "#/support");
     }());
   </script>
+</head>
+<body>
+  <p><a href="/#/support">Continue to Sakawi Support</a></p>
 </body>
 </html>
