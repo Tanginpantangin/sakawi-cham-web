@@ -1,14 +1,16 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import App from './App';
 import { languageStorageKey, resolveBrowserLanguage } from './i18n';
-import { siteCopy, supportEmail } from './siteContent';
+import { appStoreUrl, playStoreUrl, siteCopy, supportEmail } from './siteContent';
 
 jest.setTimeout(60000);
 
 jest.mock('./utils/today', () => ({
   getToday: () => new Date(2026, 6, 29, 12, 0, 0)
 }));
+
+let scrollIntoViewMock: jest.Mock;
 
 const flattenShape = (value: unknown, prefix = ''): string[] => {
   if (Array.isArray(value)) {
@@ -39,6 +41,8 @@ const flattenShape = (value: unknown, prefix = ''): string[] => {
 };
 
 beforeEach(() => {
+  scrollIntoViewMock = jest.fn();
+  Element.prototype.scrollIntoView = scrollIntoViewMock;
   window.localStorage.clear();
   window.location.hash = '#/';
   document.documentElement.lang = '';
@@ -57,7 +61,7 @@ test('root redirects to calendar and renders required public links', async () =>
   expect(document.querySelectorAll('a[href="#/releases"]')).toHaveLength(0);
   expect(screen.getAllByRole('link', { name: /Google Play/i })[0]).toHaveAttribute(
     'href',
-    'https://play.google.com/store/apps/details?id=com.sakawi.cham&hl=vi'
+    playStoreUrl
   );
 });
 
@@ -130,27 +134,107 @@ test('invalid document slugs stay inside the documents section', () => {
   expect(screen.getByRole('link', { name: /Back to Documents/i })).toHaveAttribute('href', '#/documents');
 });
 
-test('about route keeps the product introduction and mobile app CTA available', () => {
+test('about route renders the feature showcase and official download cards', () => {
+  window.localStorage.setItem(languageStorageKey, 'en');
   window.location.hash = '#/about';
 
   render(<App />);
 
   expect(screen.getByRole('heading', { name: /Sakawi/i, level: 1 })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /Feature Showcase/i })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /Download Sakawi/i })).toBeInTheDocument();
   expect(document.querySelector('a[href="#/calendar"]')).toBeInTheDocument();
   expect(document.querySelector('a[href="#/events"]')).toBeInTheDocument();
   expect(document.querySelector('a[href="#/releases"]')).not.toBeInTheDocument();
-  expect(screen.getAllByRole('link', { name: /Google Play/i })[0]).toHaveAttribute(
-    'href',
-    'https://play.google.com/store/apps/details?id=com.sakawi.cham&hl=vi'
+
+  const showcaseImages = screen.getAllByRole('img', { name: /Feature showcase image/i });
+  expect(showcaseImages).toHaveLength(4);
+  expect(showcaseImages.map((image) => image.getAttribute('src'))).toEqual([
+    '/showcase/en/calendar.svg',
+    '/showcase/en/upcoming-events.svg',
+    '/showcase/en/year-events.svg',
+    '/showcase/en/documents.svg'
+  ]);
+
+  const downloadSection = document.getElementById('download-sakawi');
+  expect(downloadSection).toBeInTheDocument();
+
+  const appStoreBadge = within(downloadSection as HTMLElement).getByAltText('Download Sakawi on the App Store');
+  const googlePlayBadge = within(downloadSection as HTMLElement).getByAltText('Get Sakawi on Google Play');
+  const appStoreQrImage = within(downloadSection as HTMLElement).getByAltText('QR code to download Sakawi from the App Store.');
+  const googlePlayQrImage = within(downloadSection as HTMLElement).getByAltText('QR code to download Sakawi from Google Play.');
+  const appStoreLinks = within(downloadSection as HTMLElement).getAllByRole('link', { name: /App Store/i });
+  const googlePlayLinks = within(downloadSection as HTMLElement).getAllByRole('link', { name: /Google Play/i });
+
+  expect(appStoreBadge).toHaveAttribute('src', '/app-store-badge-en.svg');
+  expect(googlePlayBadge).toHaveAttribute('src', '/google-play-badge-en.png');
+  expect(appStoreQrImage).toHaveAttribute('src', '/apple-app-store-qr.svg');
+  expect(googlePlayQrImage).toHaveAttribute('src', '/google-play-qr.svg');
+  expect(appStoreQrImage).toHaveAttribute('width', '160');
+  expect(appStoreQrImage).toHaveAttribute('height', '160');
+  expect(googlePlayQrImage).toHaveAttribute('width', '160');
+  expect(googlePlayQrImage).toHaveAttribute('height', '160');
+  expect(appStoreLinks).toHaveLength(3);
+  expect(googlePlayLinks).toHaveLength(3);
+  appStoreLinks.forEach((link) => expect(link).toHaveAttribute('href', appStoreUrl));
+  googlePlayLinks.forEach((link) => expect(link).toHaveAttribute('href', playStoreUrl));
+  [...appStoreLinks, ...googlePlayLinks].forEach((link) => {
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+});
+
+test('about download assets switch with the selected language', async () => {
+  window.location.hash = '#/about';
+
+  render(<App />);
+
+  expect(screen.getAllByRole('button', { name: /Tải ứng dụng/i }).length).toBeGreaterThan(0);
+  expect(screen.getByRole('heading', { name: /Tải Sakawi/i })).toBeInTheDocument();
+  expect(screen.getByAltText('Tải Sakawi trên App Store')).toHaveAttribute('src', '/app-store-badge-vi.svg');
+  expect(screen.getByAltText('Tải Sakawi trên Google Play')).toHaveAttribute('src', '/google-play-badge-vi.png');
+  expect(screen.getByAltText('Mã QR tải Sakawi từ App Store.')).toHaveAttribute('src', '/apple-app-store-qr.svg');
+  expect(screen.getByAltText('Mã QR tải Sakawi từ Google Play.')).toHaveAttribute('src', '/google-play-qr.svg');
+  expect(screen.getAllByRole('img', { name: /Ảnh giới thiệu tính năng/i })[0]).toHaveAttribute(
+    'src',
+    '/showcase/vi/calendar.svg'
   );
-  const qrImage = screen.getByAltText(/QR/i);
-  const qrLink = qrImage.closest('a');
-  expect(qrImage).toHaveAttribute('src', '/google-play-qr.svg');
-  expect(qrImage).toHaveAttribute('width', '160');
-  expect(qrImage).toHaveAttribute('height', '160');
-  expect(qrLink).toHaveAttribute('href', 'https://play.google.com/store/apps/details?id=com.sakawi.cham&hl=vi');
-  expect(qrLink).toHaveAttribute('target', '_blank');
-  expect(qrLink).toHaveAttribute('rel', 'noreferrer');
+
+  fireEvent.click(screen.getAllByRole('button', { name: /English/i })[0]);
+
+  await waitFor(() => expect(document.documentElement.lang).toBe('en'));
+  expect(screen.getAllByRole('button', { name: /Download App/i }).length).toBeGreaterThan(0);
+  expect(screen.getByRole('heading', { name: /Download Sakawi/i })).toBeInTheDocument();
+  expect(screen.getByAltText('Download Sakawi on the App Store')).toHaveAttribute('src', '/app-store-badge-en.svg');
+  expect(screen.getByAltText('Get Sakawi on Google Play')).toHaveAttribute('src', '/google-play-badge-en.png');
+  expect(screen.getByAltText('QR code to download Sakawi from the App Store.')).toHaveAttribute('src', '/apple-app-store-qr.svg');
+  expect(screen.getByAltText('QR code to download Sakawi from Google Play.')).toHaveAttribute('src', '/google-play-qr.svg');
+  expect(screen.getAllByRole('img', { name: /Feature showcase image/i })[0]).toHaveAttribute(
+    'src',
+    '/showcase/en/calendar.svg'
+  );
+});
+
+test('header download CTA scrolls on about and navigates there from other routes', async () => {
+  window.localStorage.setItem(languageStorageKey, 'en');
+  window.location.hash = '#/about';
+
+  const { unmount } = render(<App />);
+
+  fireEvent.click(screen.getAllByRole('button', { name: /^Download App$/i })[0]);
+  expect(scrollIntoViewMock).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
+
+  unmount();
+  scrollIntoViewMock.mockClear();
+  window.localStorage.setItem(languageStorageKey, 'en');
+  window.location.hash = '#/calendar';
+  render(<App />);
+
+  fireEvent.click(screen.getAllByRole('button', { name: /^Download App$/i })[0]);
+
+  await waitFor(() => expect(window.location.hash).toBe('#/about?download=1'));
+  await waitFor(() => expect(screen.getByRole('heading', { name: /Download Sakawi/i })).toBeInTheDocument());
+  await waitFor(() => expect(scrollIntoViewMock).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' }));
 });
 
 test('releases route redirects to about without exposing releases navigation', async () => {

@@ -85,8 +85,7 @@ function App() {
                 />
               }
             />
-            <Route path="/about"
-              element={<AboutPage matrixSakawi={matrixSakawiNT} fullSakawi={fullSakawiNT} />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/docs" element={<DocumentPage />} />
             <Route path="/documents" element={<DocumentsPage />} />
             <Route path="/documents/:documentId" element={<DocumentDetailPage />} />

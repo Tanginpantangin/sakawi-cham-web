@@ -1,7 +1,7 @@
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { SiteLanguage, useLanguage } from "./i18n";
-import { appIconUrl, getSiteCopy, playStoreUrl } from "./siteContent";
+import { appIconUrl, appStoreUrl, getSiteCopy, playStoreUrl } from "./siteContent";
 
 interface LayoutProps {
     children: JSX.Element;
@@ -69,8 +69,21 @@ const Brand = ({ compact = false }: { compact?: boolean }) => {
 };
 
 const SiteHeader = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const { language } = useLanguage();
     const copy = getSiteCopy(language);
+
+    const handleDownloadClick = () => {
+        const downloadSection = document.getElementById("download-sakawi");
+
+        if (location.pathname === "/about" && downloadSection) {
+            downloadSection.scrollIntoView({ behavior: "smooth", block: "start" });
+            return;
+        }
+
+        navigate("/about?download=1");
+    };
 
     return (
         <header className="site-header">
@@ -91,14 +104,14 @@ const SiteHeader = () => {
                                 </Nav.Link>
                             ))}
                         </Nav>
-                        <a className="download-button download-button-mobile" href={playStoreUrl} target="_blank" rel="noreferrer">
+                        <button type="button" className="download-button download-button-mobile" onClick={handleDownloadClick}>
                             {copy.nav.download}
-                        </a>
+                        </button>
                         <div className="header-actions">
                             <LanguageSwitcher />
-                            <a className="download-button" href={playStoreUrl} target="_blank" rel="noreferrer">
+                            <button type="button" className="download-button" onClick={handleDownloadClick}>
                                 {copy.nav.download}
-                            </a>
+                            </button>
                         </div>
                     </Navbar.Collapse>
                 </Container>
@@ -126,7 +139,8 @@ const SiteFooter = () => {
                             {copy.nav[link.key]}
                         </NavLink>
                     ))}
-                    <a href={playStoreUrl} target="_blank" rel="noreferrer">{copy.shared.googlePlay}</a>
+                    <a href={appStoreUrl} target="_blank" rel="noopener noreferrer">{copy.shared.appStore}</a>
+                    <a href={playStoreUrl} target="_blank" rel="noopener noreferrer">{copy.shared.googlePlay}</a>
                 </nav>
                 <p className="footer-copyright">{`© 2026 ${copy.shared.productName}`}</p>
             </Container>

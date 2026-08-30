@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Container } from "react-bootstrap";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import {
   calendarRuleGroups,
   comparisonRows,
@@ -19,16 +19,17 @@ import {
 } from "../data/documentLibrary";
 import { Layout } from "../Layout";
 import { useLanguage } from "../i18n";
-import { FullCalendarType } from "../model/FullCalendarType";
-import { MatrixCalendarType } from "../model/MatrixCalendarType";
-import { appIconUrl, getSiteCopy, playStoreUrl, qrCodeUrl, supportEmail } from "../siteContent";
-import Helper from "../utility/helper";
 import {
-  displayAhierDateSummary,
-  displayAwalDateSummary,
-  formatDateParam,
-  sameDate
-} from "../utils/dateFormat";
+  appIconUrl,
+  appStoreQrCodeUrl,
+  appStoreUrl,
+  getFeatureShowcaseImageUrl,
+  getSiteCopy,
+  getStoreBadgeUrls,
+  googlePlayQrCodeUrl,
+  playStoreUrl,
+  supportEmail
+} from "../siteContent";
 
 const setMetaContent = (selector: string, content: string) => {
   document.querySelector(selector)?.setAttribute("content", content);
@@ -236,63 +237,56 @@ const renderDocumentBlock = (
   }
 };
 
-interface HomePageProps {
-  matrixSakawi: MatrixCalendarType[];
-  fullSakawi: FullCalendarType[];
-}
-
-const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-const daysUntil = (date: Date) => {
-  const today = startOfDay(new Date());
-  return Math.max(0, Math.ceil((startOfDay(date).getTime() - today.getTime()) / 86400000));
-};
-
-const formatLongDate = (date: Date, language: string) =>
-  date.toLocaleDateString(language === "vi" ? "vi-VN" : "en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric"
-  });
-
-const buildCalendarPreviewDays = (year: number, month: number) => {
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  return [
-    ...Array.from({ length: firstDay }, () => null),
-    ...Array.from({ length: daysInMonth }, (_, index) => index + 1)
-  ];
-};
-
-const buildWeekdayLabels = (language: string) => {
-  const locale = language === "vi" ? "vi-VN" : "en-US";
-  return Array.from({ length: 7 }, (_, index) =>
-    new Date(2026, 7, 2 + index).toLocaleDateString(locale, { weekday: "narrow" })
-  );
-};
-
-export const AboutPage = ({ matrixSakawi, fullSakawi }: HomePageProps) => {
+export const AboutPage = () => {
+  const { search } = useLocation();
   const { language } = useLanguage();
   const copy = getSiteCopy(language);
-  const today = new Date();
-  const todayItem = fullSakawi.find((item) => sameDate(item.dateGregory, today));
-  const ahierDayCount = todayItem
-    ? Helper.getActualDayNumbersOfAhierMonth(matrixSakawi, todayItem.dateAhier.ahierMonth)
-    : 0;
-  const awalDayCount = todayItem
-    ? Helper.getDayNumbersOfAwalMonth(todayItem.dateAwal.awalMonth.year, todayItem.dateAwal.awalMonth.month)
-    : 0;
-  const weekdayLabels = buildWeekdayLabels(language);
-  const previewDays = buildCalendarPreviewDays(today.getFullYear(), today.getMonth());
-  const upcomingEvents = Helper.getNextEvents(fullSakawi).slice(0, 4);
+  const storeBadgeUrls = getStoreBadgeUrls(language);
+  const downloadCards = [
+    {
+      key: "app-store",
+      title: copy.home.appStoreCardTitle,
+      url: appStoreUrl,
+      badgeUrl: storeBadgeUrls.appStore,
+      badgeAlt: copy.home.appStoreBadgeAlt,
+      qrUrl: appStoreQrCodeUrl,
+      qrAlt: copy.home.appStoreQrAlt,
+      qrDescription: copy.home.appStoreQrDescription,
+      description: copy.home.appStoreDescription,
+      buttonText: copy.home.downloadAppStore
+    },
+    {
+      key: "google-play",
+      title: copy.home.googlePlayCardTitle,
+      url: playStoreUrl,
+      badgeUrl: storeBadgeUrls.googlePlay,
+      badgeAlt: copy.home.googlePlayBadgeAlt,
+      qrUrl: googlePlayQrCodeUrl,
+      qrAlt: copy.home.googlePlayQrAlt,
+      qrDescription: copy.home.googlePlayQrDescription,
+      description: copy.home.googlePlayDescription,
+      buttonText: copy.home.downloadGooglePlay
+    }
+  ];
+  const showcaseCards = copy.home.showcaseCards.map((card) => ({
+    ...card,
+    imageUrl: getFeatureShowcaseImageUrl(language, card.key)
+  }));
 
   usePageMetadata(copy.metadata.homeTitle, copy.metadata.homeDescription);
+
+  useEffect(() => {
+    if (new URLSearchParams(search).get("download") === "1") {
+      window.setTimeout(() => {
+        document.getElementById("download-sakawi")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 0);
+    }
+  }, [search]);
 
   return (
     <Layout>
       <Container className="page-container home-page">
-        <section className="home-hero" aria-labelledby="home-title">
+        <section className="home-hero about-introduction-section" aria-labelledby="home-title">
           <div className="home-hero-copy">
             <p className="page-eyebrow">{copy.home.eyebrow}</p>
             <h1 id="home-title">{copy.home.title}</h1>
@@ -306,144 +300,84 @@ export const AboutPage = ({ matrixSakawi, fullSakawi }: HomePageProps) => {
               </Link>
             </div>
           </div>
-          <div className="hero-brand-panel" aria-label={copy.accessibility.heroBrandLabel}>
-            <div className="download-panel-header">
-              <img className="hero-app-icon" src={appIconUrl} alt={copy.accessibility.appIconAlt} width="112" height="112" />
-              <div className="download-panel-copy">
-                <h2>{copy.home.downloadPanelTitle}</h2>
-                <p>{copy.home.downloadPanelText}</p>
-              </div>
+          <div className="formula-section about-formula" aria-labelledby="formula-title">
+            <h2 id="formula-title">{copy.home.formulaTitle}</h2>
+            <p>{copy.home.formulaIntro}</p>
+            <div className="formula-grid">
+              <article>
+                <h3>Saka</h3>
+                <p>{copy.home.saka}</p>
+              </article>
+              <article>
+                <h3>Jawi</h3>
+                <p>{copy.home.jawi}</p>
+              </article>
             </div>
-            <div className="app-download-card">
-              <a className="google-play-badge" href={playStoreUrl} target="_blank" rel="noreferrer" aria-label={copy.home.download}>
-                <span>{copy.home.download}</span>
-                <strong>{copy.shared.googlePlay}</strong>
-              </a>
-              <a
-                className="qr-card"
-                href={playStoreUrl}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={copy.accessibility.qrAlt}
-              >
-                <img src={qrCodeUrl} alt={copy.accessibility.qrAlt} width="160" height="160" />
-                <p>{copy.home.qrCaption}</p>
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <section className="home-preview-section" aria-labelledby="home-calendar-preview-title">
-          <article className="calendar-preview-panel">
-            <div className="section-heading-row">
-              <div>
-                <p className="page-eyebrow">{copy.home.currentMonthLabel}</p>
-                <h2 id="home-calendar-preview-title">{copy.home.calendarPreviewTitle}</h2>
-              </div>
-              <Link to="/calendar">{copy.home.calendarPreviewCta}</Link>
-            </div>
-            <p className="calendar-preview-month">
-              {today.toLocaleDateString(language === "vi" ? "vi-VN" : "en-US", { month: "long", year: "numeric" })}
-            </p>
-            <div className="mini-calendar" aria-label={copy.home.calendarPreviewTitle}>
-              {weekdayLabels.map((dayName, index) => (
-                <span className="mini-calendar-weekday" key={`${dayName}-${index}`}>{dayName}</span>
-              ))}
-              {previewDays.map((day, index) => (
-                <span
-                  className={day === today.getDate() ? "mini-calendar-day mini-calendar-today" : "mini-calendar-day"}
-                  key={`${day ?? "blank"}-${index}`}
-                  aria-current={day === today.getDate() ? "date" : undefined}
-                >
-                  {day}
-                </span>
-              ))}
-            </div>
-            {todayItem && (
-              <dl className="today-date-summary">
-                <div>
-                  <dt>{copy.home.todayLabel}</dt>
-                  <dd>{formatLongDate(todayItem.dateGregory, language)}</dd>
-                </div>
-                <div>
-                  <dt>{copy.home.chamDateLabel}</dt>
-                  <dd>{displayAhierDateSummary(todayItem.dateAhier, ahierDayCount).latin}</dd>
-                </div>
-                <div>
-                  <dt>{copy.home.awalDateLabel}</dt>
-                  <dd>{displayAwalDateSummary(todayItem.dateAwal, awalDayCount).latin}</dd>
-                </div>
-              </dl>
-            )}
-          </article>
-
-          <article className="events-preview-panel">
-            <div className="section-heading-row">
-              <div>
-                <p className="page-eyebrow">{copy.nav.events}</p>
-                <h2>{copy.home.upcomingPreviewTitle}</h2>
-              </div>
-              <Link to="/events">{copy.home.upcomingPreviewCta}</Link>
-            </div>
-            {upcomingEvents.length > 0 ? (
-              <div className="preview-event-list">
-                {upcomingEvents.map((event) => {
-                  const eventInfo = Helper.displayEventDay(event.eventType);
-                  return (
-                    <Link className="preview-event" to={`/calendar?date=${formatDateParam(event.eventDate)}`} key={`${event.eventType}-${event.eventDate.toISOString()}`}>
-                      <span className="preview-event-date">{Helper.displayDateString(event.eventDate)}</span>
-                      <span className="preview-event-name">{eventInfo?.latinName ?? event.eventType}</span>
-                      <span className="preview-event-meta">{eventInfo?.sakawiType === "sakawiAwal" ? copy.home.awalDateLabel : eventInfo?.sakawiType === "sakawiAhier" ? copy.home.chamDateLabel : copy.nav.events}</span>
-                      <span className="preview-event-countdown">{daysUntil(event.eventDate)} {language === "vi" ? "ngày" : "days"}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            ) : (
-              <p>{copy.home.noEvents}</p>
-            )}
-          </article>
-        </section>
-
-        <section className="formula-section" aria-labelledby="formula-title">
-          <h2 id="formula-title">{copy.home.formulaTitle}</h2>
-          <p>{copy.home.formulaIntro}</p>
-          <div className="formula-grid">
-            <article>
-              <h3>Saka</h3>
-              <p>{copy.home.saka}</p>
-            </article>
-            <article>
-              <h3>Jawi</h3>
-              <p>{copy.home.jawi}</p>
-            </article>
           </div>
         </section>
 
         <section className="feature-section" aria-labelledby="features-title">
           <h2 id="features-title">{copy.home.featuresTitle}</h2>
-          <div className="feature-grid">
-            {copy.home.features.map((feature) => (
-              <span className="feature-chip" key={feature}>{feature}</span>
+          <div className="feature-showcase-grid">
+            {showcaseCards.map((feature) => (
+              <article className="feature-showcase-card" key={feature.key}>
+                <img
+                  className="feature-showcase-image"
+                  src={feature.imageUrl}
+                  alt={feature.imageAlt}
+                  width="1200"
+                  height="900"
+                />
+                <div className="sr-only">
+                  <h3>{feature.title}</h3>
+                  <p>{feature.description}</p>
+                </div>
+              </article>
             ))}
           </div>
         </section>
 
-        <section className="screenshot-placeholder" aria-label={copy.accessibility.screenshotsLabel}>
-          <div>
-            <img src={appIconUrl} alt="" width="72" height="72" />
-            <p>{copy.home.screenshotNote}</p>
+        <section className="download-section" id="download-sakawi" aria-labelledby="download-sakawi-title">
+          <div className="download-section-heading">
+            <img className="hero-app-icon" src={appIconUrl} alt={copy.accessibility.appIconAlt} width="96" height="96" />
+            <div>
+              <h2 id="download-sakawi-title">{copy.home.downloadPanelTitle}</h2>
+              <p>{copy.home.downloadPanelText}</p>
+            </div>
           </div>
-        </section>
-
-        <section className="quick-links-section" aria-labelledby="quick-links-title">
-          <h2 id="quick-links-title">{copy.home.linksTitle}</h2>
-          <div className="public-link-row">
-            <Link to="/calendar">{copy.home.calendarLink}</Link>
-            <Link to="/events">{copy.home.eventsLink}</Link>
-            <Link to="/documents">{copy.nav.documents}</Link>
-            <Link to="/privacy">{copy.nav.privacy}</Link>
-            <Link to="/support">{copy.nav.support}</Link>
+          <div className="app-download-grid">
+            {downloadCards.map((card) => (
+              <article className="app-download-card" key={card.key}>
+                <h3>{card.title}</h3>
+                <a
+                  className="store-badge-link"
+                  href={card.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={card.badgeAlt}
+                >
+                  <img
+                    className={`store-badge store-badge-${card.key}`}
+                    src={card.badgeUrl}
+                    alt={card.badgeAlt}
+                  />
+                </a>
+                <a
+                  className="qr-card"
+                  href={card.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={card.qrAlt}
+                >
+                  <img src={card.qrUrl} alt={card.qrAlt} width="160" height="160" />
+                </a>
+                <p className="qr-description">{card.qrDescription}</p>
+                <p className="store-description">{card.description}</p>
+                <a className="download-button store-download-button" href={card.url} target="_blank" rel="noopener noreferrer">
+                  {card.buttonText}
+                </a>
+              </article>
+            ))}
           </div>
         </section>
       </Container>
@@ -590,7 +524,10 @@ export const SupportPage = () => {
         <section>
           <h2>{copy.support.installTitle}</h2>
           <p>{copy.support.installBody}</p>
-          <p><a href={playStoreUrl} target="_blank" rel="noreferrer">{copy.shared.googlePlay}</a></p>
+          <div className="public-link-row">
+            <a href={appStoreUrl} target="_blank" rel="noopener noreferrer">{copy.shared.appStore}</a>
+            <a href={playStoreUrl} target="_blank" rel="noopener noreferrer">{copy.shared.googlePlay}</a>
+          </div>
         </section>
 
         <section>

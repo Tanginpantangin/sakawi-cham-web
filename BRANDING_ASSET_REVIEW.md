@@ -1,6 +1,6 @@
 # Sakawi Branding Asset Review
 
-Reviewed on July 29, 2026.
+Reviewed on July 29, 2026. Updated on August 29, 2026 for official App Store and Google Play availability.
 
 ## Mobile App Sources Inspected
 
@@ -22,6 +22,11 @@ Reviewed on July 29, 2026.
 | Apple touch icon | `public/apple-touch-icon.png` | Derived from mobile `assets/icon.png` at 180 x 180 while preserving artwork and proportions. |
 | PWA icons | `public/icon-192.png`, `public/icon-512.png`, `public/sakawi-app-icon.png` | Derived from mobile `assets/icon.png` for browser install metadata. |
 | Open Graph image | `public/og-image.png` | Derived from mobile `assets/icon.png` and mobile theme colors without altering the logo artwork. |
-| Google Play QR code | `public/google-play-qr.svg` | Static QR generated from the official Google Play URL with `hl=vi`; no external QR service or package dependency. |
+| App Store badge | `public/app-store-badge-en.svg`, `public/app-store-badge-vi.svg` | Official Apple Media Services badge artwork. Apple officially provides Vietnamese localized badge artwork. |
+| Google Play badge | `public/google-play-badge-en.png`, `public/google-play-badge-vi.png` | Official Google Play badge artwork from Google's localized badge endpoints. |
+| App Store QR code | `public/apple-app-store-qr.svg` | Static QR generated from `https://apps.apple.com/vn/app/sakawi-cham-calendar/id6799479303` with no logo overlay. |
+| Google Play QR code | `public/google-play-qr.svg` | Static QR generated from `https://play.google.com/store/apps/details?id=com.sakawi.cham` with no logo overlay. |
+| Feature showcase source screenshots | `public/showcase/source/*.jpg` | Official public App Store screenshots downloaded from the Sakawi listing without editing the app UI. |
+| Feature showcase localized assets | `public/showcase/vi/*.svg`, `public/showcase/en/*.svg` | Presentation SVGs generated around the source screenshots with separate Vietnamese and English titles. |
 
 The logo was not redrawn, simplified, recolored, regenerated, or replaced with a monochrome mark. Web icon sizes were derived from the official mobile app icon while preserving the original visual identity.

@@ -1,16 +1,28 @@
 import { EventType } from "./enums/enum";
 import { SiteLanguage } from "./i18n";
 
-export const playStoreUrl = "https://play.google.com/store/apps/details?id=com.sakawi.cham&hl=vi";
+export const playStoreUrl = "https://play.google.com/store/apps/details?id=com.sakawi.cham";
+export const appStoreUrl = "https://apps.apple.com/vn/app/sakawi-cham-calendar/id6799479303";
 export const appIconUrl = `${process.env.PUBLIC_URL}/sakawi-app-icon.png`;
-export const qrCodeUrl = `${process.env.PUBLIC_URL}/google-play-qr.svg`;
+export const googlePlayQrCodeUrl = `${process.env.PUBLIC_URL}/google-play-qr.svg`;
+export const appStoreQrCodeUrl = `${process.env.PUBLIC_URL}/apple-app-store-qr.svg`;
+export const qrCodeUrl = googlePlayQrCodeUrl;
 export const supportEmail = "sakawi.app@gmail.com";
+
+export const getStoreBadgeUrls = (language: SiteLanguage) => ({
+  appStore: `${process.env.PUBLIC_URL}/app-store-badge-${language === "vi" ? "vi" : "en"}.svg`,
+  googlePlay: `${process.env.PUBLIC_URL}/google-play-badge-${language === "vi" ? "vi" : "en"}.png`
+});
+
+export const getFeatureShowcaseImageUrl = (language: SiteLanguage, key: string) =>
+  `${process.env.PUBLIC_URL}/showcase/${language}/${key}.svg`;
 
 export type TranslationTree = Record<string, unknown>;
 
 interface SiteTranslation {
   shared: {
     productName: string;
+    appStore: string;
     googlePlay: string;
     homeLabel: string;
     appIconAlt: string;
@@ -70,11 +82,22 @@ interface SiteTranslation {
     saka: string;
     jawi: string;
     download: string;
+    downloadAppStore: string;
+    downloadGooglePlay: string;
     downloadPanelTitle: string;
     downloadPanelText: string;
+    appStoreCardTitle: string;
+    googlePlayCardTitle: string;
+    appStoreBadgeAlt: string;
+    googlePlayBadgeAlt: string;
+    appStoreQrAlt: string;
+    googlePlayQrAlt: string;
+    appStoreQrDescription: string;
+    googlePlayQrDescription: string;
+    appStoreDescription: string;
+    googlePlayDescription: string;
     qrCaption: string;
     iosNote: string;
-    screenshotNote: string;
     featuresTitle: string;
     linksTitle: string;
     calendarLink: string;
@@ -91,6 +114,12 @@ interface SiteTranslation {
     awalDateLabel: string;
     noEvents: string;
     features: readonly string[];
+    showcaseCards: readonly {
+      key: string;
+      title: string;
+      description: string;
+      imageAlt: string;
+    }[];
   };
   calendar: {
     title: string;
@@ -238,6 +267,7 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
   vi: {
     shared: {
       productName: "Sakawi",
+      appStore: "App Store",
       googlePlay: "Google Play",
       homeLabel: "Trang chủ Sakawi",
       appIconAlt: "Biểu tượng ứng dụng Sakawi"
@@ -250,7 +280,7 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       about: "Giới thiệu",
       privacy: "Chính sách riêng tư",
       support: "Hỗ trợ",
-      download: "Google Play",
+      download: "Tải ứng dụng",
       navLabel: "Điều hướng chính",
       languageLabel: "Chọn ngôn ngữ",
       menuLabel: "Mở điều hướng"
@@ -296,13 +326,24 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       formulaIntro: "Sakawi là sự kết hợp của hai hệ thống lịch:",
       saka: "Saka - lịch Chăm theo hệ Saka.",
       jawi: "Jawi - lịch Awal được cộng đồng Chăm Bani sử dụng.",
-      download: "Tải trên Google Play",
+      download: "Tải ứng dụng",
+      downloadAppStore: "Tải trên App Store",
+      downloadGooglePlay: "Tải trên Google Play",
       downloadPanelTitle: "Tải Sakawi",
-      downloadPanelText: "Dùng nút tải hoặc quét mã QR.",
+      downloadPanelText: "Chọn cửa hàng chính thức hoặc quét mã QR.",
+      appStoreCardTitle: "iPhone",
+      googlePlayCardTitle: "Android",
+      appStoreBadgeAlt: "Tải Sakawi trên App Store",
+      googlePlayBadgeAlt: "Tải Sakawi trên Google Play",
+      appStoreQrAlt: "Mã QR tải Sakawi từ App Store.",
+      googlePlayQrAlt: "Mã QR tải Sakawi từ Google Play.",
+      appStoreQrDescription: "Quét mã QR để tải Sakawi từ App Store.",
+      googlePlayQrDescription: "Quét mã QR để tải Sakawi từ Google Play.",
+      appStoreDescription: "Dành cho iPhone và thiết bị Apple tương thích.",
+      googlePlayDescription: "Dành cho điện thoại và máy tính bảng Android.",
       qrCaption: "Quét mã QR để mở Google Play.",
-      iosNote: "Phiên bản iOS có thể được xem xét sau.",
-      screenshotNote: "Ảnh chụp ứng dụng sẽ được bổ sung khi có nguồn chính thức trong kho dự án.",
-      featuresTitle: "Tính năng chính",
+      iosNote: "Sakawi hiện có trên App Store.",
+      featuresTitle: "Tính năng nổi bật",
       linksTitle: "Liên kết nhanh",
       calendarLink: "Mở lịch tháng",
       eventsLink: "Xem sự kiện",
@@ -326,6 +367,32 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
         "Đếm ngược",
         "Tiếng Việt",
         "English"
+      ],
+      showcaseCards: [
+        {
+          key: "calendar",
+          title: "Lịch Chăm trong tầm tay",
+          description: "Theo dõi Lịch Chăm, Lịch Awal và Dương lịch trong cùng một ứng dụng.",
+          imageAlt: "Ảnh giới thiệu tính năng Lịch Chăm trong tầm tay của Sakawi."
+        },
+        {
+          key: "upcoming-events",
+          title: "Không bỏ lỡ ngày quan trọng",
+          description: "Theo dõi các sự kiện sắp diễn ra cùng số ngày còn lại.",
+          imageAlt: "Ảnh giới thiệu tính năng theo dõi sự kiện sắp diễn ra của Sakawi."
+        },
+        {
+          key: "year-events",
+          title: "Sự kiện cả năm",
+          description: "Tra cứu nhanh toàn bộ các sự kiện trong năm.",
+          imageAlt: "Ảnh giới thiệu tính năng sự kiện cả năm của Sakawi."
+        },
+        {
+          key: "documents",
+          title: "Kiến thức về Sakawi",
+          description: "Tìm hiểu về Lịch Chăm, lịch Awal và các quy tắc của lịch.",
+          imageAlt: "Ảnh giới thiệu tính năng tài liệu và kiến thức về Sakawi."
+        }
       ]
     },
     calendar: {
@@ -490,7 +557,7 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       lede: "Trang này dành cho hỗ trợ kỹ thuật: cài đặt, cập nhật, quyền riêng tư và xử lý sự cố.",
       contactLabel: "Email hỗ trợ đã xác minh",
       installTitle: "Cài đặt",
-      installBody: "Cài Sakawi từ Google Play bằng liên kết chính thức. Nếu Play Store không mở đúng trang, hãy kiểm tra kết nối mạng và thử lại.",
+      installBody: "Cài Sakawi từ App Store hoặc Google Play bằng liên kết chính thức. Nếu cửa hàng không mở đúng trang, hãy kiểm tra kết nối mạng và thử lại.",
       updateTitle: "Cập nhật",
       updateBody: "Mở Google Play, tìm Sakawi và chọn Cập nhật nếu có phiên bản mới. Một số cập nhật nội dung có thể được áp dụng trong ứng dụng sau khi khởi động lại.",
       privacyTitle: "Cài đặt quyền riêng tư",
@@ -538,6 +605,7 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
   en: {
     shared: {
       productName: "Sakawi",
+      appStore: "App Store",
       googlePlay: "Google Play",
       homeLabel: "Sakawi home",
       appIconAlt: "Sakawi app icon"
@@ -550,7 +618,7 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       about: "About",
       privacy: "Privacy",
       support: "Support",
-      download: "Google Play",
+      download: "Download App",
       navLabel: "Primary navigation",
       languageLabel: "Choose language",
       menuLabel: "Open navigation"
@@ -596,13 +664,24 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       formulaIntro: "Sakawi is a combination of two calendar systems:",
       saka: "Saka - the Cham calendar based on the Saka system.",
       jawi: "Jawi - the Awal calendar used by the Cham Bani community.",
-      download: "Get it on Google Play",
+      download: "Download App",
+      downloadAppStore: "Download on the App Store",
+      downloadGooglePlay: "Get it on Google Play",
       downloadPanelTitle: "Download Sakawi",
-      downloadPanelText: "Use the button or scan the QR code.",
+      downloadPanelText: "Choose the official store or scan the QR code.",
+      appStoreCardTitle: "iPhone",
+      googlePlayCardTitle: "Android",
+      appStoreBadgeAlt: "Download Sakawi on the App Store",
+      googlePlayBadgeAlt: "Get Sakawi on Google Play",
+      appStoreQrAlt: "QR code to download Sakawi from the App Store.",
+      googlePlayQrAlt: "QR code to download Sakawi from Google Play.",
+      appStoreQrDescription: "Scan the QR code to download Sakawi from the App Store.",
+      googlePlayQrDescription: "Scan the QR code to download Sakawi from Google Play.",
+      appStoreDescription: "For iPhone and compatible Apple devices.",
+      googlePlayDescription: "For Android phones and tablets.",
       qrCaption: "Scan the QR code to open Google Play.",
-      iosNote: "iOS may come later.",
-      screenshotNote: "App screenshots will be added when official source images are available in the project repository.",
-      featuresTitle: "Core features",
+      iosNote: "Sakawi is available on the App Store.",
+      featuresTitle: "Feature Showcase",
       linksTitle: "Quick links",
       calendarLink: "Open monthly calendar",
       eventsLink: "View events",
@@ -626,6 +705,32 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
         "Countdown",
         "Vietnamese",
         "English"
+      ],
+      showcaseCards: [
+        {
+          key: "calendar",
+          title: "Cham Calendar at your fingertips",
+          description: "View Cham Calendar, Awal Calendar and Gregorian Calendar together.",
+          imageAlt: "Feature showcase image for Sakawi Cham Calendar at your fingertips."
+        },
+        {
+          key: "upcoming-events",
+          title: "Never miss important events",
+          description: "Track upcoming events with live countdowns.",
+          imageAlt: "Feature showcase image for Sakawi upcoming event countdowns."
+        },
+        {
+          key: "year-events",
+          title: "Events throughout the year",
+          description: "Browse all important events for the year.",
+          imageAlt: "Feature showcase image for Sakawi year events."
+        },
+        {
+          key: "documents",
+          title: "Learn about Sakawi",
+          description: "Explore Cham Calendar, Awal Calendar and calendar rules.",
+          imageAlt: "Feature showcase image for Sakawi documents."
+        }
       ]
     },
     calendar: {
@@ -790,7 +895,7 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       lede: "This page is for technical assistance with installation, updates, privacy settings, and troubleshooting.",
       contactLabel: "Verified support email",
       installTitle: "Installation",
-      installBody: "Install Sakawi from Google Play using the official link. If the Play Store does not open the page, check your network connection and try again.",
+      installBody: "Install Sakawi from the App Store or Google Play using the official links. If a store does not open the page, check your network connection and try again.",
       updateTitle: "Updates",
       updateBody: "Open Google Play, search for Sakawi, and choose Update when a new version is available. Some content updates may apply inside the app after restart.",
       privacyTitle: "Privacy settings",
