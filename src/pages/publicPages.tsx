@@ -32,18 +32,57 @@ import {
 } from "../siteContent";
 
 const setMetaContent = (selector: string, content: string) => {
-  document.querySelector(selector)?.setAttribute("content", content);
+  ensureMeta(selector).setAttribute("content", content);
 };
 
-const usePageMetadata = (title: string, description: string) => {
+const ensureCanonicalLink = () => {
+  let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+
+  if (!canonical) {
+    canonical = document.createElement("link");
+    canonical.rel = "canonical";
+    document.head.appendChild(canonical);
+  }
+
+  return canonical;
+};
+
+const ensureMeta = (selector: string) => {
+  const existing = document.querySelector<HTMLMetaElement>(selector);
+
+  if (existing) {
+    return existing;
+  }
+
+  const meta = document.createElement("meta");
+  const nameMatch = selector.match(/meta\[name="([^"]+)"\]/);
+  const propertyMatch = selector.match(/meta\[property="([^"]+)"\]/);
+
+  if (nameMatch) {
+    meta.name = nameMatch[1];
+  }
+
+  if (propertyMatch) {
+    meta.setAttribute("property", propertyMatch[1]);
+  }
+
+  document.head.appendChild(meta);
+  return meta;
+};
+
+const usePageMetadata = (title: string, description: string, canonicalUrl?: string) => {
   useEffect(() => {
     document.title = title;
+    if (canonicalUrl) {
+      ensureCanonicalLink().href = canonicalUrl;
+      setMetaContent('meta[property="og:url"]', canonicalUrl);
+    }
     setMetaContent('meta[name="description"]', description);
     setMetaContent('meta[property="og:title"]', title);
     setMetaContent('meta[property="og:description"]', description);
     setMetaContent('meta[name="twitter:title"]', title);
     setMetaContent('meta[name="twitter:description"]', description);
-  }, [description, title]);
+  }, [canonicalUrl, description, title]);
 };
 
 const Breadcrumb = ({ current }: { current: string }) => {
@@ -58,6 +97,34 @@ const Breadcrumb = ({ current }: { current: string }) => {
     </nav>
   );
 };
+
+const renderPrivacySections = (
+  sections: readonly {
+    title: string;
+    body: string;
+    items?: readonly string[];
+    contactEmail?: boolean;
+  }[]
+) => (
+  <>
+    {sections.map((section) => (
+      <section key={section.title}>
+        <h2>{section.title}</h2>
+        <p>
+          {section.body}
+          {section.contactEmail && <> <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.</>}
+        </p>
+        {section.items && (
+          <ul>
+            {section.items.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        )}
+      </section>
+    ))}
+  </>
+);
 
 const documentToneClass = (tone: DocumentTone) => `document-tone-${tone}`;
 
@@ -489,15 +556,34 @@ export const PrivacyPage = () => {
         <p className="page-lede">{copy.privacy.lede}</p>
         <p className="page-meta">{copy.privacy.updated}</p>
 
-        {copy.privacy.sections.map((section) => (
-          <section key={section.title}>
-            <h2>{section.title}</h2>
-            <p>
-              {section.body}
-              {section.contactEmail && <> <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.</>}
-            </p>
-          </section>
-        ))}
+        {renderPrivacySections(copy.privacy.sections)}
+      </Container>
+    </Layout>
+  );
+};
+
+export const ChamKeyboardPrivacyPage = () => {
+  const { language } = useLanguage();
+  const copy = getSiteCopy(language);
+
+  usePageMetadata(
+    copy.metadata.chamKeyboardPrivacyTitle,
+    copy.metadata.chamKeyboardPrivacyDescription,
+    "https://www.sakawi.com/cham-keyboard/privacy"
+  );
+
+  return (
+    <Layout>
+      <Container className="page-container public-page">
+        <Breadcrumb current={copy.chamKeyboardPrivacy.title} />
+        <p className="page-eyebrow">Cham Keyboard</p>
+        <h1>{copy.chamKeyboardPrivacy.title}</h1>
+        <p className="page-lede">{copy.chamKeyboardPrivacy.lede}</p>
+        <p className="page-meta">{copy.chamKeyboardPrivacy.productLabel}</p>
+        <p className="page-meta">{copy.chamKeyboardPrivacy.packageLabel}</p>
+        <p className="page-meta">{copy.chamKeyboardPrivacy.updated}</p>
+
+        {renderPrivacySections(copy.chamKeyboardPrivacy.sections)}
       </Container>
     </Layout>
   );

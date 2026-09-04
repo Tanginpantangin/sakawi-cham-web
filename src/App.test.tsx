@@ -268,6 +268,36 @@ test('public contact pages use Sakawi official contact and copyright', () => {
   expect(screen.getByText('© 2026 Sakawi')).toBeInTheDocument();
 });
 
+test('Cham Keyboard privacy route explains local composition without data transmission', () => {
+  window.localStorage.setItem(languageStorageKey, 'en');
+  window.location.hash = '#/cham-keyboard/privacy';
+
+  render(<App />);
+
+  expect(screen.getByRole('heading', { name: /^Privacy Policy$/i, level: 1 })).toBeInTheDocument();
+  expect(screen.getByText('Product: Cham Keyboard')).toBeInTheDocument();
+  expect(screen.getByText('Android package: com.chamkeyboard')).toBeInTheDocument();
+  expect(screen.getByText('Last updated: September 4, 2026')).toBeInTheDocument();
+  expect(screen.getByText(/separate from Sakawi - Cham Calendar/i)).toBeInTheDocument();
+  expect(screen.getByText(/at most 8 Unicode code points before the cursor/i)).toBeInTheDocument();
+  expect(screen.getByText(/does not request the Android INTERNET permission/i)).toBeInTheDocument();
+  expect(screen.getByText(/does not use analytics SDKs, advertising SDKs, or tracking SDKs/i)).toBeInTheDocument();
+  expect(screen.getByText(/does not sell or share typed text/i)).toBeInTheDocument();
+  expect(screen.getByText('Theme')).toBeInTheDocument();
+  expect(screen.getByText('Haptic feedback')).toBeInTheDocument();
+  expect(screen.getByText('Keyboard size')).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: supportEmail })).toHaveAttribute('href', `mailto:${supportEmail}`);
+  expect(document.title).toBe('Privacy Policy | Cham Keyboard');
+  expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute(
+    'href',
+    'https://www.sakawi.com/cham-keyboard/privacy'
+  );
+  expect(document.querySelector('meta[name="description"]')).toHaveAttribute(
+    'content',
+    siteCopy.en.metadata.chamKeyboardPrivacyDescription
+  );
+});
+
 test('calendar route supports month navigation, today, selection, events, language, and region', async () => {
   window.localStorage.setItem(languageStorageKey, 'en');
   window.location.hash = '#/calendar?date=2026-07-29';

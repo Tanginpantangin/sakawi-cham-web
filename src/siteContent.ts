@@ -55,6 +55,8 @@ interface SiteTranslation {
     documentsDescription: string;
     privacyTitle: string;
     privacyDescription: string;
+    chamKeyboardPrivacyTitle: string;
+    chamKeyboardPrivacyDescription: string;
     supportTitle: string;
     supportDescription: string;
     notFoundTitle: string;
@@ -217,6 +219,19 @@ interface SiteTranslation {
       contactEmail?: boolean;
     }[];
   };
+  chamKeyboardPrivacy: {
+    title: string;
+    productLabel: string;
+    packageLabel: string;
+    lede: string;
+    updated: string;
+    sections: readonly {
+      title: string;
+      body: string;
+      items?: readonly string[];
+      contactEmail?: boolean;
+    }[];
+  };
   support: {
     title: string;
     lede: string;
@@ -300,6 +315,8 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       documentsDescription: "Tài liệu song ngữ về kiến thức căn bản của lịch Cham trong Sakawi.",
       privacyTitle: "Chính sách riêng tư | Sakawi",
       privacyDescription: "Chính sách riêng tư của Sakawi, bao gồm lựa chọn đồng ý cho Firebase Analytics và Firebase Crashlytics.",
+      chamKeyboardPrivacyTitle: "Chính sách riêng tư | Cham Keyboard",
+      chamKeyboardPrivacyDescription: "Chính sách riêng tư của Cham Keyboard cho Android, bao gồm cách bàn phím xử lý văn bản, ngữ cảnh con trỏ và tùy chọn cục bộ trên thiết bị.",
       supportTitle: "Hỗ trợ | Sakawi",
       supportDescription: "Hỗ trợ kỹ thuật Sakawi cho cài đặt, cập nhật, quyền riêng tư và xử lý sự cố.",
       notFoundTitle: "Không tìm thấy trang | Sakawi",
@@ -552,6 +569,61 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
         }
       ]
     },
+    chamKeyboardPrivacy: {
+      title: "Chính sách riêng tư",
+      productLabel: "Sản phẩm: Cham Keyboard",
+      packageLabel: "Gói Android: com.chamkeyboard",
+      lede: "Chính sách này áp dụng cho Cham Keyboard, một ứng dụng bàn phím/phương thức nhập Android riêng biệt với Sakawi - Cham Calendar.",
+      updated: "Cập nhật lần cuối: 4 tháng 9 năm 2026",
+      sections: [
+        {
+          title: "Thông tin chúng tôi thu thập",
+          body: "Cham Keyboard không yêu cầu tài khoản và không thu thập tên, số điện thoại, địa chỉ, danh bạ, vị trí, ảnh, nội dung lịch thiết bị hoặc thông tin thanh toán. Ứng dụng chỉ lưu các tùy chọn bàn phím cục bộ được mô tả trong chính sách này."
+        },
+        {
+          title: "Văn bản bạn nhập",
+          body: "Cham Keyboard không lưu trữ lâu dài văn bản bạn nhập, không gửi văn bản bạn nhập đến máy chủ và không bán hoặc chia sẻ nội dung đã nhập hay dữ liệu cá nhân."
+        },
+        {
+          title: "Ghép chữ Cham cục bộ",
+          body: "Để hỗ trợ ghép chữ Cham, bàn phím đôi khi cần đọc một lượng nhỏ văn bản ngay trước con trỏ. Khi cần cho việc ghép chữ, phiên bản hiện tại đọc tối đa 8 điểm mã Unicode trước con trỏ. Ngữ cảnh này chỉ được xử lý cục bộ trên thiết bị, không được lưu lại và không được truyền đi."
+        },
+        {
+          title: "Cài đặt cục bộ",
+          body: "Cham Keyboard chỉ lưu các tùy chọn bàn phím trên thiết bị để ghi nhớ cách bạn muốn sử dụng bàn phím.",
+          items: [
+            "Giao diện",
+            "Phản hồi rung",
+            "Kích thước bàn phím"
+          ]
+        },
+        {
+          title: "Internet và truyền dữ liệu",
+          body: "Cham Keyboard không yêu cầu quyền INTERNET trên Android. Ứng dụng không truyền văn bản bạn nhập, ngữ cảnh con trỏ hoặc tùy chọn bàn phím đến máy chủ."
+        },
+        {
+          title: "Phân tích và quảng cáo",
+          body: "Cham Keyboard không sử dụng SDK phân tích, SDK quảng cáo hoặc SDK theo dõi. Ứng dụng không sử dụng dữ liệu cho quảng cáo hoặc cá nhân hóa quảng cáo."
+        },
+        {
+          title: "Chia sẻ dữ liệu",
+          body: "Cham Keyboard không bán hoặc chia sẻ văn bản đã nhập, ngữ cảnh con trỏ, tùy chọn bàn phím hoặc dữ liệu cá nhân với bên thứ ba."
+        },
+        {
+          title: "Quyền riêng tư của trẻ em",
+          body: "Cham Keyboard không được thiết kế để thu thập thông tin cá nhân từ trẻ em. Nếu bạn cho rằng trẻ em đã cung cấp thông tin cá nhân qua ứng dụng, vui lòng liên hệ để chúng tôi xem xét."
+        },
+        {
+          title: "Thay đổi chính sách này",
+          body: "Chúng tôi có thể cập nhật chính sách này khi Cham Keyboard thay đổi. Khi cập nhật, ngày Cập nhật lần cuối trên trang này sẽ được thay đổi."
+        },
+        {
+          title: "Liên hệ",
+          body: "Nếu có câu hỏi về Cham Keyboard hoặc chính sách riêng tư này, vui lòng liên hệ qua",
+          contactEmail: true
+        }
+      ]
+    },
     support: {
       title: "Hỗ trợ Sakawi",
       lede: "Trang này dành cho hỗ trợ kỹ thuật: cài đặt, cập nhật, quyền riêng tư và xử lý sự cố.",
@@ -638,6 +710,8 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
       documentsDescription: "Bilingual documents for basic Cham Calendar knowledge in Sakawi.",
       privacyTitle: "Privacy | Sakawi",
       privacyDescription: "Sakawi privacy policy, including consent choices for Firebase Analytics and Firebase Crashlytics.",
+      chamKeyboardPrivacyTitle: "Privacy Policy | Cham Keyboard",
+      chamKeyboardPrivacyDescription: "Cham Keyboard privacy policy for Android, including how the keyboard handles typed text, cursor context, and local device preferences.",
       supportTitle: "Support | Sakawi",
       supportDescription: "Technical help for Sakawi installation, updates, privacy settings, and troubleshooting.",
       notFoundTitle: "Page not found | Sakawi",
@@ -886,6 +960,61 @@ export const siteCopy: Record<SiteLanguage, SiteTranslation> = {
         {
           title: "Contact",
           body: "For questions about the Sakawi application or the Sakawi website, contact Sakawi at",
+          contactEmail: true
+        }
+      ]
+    },
+    chamKeyboardPrivacy: {
+      title: "Privacy Policy",
+      productLabel: "Product: Cham Keyboard",
+      packageLabel: "Android package: com.chamkeyboard",
+      lede: "This policy applies to Cham Keyboard, an Android input method/keyboard app that is separate from Sakawi - Cham Calendar.",
+      updated: "Last updated: September 4, 2026",
+      sections: [
+        {
+          title: "Information We Collect",
+          body: "Cham Keyboard does not require an account and does not collect your name, phone number, address, contacts, location, photos, device calendar contents, or payment information. The app stores only the local keyboard preferences described in this policy."
+        },
+        {
+          title: "Text You Type",
+          body: "Cham Keyboard does not persist or store the text you type, does not transmit typed text to a server, and does not sell or share typed content or personal data."
+        },
+        {
+          title: "Local Cham Composition",
+          body: "To support Cham-script composition, the keyboard may read a small amount of text immediately before the cursor. When needed for composition, the current implementation reads at most 8 Unicode code points before the cursor. This context is processed locally on your device, is not persisted, and is not transmitted."
+        },
+        {
+          title: "Local Settings",
+          body: "Cham Keyboard stores only local keyboard preferences on your device so the keyboard can remember how you want it to work.",
+          items: [
+            "Theme",
+            "Haptic feedback",
+            "Keyboard size"
+          ]
+        },
+        {
+          title: "Internet and Data Transmission",
+          body: "Cham Keyboard does not request the Android INTERNET permission. The app does not transmit typed text, cursor context, or keyboard preferences to a server."
+        },
+        {
+          title: "Analytics and Advertising",
+          body: "Cham Keyboard does not use analytics SDKs, advertising SDKs, or tracking SDKs. The app does not use data for ads or ad personalization."
+        },
+        {
+          title: "Data Sharing",
+          body: "Cham Keyboard does not sell or share typed text, cursor context, keyboard preferences, or personal data with third parties."
+        },
+        {
+          title: "Children's Privacy",
+          body: "Cham Keyboard is not designed to collect personal information from children. If you believe a child has provided personal information through the app, please contact us so we can review it."
+        },
+        {
+          title: "Changes to This Privacy Policy",
+          body: "We may update this policy when Cham Keyboard changes. When we do, the Last updated date on this page will change."
+        },
+        {
+          title: "Contact",
+          body: "For questions about Cham Keyboard or this privacy policy, contact us at",
           contactEmail: true
         }
       ]

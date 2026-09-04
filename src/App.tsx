@@ -12,6 +12,7 @@ import {
   DocumentDetailPage,
   DocumentsPage,
   AboutPage,
+  ChamKeyboardPrivacyPage,
   NotFoundPage,
   PrivacyPage,
   SupportPage
@@ -90,6 +91,7 @@ function App() {
             <Route path="/documents" element={<DocumentsPage />} />
             <Route path="/documents/:documentId" element={<DocumentDetailPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/cham-keyboard/privacy" element={<ChamKeyboardPrivacyPage />} />
             <Route path="/support" element={<SupportPage />} />
             <Route path="/releases" element={<Navigate to="/about" replace />} />
             <Route path="*" element={<NotFoundPage />} />
